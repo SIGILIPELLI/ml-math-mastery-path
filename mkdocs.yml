@@ -1,0 +1,114 @@
+site_name: ML Math Foundations Mastery Path
+site_description: A structured, module-wise course on the mathematical foundations of AI/ML — derivatives and calculus, vectors and linear algebra, probability and statistics — and how they underpin machine learning algorithms like gradient descent and backpropagation.
+site_url: https://sigilipelli.github.io/ml-math-mastery-path/
+repo_url: https://github.com/SIGILIPELLI/ml-math-mastery-path
+repo_name: ml-math-mastery-path
+
+theme:
+  name: material
+  custom_dir: docs/overrides
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - navigation.indexes
+    - content.code.copy
+    - content.code.annotate
+    - search.suggest
+    - search.highlight
+
+markdown_extensions:
+  - admonition
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.superfences
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.arithmatex:
+      generic: true
+  - toc:
+      permalink: true
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+extra_css:
+  - stylesheets/extra.css
+
+# --- auto-pruned stub levels (see AdSense low-value-content fix) ---
+exclude_docs: |
+  level-2/*
+  level-3/*
+  level-4/*
+# --- end auto-pruned stub levels ---
+
+nav:
+  - Home: index.md
+  - Privacy Policy: privacy.md
+  - "Level 1 · Entry":
+      - Overview: level-1/index.md
+      - "01 · Why Math Matters for ML": level-1/01-why-math-matters.md
+      - "02 · Scalars, Vectors & Matrices": level-1/02-scalars-vectors-matrices.md
+      - "03 · Vector Operations": level-1/03-vector-operations.md
+      - "04 · Matrix Operations": level-1/04-matrix-operations.md
+      - "05 · Functions & Graphs Refresher": level-1/05-functions-graphs.md
+      - "06 · What Is a Derivative?": level-1/06-what-is-a-derivative.md
+      - "07 · Basic Derivative Rules": level-1/07-derivative-rules.md
+      - "08 · Partial Derivatives & Gradients": level-1/08-partial-derivatives-gradients.md
+      - "09 · Linear Regression as a Math Example": level-1/09-linear-regression-math.md
+      - "10 · Capstone — Derive & Verify a Gradient": level-1/10-capstone-gradient.md
+  - "Level 2 · Intermediate":
+      - Overview: level-2/index.md
+      - "01 · Gradient Descent Step-by-Step": level-2/01-gradient-descent.md
+      - "02 · Chain Rule Deep Dive": level-2/02-chain-rule-deep-dive.md
+      - "03 · Jacobians & Hessians": level-2/03-jacobians-hessians.md
+      - "04 · Eigenvalues & Eigenvectors Intuition": level-2/04-eigenvalues-eigenvectors.md
+      - "05 · Matrix Decompositions Overview": level-2/05-matrix-decompositions.md
+      - "06 · Probability Basics": level-2/06-probability-basics.md
+      - "07 · Expectation & Variance": level-2/07-expectation-variance.md
+      - "08 · Bayes' Theorem": level-2/08-bayes-theorem.md
+      - "09 · Distributions Used in ML": level-2/09-distributions-in-ml.md
+      - "10 · Capstone — Probability & Optimization Mini-Project": level-2/10-capstone-probability-optimization.md
+  - "Level 3 · Advanced":
+      - Overview: level-3/index.md
+      - "01 · Backpropagation from the Chain Rule": level-3/01-backpropagation-chain-rule.md
+      - "02 · Loss Functions & Their Derivatives": level-3/02-loss-functions-derivatives.md
+      - "03 · Optimization Beyond Vanilla GD": level-3/03-momentum-adam.md
+      - "04 · Regularization Math (L1/L2)": level-3/04-regularization-math.md
+      - "05 · Maximum Likelihood Estimation": level-3/05-maximum-likelihood-estimation.md
+      - "06 · Softmax & Cross-Entropy Derivatives": level-3/06-softmax-cross-entropy.md
+      - "07 · Computational Graphs & Autodiff": level-3/07-computational-graphs-autodiff.md
+      - "08 · Batch Normalization Math": level-3/08-batch-normalization-math.md
+      - "09 · Numerical Stability in ML Math": level-3/09-numerical-stability.md
+      - "10 · Capstone — Hand-Derive a Small Network": level-3/10-capstone-small-network.md
+  - "Level 4 · Master":
+      - Overview: level-4/index.md
+      - "01 · Convexity & Optimization": level-4/01-convexity-optimization.md
+      - "02 · Lagrange Multipliers & Constrained Optimization": level-4/02-lagrange-multipliers.md
+      - "03 · Information Theory Basics": level-4/03-information-theory-basics.md
+      - "04 · Logistic Regression Gradient from Scratch": level-4/04-logistic-regression-gradient.md
+      - "05 · Kernel Methods & the Kernel Trick": level-4/05-kernel-methods.md
+      - "06 · Singular Value Decomposition Deep Dive": level-4/06-svd-deep-dive.md
+      - "07 · Bayesian Inference Foundations": level-4/07-bayesian-inference.md
+      - "08 · Numerical Optimization Methods": level-4/08-numerical-optimization-methods.md
+      - "09 · Math Behind Transformer Attention": level-4/09-attention-math.md
+      - "10 · Capstone — Linear Regression from Scratch in NumPy": level-4/10-capstone-linear-regression-scratch.md
