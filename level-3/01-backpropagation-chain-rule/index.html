@@ -1316,6 +1316,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 · Backpropagation from the Chain Rule
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1332,6 +1350,91 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#a-tiny-network" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A tiny network
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#forward-pass" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Forward pass
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backward-pass-chain-rule-one-layer-at-a-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backward pass: chain rule, one layer at a time
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#worked-numeric-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked numeric example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#numeric-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numeric verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1991,6 +2094,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#a-tiny-network" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A tiny network
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#forward-pass" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Forward pass
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backward-pass-chain-rule-one-layer-at-a-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backward pass: chain rule, one layer at a time
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#worked-numeric-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked numeric example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#numeric-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numeric verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2010,8 +2187,111 @@
 
 
 <h1 id="01-backpropagation-from-the-chain-rule">01 · Backpropagation from the Chain Rule<a class="headerlink" href="#01-backpropagation-from-the-chain-rule" title="Permanent link">&para;</a></h1>
-<p>This module is part of Level 3 · Advanced.</p>
-<p>More lessons are on the way — check back soon.</p>
+<p>Backpropagation is not a separate algorithm from calculus — it's the
+multivariable chain rule (Level 2 Module 2), applied systematically layer by
+layer, with intermediate results reused for efficiency.</p>
+<h2 id="a-tiny-network">A tiny network<a class="headerlink" href="#a-tiny-network" title="Permanent link">&para;</a></h2>
+<p>Consider a 2-layer network computing a scalar loss from a single input <span class="arithmatex">\(x\)</span>:</p>
+<div class="arithmatex">\[
+z = wx + b \qquad a = \sigma(z) \qquad L = (a - y)^2
+\]</div>
+<p>where <span class="arithmatex">\(\sigma\)</span> is the sigmoid <span class="arithmatex">\(\sigma(z) = 1/(1+e^{-z})\)</span>, <span class="arithmatex">\(y\)</span> is the target,
+and <span class="arithmatex">\(w,b\)</span> are parameters we want gradients for.</p>
+<h2 id="forward-pass">Forward pass<a class="headerlink" href="#forward-pass" title="Permanent link">&para;</a></h2>
+<p>Compute and <strong>cache</strong> every intermediate value — this is what makes
+backprop efficient (each value reused, never recomputed):</p>
+<div class="arithmatex">\[
+z = wx+b, \qquad a = \sigma(z), \qquad L = (a-y)^2
+\]</div>
+<h2 id="backward-pass-chain-rule-one-layer-at-a-time">Backward pass: chain rule, one layer at a time<a class="headerlink" href="#backward-pass-chain-rule-one-layer-at-a-time" title="Permanent link">&para;</a></h2>
+<p>We want <span class="arithmatex">\(\partial L/\partial w\)</span> and <span class="arithmatex">\(\partial L/\partial b\)</span>. Chain them
+through <span class="arithmatex">\(L \to a \to z \to \{w,b\}\)</span>:</p>
+<div class="arithmatex">\[
+\frac{\partial L}{\partial a} = 2(a-y)
+\]</div>
+<div class="arithmatex">\[
+\frac{\partial a}{\partial z} = \sigma(z)(1-\sigma(z)) = a(1-a)
+\]</div>
+<div class="arithmatex">\[
+\frac{\partial z}{\partial w} = x \qquad \frac{\partial z}{\partial b} = 1
+\]</div>
+<p>Chain rule combines these:</p>
+<div class="arithmatex">\[
+\frac{\partial L}{\partial w} = \frac{\partial L}{\partial a}\frac{\partial a}{\partial z}\frac{\partial z}{\partial w} = 2(a-y)\,a(1-a)\,x
+\]</div>
+<div class="arithmatex">\[
+\frac{\partial L}{\partial b} = 2(a-y)\,a(1-a)
+\]</div>
+<p>Notice <span class="arithmatex">\(\partial L/\partial w\)</span> reuses <span class="arithmatex">\(\partial L/\partial b\)</span> exactly (just
+multiplied by <span class="arithmatex">\(x\)</span>) — this reuse of the shared upstream term
+<span class="arithmatex">\(\delta = \partial L/\partial z = 2(a-y)a(1-a)\)</span> is the "backward propagation
+of error" the algorithm is named for.</p>
+<h2 id="worked-numeric-example">Worked numeric example<a class="headerlink" href="#worked-numeric-example" title="Permanent link">&para;</a></h2>
+<p>Let <span class="arithmatex">\(x=2, y=1, w=0.5, b=0\)</span>.</p>
+<p><strong>Forward:</strong></p>
+<div class="arithmatex">\[
+z = 0.5(2)+0 = 1.0, \qquad a = \sigma(1.0) = \frac{1}{1+e^{-1}} \approx 0.7311
+\]</div>
+<div class="arithmatex">\[
+L = (0.7311-1)^2 \approx 0.0723
+\]</div>
+<p><strong>Backward:</strong></p>
+<div class="arithmatex">\[
+\delta = 2(a-y)a(1-a) = 2(-0.2689)(0.7311)(0.2689) \approx -0.1055
+\]</div>
+<div class="arithmatex">\[
+\frac{\partial L}{\partial w} = \delta \cdot x \approx -0.2110 \qquad \frac{\partial L}{\partial b} = \delta \approx -0.1055
+\]</div>
+<h2 id="numeric-verification">Numeric verification<a class="headerlink" href="#numeric-verification" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="k">def</span><span class="w"> </span><span class="nf">sigmoid</span><span class="p">(</span><span class="n">z</span><span class="p">):</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="k">return</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">z</span><span class="p">))</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.0</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Forward</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">z</span> <span class="o">=</span> <span class="n">w</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">b</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="n">a</span> <span class="o">=</span> <span class="n">sigmoid</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="n">L</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Backward (analytic)</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="n">delta</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">a</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span> <span class="o">*</span> <span class="n">a</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="n">dL_dw</span> <span class="o">=</span> <span class="n">delta</span> <span class="o">*</span> <span class="n">x</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="n">dL_db</span> <span class="o">=</span> <span class="n">delta</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"z=</span><span class="si">{</span><span class="n">z</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> a=</span><span class="si">{</span><span class="n">a</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> L=</span><span class="si">{</span><span class="n">L</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"analytic dL/dw=</span><span class="si">{</span><span class="n">dL_dw</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> dL/db=</span><span class="si">{</span><span class="n">dL_db</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="c1"># Numeric gradient check via finite differences</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="k">def</span><span class="w"> </span><span class="nf">loss</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>    <span class="n">z</span> <span class="o">=</span> <span class="n">w</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">b</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>    <span class="n">a</span> <span class="o">=</span> <span class="n">sigmoid</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>    <span class="k">return</span> <span class="p">(</span><span class="n">a</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="n">h</span> <span class="o">=</span> <span class="mf">1e-6</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="n">dL_dw_num</span> <span class="o">=</span> <span class="p">(</span><span class="n">loss</span><span class="p">(</span><span class="n">w</span> <span class="o">+</span> <span class="n">h</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="o">-</span> <span class="n">loss</span><span class="p">(</span><span class="n">w</span> <span class="o">-</span> <span class="n">h</span><span class="p">,</span> <span class="n">b</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">h</span><span class="p">)</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="n">dL_db_num</span> <span class="o">=</span> <span class="p">(</span><span class="n">loss</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">b</span> <span class="o">+</span> <span class="n">h</span><span class="p">)</span> <span class="o">-</span> <span class="n">loss</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">b</span> <span class="o">-</span> <span class="n">h</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">h</span><span class="p">)</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"numeric  dL/dw=</span><span class="si">{</span><span class="n">dL_dw_num</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> dL/db=</span><span class="si">{</span><span class="n">dL_db_num</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</code></pre></div>
+<p>Expected output (analytic backprop matches finite-difference gradient
+checking — this is the standard way to validate any hand-derived backward
+pass):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>z=1.0000 a=0.7311 L=0.0723
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>analytic dL/dw=-0.2110 dL/db=-0.1055
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>numeric  dL/dw=-0.2110 dL/db=-0.1055
+</code></pre></div>
+<h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
+<p>Extend the network with a second layer: <span class="arithmatex">\(z_1=wx+b\)</span>, <span class="arithmatex">\(a_1=\sigma(z_1)\)</span>,
+<span class="arithmatex">\(z_2 = w_2a_1+b_2\)</span>, <span class="arithmatex">\(a_2=\sigma(z_2)\)</span>, <span class="arithmatex">\(L=(a_2-y)^2\)</span>.</p>
+<ol>
+<li>Write the chain from <span class="arithmatex">\(L\)</span> back to <span class="arithmatex">\(w, b\)</span> (through both layers) as a
+   product of partials, reusing <span class="arithmatex">\(\delta_2 = \partial L/\partial z_2\)</span> and
+   <span class="arithmatex">\(\delta_1 = \partial L/\partial z_1\)</span>.</li>
+<li>Derive <span class="arithmatex">\(\delta_1\)</span> in terms of <span class="arithmatex">\(\delta_2, w_2, a_1\)</span>.</li>
+<li>Hand-compute all gradients for <span class="arithmatex">\(x=1, y=0, w=0.3, b=0, w_2=0.8, b_2=0\)</span>.</li>
+<li>Verify every gradient with finite-difference gradient checking in NumPy.</li>
+</ol>
 
 
 

@@ -1194,6 +1194,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10 · Capstone — Probability & Optimization Mini-Project
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1210,6 +1228,102 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The setup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#negative-log-likelihood" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Negative log-likelihood
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deriving-the-gradient" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deriving the gradient
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#worked-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#full-implementation-and-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Full implementation and verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#putting-the-level-together" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Putting the level together
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1991,6 +2105,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The setup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#negative-log-likelihood" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Negative log-likelihood
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deriving-the-gradient" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deriving the gradient
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#worked-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#full-implementation-and-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Full implementation and verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#putting-the-level-together" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Putting the level together
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2010,8 +2209,95 @@
 
 
 <h1 id="10-capstone-probability-optimization-mini-project">10 · Capstone — Probability &amp; Optimization Mini-Project<a class="headerlink" href="#10-capstone-probability-optimization-mini-project" title="Permanent link">&para;</a></h1>
-<p>This module is part of Level 2 · Intermediate.</p>
-<p>More lessons are on the way — check back soon.</p>
+<p>This capstone combines everything from Level 2: gradient descent, the chain
+rule, and probability/distributions — by fitting a simple probabilistic
+model (a Bernoulli/logistic model) to data using gradient descent, and
+verifying every piece by hand and in NumPy.</p>
+<h2 id="the-setup">The setup<a class="headerlink" href="#the-setup" title="Permanent link">&para;</a></h2>
+<p>We observe <span class="arithmatex">\(n\)</span> coin flips <span class="arithmatex">\(y_1,\dots,y_n \in \{0,1\}\)</span> and want to estimate
+the probability of heads, <span class="arithmatex">\(p\)</span>. Model each flip as Bernoulli(<span class="arithmatex">\(p\)</span>)
+(Module 9). Instead of the closed-form estimate (the sample mean), we'll
+<strong>find <span class="arithmatex">\(p\)</span> with gradient descent</strong> on the negative log-likelihood — the same
+strategy used to train logistic regression.</p>
+<h2 id="negative-log-likelihood">Negative log-likelihood<a class="headerlink" href="#negative-log-likelihood" title="Permanent link">&para;</a></h2>
+<p>The likelihood of the whole dataset (i.i.d. flips) is
+<span class="arithmatex">\(L(p) = \prod_i p^{y_i}(1-p)^{1-y_i}\)</span>. Taking logs turns the product into a
+sum (much easier to differentiate):</p>
+<div class="arithmatex">\[
+\ell(p) = \sum_i \big[y_i\ln p + (1-y_i)\ln(1-p)\big]
+\]</div>
+<p>We minimize the <strong>negative</strong> log-likelihood <span class="arithmatex">\(J(p) = -\ell(p)\)</span>.</p>
+<h2 id="deriving-the-gradient">Deriving the gradient<a class="headerlink" href="#deriving-the-gradient" title="Permanent link">&para;</a></h2>
+<div class="arithmatex">\[
+\frac{dJ}{dp} = -\sum_i\left[\frac{y_i}{p} - \frac{1-y_i}{1-p}\right]
+\]</div>
+<p>Let <span class="arithmatex">\(n_1 = \sum_i y_i\)</span> (count of heads) and <span class="arithmatex">\(n_0 = n-n_1\)</span> (count of tails):</p>
+<div class="arithmatex">\[
+\frac{dJ}{dp} = -\frac{n_1}{p} + \frac{n_0}{1-p}
+\]</div>
+<p>Setting this to zero (the exact, closed-form optimum) gives
+<span class="arithmatex">\(n_1(1-p) = n_0 p \Rightarrow p^\star = n_1/n\)</span> — the sample mean, exactly as
+expected. Gradient descent should converge to this same value.</p>
+<h2 id="worked-example">Worked example<a class="headerlink" href="#worked-example" title="Permanent link">&para;</a></h2>
+<p>Suppose <span class="arithmatex">\(n=10\)</span> flips with <span class="arithmatex">\(n_1=7\)</span> heads, <span class="arithmatex">\(n_0=3\)</span> tails. The true optimum is
+<span class="arithmatex">\(p^\star = 0.7\)</span>.</p>
+<p><strong>Gradient at <span class="arithmatex">\(p=0.5\)</span>:</strong></p>
+<div class="arithmatex">\[
+\frac{dJ}{dp}\Big|_{p=0.5} = -\frac{7}{0.5}+\frac{3}{0.5} = -14+6=-8
+\]</div>
+<p><strong>One gradient descent step</strong> with <span class="arithmatex">\(\alpha=0.02\)</span>:</p>
+<div class="arithmatex">\[
+p_1 = 0.5 - 0.02(-8) = 0.5+0.16=0.66
+\]</div>
+<p>Already close to <span class="arithmatex">\(0.7\)</span> after a single step; repeated steps converge to
+<span class="arithmatex">\(0.7\)</span> (verified below).</p>
+<h2 id="full-implementation-and-verification">Full implementation and verification<a class="headerlink" href="#full-implementation-and-verification" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">n1</span><span class="p">,</span> <span class="n">n0</span> <span class="o">=</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">3</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">n</span> <span class="o">=</span> <span class="n">n1</span> <span class="o">+</span> <span class="n">n0</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">p_star</span> <span class="o">=</span> <span class="n">n1</span> <span class="o">/</span> <span class="n">n</span>  <span class="c1"># closed-form optimum</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="k">def</span><span class="w"> </span><span class="nf">dJ_dp</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="k">return</span> <span class="o">-</span><span class="n">n1</span> <span class="o">/</span> <span class="n">p</span> <span class="o">+</span> <span class="n">n0</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">p</span><span class="p">)</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="n">p</span> <span class="o">=</span> <span class="mf">0.5</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.02</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="n">history</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="p">]</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">200</span><span class="p">):</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="n">grad</span> <span class="o">=</span> <span class="n">dJ_dp</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="n">p</span> <span class="o">=</span> <span class="n">p</span> <span class="o">-</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">grad</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="mf">1e-6</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="mf">1e-6</span><span class="p">)</span>  <span class="c1"># keep p in valid (0,1) range</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    <span class="n">history</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"closed-form optimum p*:"</span><span class="p">,</span> <span class="n">p_star</span><span class="p">)</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"gradient descent p after 1 step :"</span><span class="p">,</span> <span class="n">history</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"gradient descent p after 200 steps:"</span><span class="p">,</span> <span class="n">history</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+</code></pre></div>
+<p>Expected output (gradient descent converges to the closed-form MLE):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>closed-form optimum p*: 0.7
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>gradient descent p after 1 step : 0.66
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>gradient descent p after 200 steps: 0.69999...
+</code></pre></div>
+<h2 id="putting-the-level-together">Putting the level together<a class="headerlink" href="#putting-the-level-together" title="Permanent link">&para;</a></h2>
+<p>This one exercise touches every Level 2 module: probability and Bernoulli
+(6, 9), expectation used implicitly in the likelihood (7), Bayes-style
+reasoning about what the data implies about <span class="arithmatex">\(p\)</span> (8), the chain rule used
+inside the derivative of <span class="arithmatex">\(\ln p\)</span> and <span class="arithmatex">\(\ln(1-p)\)</span> (2), and gradient descent
+itself (1) — this is precisely the recipe Level 3 will scale up to full
+logistic regression and neural networks.</p>
+<h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
+<p>Using <span class="arithmatex">\(n_1=15, n_0=5\)</span> (so <span class="arithmatex">\(n=20\)</span>, <span class="arithmatex">\(p^\star=0.75\)</span>):</p>
+<ol>
+<li>Derive <span class="arithmatex">\(dJ/dp\)</span> symbolically (same form as above, different counts).</li>
+<li>By hand, compute the gradient at <span class="arithmatex">\(p=0.5\)</span> and the value of <span class="arithmatex">\(p\)</span> after one
+   gradient descent step with <span class="arithmatex">\(\alpha=0.01\)</span>.</li>
+<li>Implement the full gradient descent loop in NumPy for 300 steps and
+   confirm it converges to <span class="arithmatex">\(p^\star = 0.75\)</span>.</li>
+<li>Plot (or print every 50 steps) how <span class="arithmatex">\(p\)</span> approaches <span class="arithmatex">\(p^\star\)</span>, and describe
+   in one sentence how the convergence rate would change if <span class="arithmatex">\(\alpha\)</span> were
+   doubled.</li>
+</ol>
 
 
 

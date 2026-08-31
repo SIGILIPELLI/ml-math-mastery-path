@@ -1858,6 +1858,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    07 · Bayesian Inference Foundations
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1874,6 +1892,80 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#bayes-theorem-for-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bayes' theorem for parameters
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#map-vs-mle-vs-full-bayesian" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MAP vs. MLE vs. full Bayesian
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#worked-example-beta-bernoulli-conjugate-update" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked example: Beta-Bernoulli conjugate update
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#numeric-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numeric verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1991,6 +2083,69 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#bayes-theorem-for-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bayes' theorem for parameters
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#map-vs-mle-vs-full-bayesian" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MAP vs. MLE vs. full Bayesian
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#worked-example-beta-bernoulli-conjugate-update" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked example: Beta-Bernoulli conjugate update
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#numeric-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numeric verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2010,8 +2165,91 @@
 
 
 <h1 id="07-bayesian-inference-foundations">07 · Bayesian Inference Foundations<a class="headerlink" href="#07-bayesian-inference-foundations" title="Permanent link">&para;</a></h1>
-<p>This module is part of Level 4 · Master.</p>
-<p>More lessons are on the way — check back soon.</p>
+<p>Bayesian inference treats parameters as random variables with a
+distribution that gets updated as data arrives — contrasted with MLE
+(Level 3 Module 05), which finds a single "best" point estimate.</p>
+<h2 id="bayes-theorem-for-parameters">Bayes' theorem for parameters<a class="headerlink" href="#bayes-theorem-for-parameters" title="Permanent link">&para;</a></h2>
+<div class="arithmatex">\[
+p(\theta \mid D) = \frac{p(D\mid\theta)\,p(\theta)}{p(D)}
+\]</div>
+<ul>
+<li><span class="arithmatex">\(p(\theta)\)</span>: <strong>prior</strong> — belief about <span class="arithmatex">\(\theta\)</span> before seeing data.</li>
+<li><span class="arithmatex">\(p(D\mid\theta)\)</span>: <strong>likelihood</strong> — same quantity MLE maximizes.</li>
+<li><span class="arithmatex">\(p(\theta\mid D)\)</span>: <strong>posterior</strong> — updated belief after seeing data.</li>
+<li><span class="arithmatex">\(p(D) = \int p(D\mid\theta)p(\theta)\,d\theta\)</span>: <strong>evidence</strong>, a
+  normalizing constant.</li>
+</ul>
+<h2 id="map-vs-mle-vs-full-bayesian">MAP vs. MLE vs. full Bayesian<a class="headerlink" href="#map-vs-mle-vs-full-bayesian" title="Permanent link">&para;</a></h2>
+<p><strong>MLE:</strong> <span class="arithmatex">\(\hat\theta = \arg\max_\theta p(D\mid\theta)\)</span> — ignores prior.</p>
+<p><strong>MAP (maximum a posteriori):</strong> <span class="arithmatex">\(\hat\theta = \arg\max_\theta
+p(D\mid\theta)p(\theta)\)</span> — a single point, but prior-informed. This is
+where L2 regularization comes from: a Gaussian prior on weights, when you
+take <span class="arithmatex">\(-\log\)</span> of <span class="arithmatex">\(p(D\mid\theta)p(\theta)\)</span>, adds exactly a <span class="arithmatex">\(\lambda\|w\|^2\)</span>
+term to the loss (Level 3 Module 04's regularization, derived properly).</p>
+<p><strong>Full Bayesian:</strong> keep the entire posterior distribution <span class="arithmatex">\(p(\theta\mid
+D)\)</span>, not just its peak — captures uncertainty about <span class="arithmatex">\(\theta\)</span> itself.</p>
+<h2 id="worked-example-beta-bernoulli-conjugate-update">Worked example: Beta-Bernoulli conjugate update<a class="headerlink" href="#worked-example-beta-bernoulli-conjugate-update" title="Permanent link">&para;</a></h2>
+<p>Coin flips are Bernoulli(<span class="arithmatex">\(\theta\)</span>). A <strong>Beta(<span class="arithmatex">\(\alpha,\beta\)</span>)</strong> prior on
+<span class="arithmatex">\(\theta\)</span> is <em>conjugate</em>: the posterior after observing <span class="arithmatex">\(k\)</span> heads in <span class="arithmatex">\(n\)</span>
+flips is again Beta, with a simple update:</p>
+<div class="arithmatex">\[
+p(\theta) = \text{Beta}(\alpha,\beta) \propto \theta^{\alpha-1}(1-\theta)^{\beta-1}
+\]</div>
+<div class="arithmatex">\[
+p(\theta\mid D) \propto \theta^k(1-\theta)^{n-k}\cdot\theta^{\alpha-1}(1-\theta)^{\beta-1} = \theta^{\alpha+k-1}(1-\theta)^{\beta+n-k-1}
+\]</div>
+<div class="arithmatex">\[
+p(\theta\mid D) = \text{Beta}(\alpha+k,\ \beta+n-k)
+\]</div>
+<p>Starting with a uniform prior Beta(1,1) and observing 7 heads in 10 flips
+gives posterior Beta(8,4), with posterior mean
+<span class="arithmatex">\(\frac{8}{8+4}=0.6\overline{6}\)</span> — close to, but pulled slightly toward 0.5
+from, the raw MLE estimate <span class="arithmatex">\(7/10=0.7\)</span>.</p>
+<h2 id="numeric-verification">Numeric verification<a class="headerlink" href="#numeric-verification" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">stats</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">alpha_prior</span><span class="p">,</span> <span class="n">beta_prior</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span>  <span class="c1"># uniform prior</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">n</span><span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">7</span>  <span class="c1"># 10 flips, 7 heads</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="n">alpha_post</span> <span class="o">=</span> <span class="n">alpha_prior</span> <span class="o">+</span> <span class="n">k</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">beta_post</span> <span class="o">=</span> <span class="n">beta_prior</span> <span class="o">+</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="n">k</span><span class="p">)</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="n">mle_estimate</span> <span class="o">=</span> <span class="n">k</span> <span class="o">/</span> <span class="n">n</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="n">map_estimate</span> <span class="o">=</span> <span class="p">(</span><span class="n">alpha_post</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">alpha_post</span> <span class="o">+</span> <span class="n">beta_post</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span> <span class="k">if</span> <span class="n">alpha_post</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">beta_post</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="kc">None</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="n">posterior_mean</span> <span class="o">=</span> <span class="n">alpha_post</span> <span class="o">/</span> <span class="p">(</span><span class="n">alpha_post</span> <span class="o">+</span> <span class="n">beta_post</span><span class="p">)</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"MLE estimate = </span><span class="si">{</span><span class="n">mle_estimate</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"posterior Beta(</span><span class="si">{</span><span class="n">alpha_post</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">beta_post</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"posterior mean = </span><span class="si">{</span><span class="n">posterior_mean</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="c1"># Verify via direct numerical integration of Bayes' theorem</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="n">theta_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.999</span><span class="p">,</span> <span class="mi">100000</span><span class="p">)</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="n">prior</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">beta</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">theta_grid</span><span class="p">,</span> <span class="n">alpha_prior</span><span class="p">,</span> <span class="n">beta_prior</span><span class="p">)</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="n">likelihood</span> <span class="o">=</span> <span class="n">theta_grid</span><span class="o">**</span><span class="n">k</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">theta_grid</span><span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="n">k</span><span class="p">)</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="n">unnormalized_posterior</span> <span class="o">=</span> <span class="n">prior</span> <span class="o">*</span> <span class="n">likelihood</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="n">posterior</span> <span class="o">=</span> <span class="n">unnormalized_posterior</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">trapz</span><span class="p">(</span><span class="n">unnormalized_posterior</span><span class="p">,</span> <span class="n">theta_grid</span><span class="p">)</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="n">numeric_posterior_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">trapz</span><span class="p">(</span><span class="n">theta_grid</span> <span class="o">*</span> <span class="n">posterior</span><span class="p">,</span> <span class="n">theta_grid</span><span class="p">)</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"numerically integrated posterior mean = </span><span class="si">{</span><span class="n">numeric_posterior_mean</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>MLE estimate = 0.7000
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>posterior Beta(8,4)
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>posterior mean = 0.6667
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>numerically integrated posterior mean = 0.6667
+</code></pre></div>
+<h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Repeat with a stronger prior Beta(10,10) (representing a strong belief
+   the coin is fair) and the same data (7 heads/10 flips). How much does
+   the posterior mean shift toward 0.5 compared to the uniform-prior case?</li>
+<li>Derive, via <span class="arithmatex">\(-\log\)</span> of MAP's objective <span class="arithmatex">\(p(D\mid\theta)p(\theta)\)</span> for
+   Gaussian likelihood and Gaussian prior on a weight <span class="arithmatex">\(w\)</span>, that MAP
+   estimation reduces exactly to L2-regularized least squares. Identify
+   <span class="arithmatex">\(\lambda\)</span> in terms of the likelihood and prior variances.</li>
+<li>Plot the posterior distribution as more coin flips arrive (5, 20, 100
+   flips, same true <span class="arithmatex">\(\theta=0.7\)</span>) and describe how it narrows —
+   this is Bayesian uncertainty quantification in action.</li>
+</ol>
 
 
 

@@ -1372,6 +1372,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 · Optimization Beyond Vanilla GD
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1388,6 +1406,80 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#momentum" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Momentum
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adam-adaptive-moment-estimation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adam (Adaptive Moment Estimation)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#worked-example-momentum-2-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked example: momentum, 2 steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#numeric-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numeric verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1991,6 +2083,69 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#momentum" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Momentum
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adam-adaptive-moment-estimation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adam (Adaptive Moment Estimation)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#worked-example-momentum-2-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked example: momentum, 2 steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#numeric-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numeric verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2010,8 +2165,103 @@
 
 
 <h1 id="03-optimization-beyond-vanilla-gd">03 · Optimization Beyond Vanilla GD<a class="headerlink" href="#03-optimization-beyond-vanilla-gd" title="Permanent link">&para;</a></h1>
-<p>This module is part of Level 3 · Advanced.</p>
-<p>More lessons are on the way — check back soon.</p>
+<p>Vanilla gradient descent (Level 2 Module 1) treats every step independently.
+<strong>Momentum</strong> and <strong>Adam</strong> use the <em>history</em> of gradients to converge faster
+and handle noisy or ill-conditioned loss surfaces — this is what optimizers
+like <code>torch.optim.Adam</code> actually compute under the hood.</p>
+<h2 id="momentum">Momentum<a class="headerlink" href="#momentum" title="Permanent link">&para;</a></h2>
+<p>Momentum keeps an exponentially-decaying running average of past gradients,
+<span class="arithmatex">\(v_t\)</span>, and steps using that instead of the raw gradient:</p>
+<div class="arithmatex">\[
+v_t = \beta v_{t-1} + (1-\beta)\nabla J(\theta_{t-1}) \qquad \theta_t = \theta_{t-1} - \alpha v_t
+\]</div>
+<p>with <span class="arithmatex">\(\beta \in [0,1)\)</span> (commonly <span class="arithmatex">\(0.9\)</span>). Intuition: like a ball rolling
+downhill, momentum smooths out oscillations across steep, narrow valleys and
+keeps moving through small local bumps.</p>
+<h2 id="adam-adaptive-moment-estimation">Adam (Adaptive Moment Estimation)<a class="headerlink" href="#adam-adaptive-moment-estimation" title="Permanent link">&para;</a></h2>
+<p>Adam tracks <strong>two</strong> running averages: the first moment (mean, like momentum)
+and the second moment (uncentered variance of the gradient), then uses both
+to adapt the step size per-parameter:</p>
+<div class="arithmatex">\[
+m_t = \beta_1 m_{t-1} + (1-\beta_1)g_t \qquad v_t = \beta_2 v_{t-1} + (1-\beta_2)g_t^2
+\]</div>
+<p>where <span class="arithmatex">\(g_t = \nabla J(\theta_{t-1})\)</span>. Because <span class="arithmatex">\(m_0=v_0=0\)</span>, early estimates
+are biased toward zero, so Adam <strong>bias-corrects</strong>:</p>
+<div class="arithmatex">\[
+\hat m_t = \frac{m_t}{1-\beta_1^t} \qquad \hat v_t = \frac{v_t}{1-\beta_2^t}
+\]</div>
+<div class="arithmatex">\[
+\theta_t = \theta_{t-1} - \alpha\frac{\hat m_t}{\sqrt{\hat v_t}+\epsilon}
+\]</div>
+<p>Common defaults: <span class="arithmatex">\(\beta_1=0.9\)</span>, <span class="arithmatex">\(\beta_2=0.999\)</span>, <span class="arithmatex">\(\epsilon=10^{-8}\)</span>. Dividing
+by <span class="arithmatex">\(\sqrt{\hat v_t}\)</span> shrinks the step for parameters with consistently large
+gradients and grows it for parameters with small/sparse gradients —
+adaptive per-parameter learning rates.</p>
+<h2 id="worked-example-momentum-2-steps">Worked example: momentum, 2 steps<a class="headerlink" href="#worked-example-momentum-2-steps" title="Permanent link">&para;</a></h2>
+<p><span class="arithmatex">\(J(\theta)=(\theta-3)^2+2\)</span> (same as Level 2 Module 1),
+<span class="arithmatex">\(J'(\theta)=2(\theta-3)\)</span>. Start <span class="arithmatex">\(\theta_0=0\)</span>, <span class="arithmatex">\(v_0=0\)</span>, <span class="arithmatex">\(\alpha=0.3\)</span>,
+<span class="arithmatex">\(\beta=0.9\)</span>.</p>
+<p><strong>Step 1:</strong> <span class="arithmatex">\(g_1 = J'(0) = -6\)</span>.</p>
+<div class="arithmatex">\[
+v_1 = 0.9(0)+0.1(-6) = -0.6 \qquad \theta_1 = 0-0.3(-0.6)=0.18
+\]</div>
+<p><strong>Step 2:</strong> <span class="arithmatex">\(g_2 = J'(0.18) = 2(0.18-3)=-5.64\)</span>.</p>
+<div class="arithmatex">\[
+v_2 = 0.9(-0.6)+0.1(-5.64) = -0.54-0.564=-1.104
+\]</div>
+<div class="arithmatex">\[
+\theta_2 = 0.18-0.3(-1.104) = 0.18+0.3312=0.5112
+\]</div>
+<p>Momentum's first steps look smaller than vanilla GD's (which reached <span class="arithmatex">\(1.8\)</span>
+after step 1) because <span class="arithmatex">\(v_t\)</span> starts at zero and needs a few steps to "warm
+up" — but it accelerates once the running average builds up speed in a
+consistent direction.</p>
+<h2 id="numeric-verification">Numeric verification<a class="headerlink" href="#numeric-verification" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="k">def</span><span class="w"> </span><span class="nf">dJ</span><span class="p">(</span><span class="n">theta</span><span class="p">):</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="k">return</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">theta</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># Momentum</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="n">theta</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">beta</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.9</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="n">g</span> <span class="o">=</span> <span class="n">dJ</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="n">v</span> <span class="o">=</span> <span class="n">beta</span> <span class="o">*</span> <span class="n">v</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">beta</span><span class="p">)</span> <span class="o">*</span> <span class="n">g</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="n">theta</span> <span class="o">=</span> <span class="n">theta</span> <span class="o">-</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">v</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"momentum step </span><span class="si">{</span><span class="n">step</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">: theta=</span><span class="si">{</span><span class="n">theta</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1"># Adam</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="n">theta</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.3</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="n">beta1</span><span class="p">,</span> <span class="n">beta2</span><span class="p">,</span> <span class="n">eps</span> <span class="o">=</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.999</span><span class="p">,</span> <span class="mf">1e-8</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">):</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    <span class="n">g</span> <span class="o">=</span> <span class="n">dJ</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    <span class="n">m</span> <span class="o">=</span> <span class="n">beta1</span> <span class="o">*</span> <span class="n">m</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">beta1</span><span class="p">)</span> <span class="o">*</span> <span class="n">g</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    <span class="n">v</span> <span class="o">=</span> <span class="n">beta2</span> <span class="o">*</span> <span class="n">v</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">beta2</span><span class="p">)</span> <span class="o">*</span> <span class="n">g</span><span class="o">**</span><span class="mi">2</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    <span class="n">m_hat</span> <span class="o">=</span> <span class="n">m</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">beta1</span><span class="o">**</span><span class="n">t</span><span class="p">)</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    <span class="n">v_hat</span> <span class="o">=</span> <span class="n">v</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">beta2</span><span class="o">**</span><span class="n">t</span><span class="p">)</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>    <span class="n">theta</span> <span class="o">=</span> <span class="n">theta</span> <span class="o">-</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">m_hat</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">v_hat</span><span class="p">)</span> <span class="o">+</span> <span class="n">eps</span><span class="p">)</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"adam step </span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s2">: theta=</span><span class="si">{</span><span class="n">theta</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</code></pre></div>
+<p>Expected output (momentum matches the hand computation; Adam converges
+quickly toward the minimum <span class="arithmatex">\(\theta=3\)</span> due to adaptive step sizes):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>momentum step 1: theta=0.1800
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>momentum step 2: theta=0.5112
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>adam step 1: theta=0.3000
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>adam step 2: theta=0.5998
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>adam step 3: theta=0.8981
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>adam step 4: theta=1.1926
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>adam step 5: theta=1.4808
+</code></pre></div>
+<h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
+<p>Using <span class="arithmatex">\(J(\theta)=\theta^2\)</span> (<span class="arithmatex">\(J'(\theta)=2\theta\)</span>), start <span class="arithmatex">\(\theta_0=5\)</span>.</p>
+<ol>
+<li>Hand-compute 2 steps of momentum with <span class="arithmatex">\(\alpha=0.1,\beta=0.9,v_0=0\)</span>.</li>
+<li>Hand-compute 2 steps of vanilla gradient descent with the same <span class="arithmatex">\(\alpha\)</span>
+   and compare which moves faster initially — explain why.</li>
+<li>Implement both in NumPy for 20 steps and plot/print <span class="arithmatex">\(\theta\)</span> over time.</li>
+<li>Implement Adam for the same 20 steps with default hyperparameters and
+   compare final <span class="arithmatex">\(\theta\)</span> values across all three methods.</li>
+</ol>
 
 
 

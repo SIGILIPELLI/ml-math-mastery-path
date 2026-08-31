@@ -1746,6 +1746,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 · Information Theory Basics
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1762,6 +1780,91 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#entropy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entropy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cross-entropy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cross-entropy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kl-divergence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        KL divergence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#worked-numeric-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked numeric example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#numeric-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numeric verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1991,6 +2094,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#entropy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entropy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cross-entropy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cross-entropy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kl-divergence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        KL divergence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#worked-numeric-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked numeric example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#numeric-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numeric verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2010,8 +2187,100 @@
 
 
 <h1 id="03-information-theory-basics">03 · Information Theory Basics<a class="headerlink" href="#03-information-theory-basics" title="Permanent link">&para;</a></h1>
-<p>This module is part of Level 4 · Master.</p>
-<p>More lessons are on the way — check back soon.</p>
+<p>Entropy, cross-entropy, and KL divergence quantify "how surprising" or
+"how different" distributions are — and they underlie the loss functions
+used throughout classification and generative modeling.</p>
+<h2 id="entropy">Entropy<a class="headerlink" href="#entropy" title="Permanent link">&para;</a></h2>
+<p>Entropy measures the average "surprise" (information content) of a
+distribution <span class="arithmatex">\(p\)</span>:</p>
+<div class="arithmatex">\[
+H(p) = -\sum_i p_i \log p_i
+\]</div>
+<p><span class="arithmatex">\(-\log p_i\)</span> is the "surprise" of outcome <span class="arithmatex">\(i\)</span> (rare events, small <span class="arithmatex">\(p_i\)</span>,
+are more surprising). <span class="arithmatex">\(H(p)\)</span> is maximized by the uniform distribution
+(maximum uncertainty) and is 0 for a distribution with all mass on one
+outcome (no uncertainty at all).</p>
+<h2 id="cross-entropy">Cross-entropy<a class="headerlink" href="#cross-entropy" title="Permanent link">&para;</a></h2>
+<p>Cross-entropy measures the average surprise of outcomes drawn from true
+distribution <span class="arithmatex">\(p\)</span>, but measured using a <em>model's</em> distribution <span class="arithmatex">\(q\)</span>:</p>
+<div class="arithmatex">\[
+H(p,q) = -\sum_i p_i \log q_i
+\]</div>
+<p>This is exactly the classification loss from Module 06 of Level 3 — <span class="arithmatex">\(p\)</span> is
+the one-hot true label, <span class="arithmatex">\(q\)</span> is the predicted distribution.</p>
+<h2 id="kl-divergence">KL divergence<a class="headerlink" href="#kl-divergence" title="Permanent link">&para;</a></h2>
+<p>The Kullback-Leibler divergence measures how much <em>extra</em> surprise you pay
+for using <span class="arithmatex">\(q\)</span> instead of the true <span class="arithmatex">\(p\)</span>:</p>
+<div class="arithmatex">\[
+D_{KL}(p\|q) = \sum_i p_i \log\frac{p_i}{q_i} = H(p,q) - H(p)
+\]</div>
+<p><span class="arithmatex">\(D_{KL}\ge 0\)</span> always (Gibbs' inequality), with equality iff <span class="arithmatex">\(p=q\)</span>. Since
+<span class="arithmatex">\(H(p)\)</span> doesn't depend on the model, minimizing cross-entropy loss is
+<em>exactly</em> minimizing <span class="arithmatex">\(D_{KL}(p\|q)\)</span> — training a classifier is literally
+minimizing the KL divergence from the true label distribution to the
+model's predicted distribution.</p>
+<h2 id="worked-numeric-example">Worked numeric example<a class="headerlink" href="#worked-numeric-example" title="Permanent link">&para;</a></h2>
+<p>True distribution <span class="arithmatex">\(p=(1,0,0)\)</span> (one-hot), model prediction
+<span class="arithmatex">\(q=(0.7,0.2,0.1)\)</span>.</p>
+<div class="arithmatex">\[
+H(p) = -1\log 1 - 0 - 0 = 0 \quad(\text{one-hot has zero entropy})
+\]</div>
+<div class="arithmatex">\[
+H(p,q) = -1\log(0.7) \approx 0.3567
+\]</div>
+<div class="arithmatex">\[
+D_{KL}(p\|q) = H(p,q)-H(p) = 0.3567 - 0 = 0.3567
+\]</div>
+<h2 id="numeric-verification">Numeric verification<a class="headerlink" href="#numeric-verification" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">])</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="k">def</span><span class="w"> </span><span class="nf">entropy</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="c1"># 0*log(0) := 0 by convention</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="k">return</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">p</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">p</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">p</span><span class="p">),</span> <span class="mf">0.0</span><span class="p">))</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="k">def</span><span class="w"> </span><span class="nf">cross_entropy</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">):</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="k">return</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">p</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">p</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">q</span><span class="p">),</span> <span class="mf">0.0</span><span class="p">))</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="k">def</span><span class="w"> </span><span class="nf">kl_divergence</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">):</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">p</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">p</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">p</span> <span class="o">/</span> <span class="n">q</span><span class="p">),</span> <span class="mf">0.0</span><span class="p">))</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="n">Hp</span> <span class="o">=</span> <span class="n">entropy</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="n">Hpq</span> <span class="o">=</span> <span class="n">cross_entropy</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="n">KL</span> <span class="o">=</span> <span class="n">kl_divergence</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"H(p) = </span><span class="si">{</span><span class="n">Hp</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"H(p,q) = </span><span class="si">{</span><span class="n">Hpq</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"KL(p||q) = </span><span class="si">{</span><span class="n">KL</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"H(p,q) - H(p) = </span><span class="si">{</span><span class="n">Hpq</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">Hp</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">  (should equal KL(p||q))"</span><span class="p">)</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="c1"># Compare a softer true distribution</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="n">p2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">])</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="n">q2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">])</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">H(p2)=</span><span class="si">{</span><span class="n">entropy</span><span class="p">(</span><span class="n">p2</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">, H(p2,q2)=</span><span class="si">{</span><span class="n">cross_entropy</span><span class="p">(</span><span class="n">p2</span><span class="p">,</span><span class="n">q2</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">, "</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>      <span class="sa">f</span><span class="s2">"KL(p2||q2)=</span><span class="si">{</span><span class="n">kl_divergence</span><span class="p">(</span><span class="n">p2</span><span class="p">,</span><span class="n">q2</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>H(p) = 0.0000
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>H(p,q) = 0.3567
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>KL(p||q) = 0.3567
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>H(p,q) - H(p) = 0.3567  (should equal KL(p||q))
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>H(p2)=0.8018, H(p2,q2)=0.9927, KL(p2||q2)=0.1909
+</code></pre></div>
+<h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Show numerically that <span class="arithmatex">\(D_{KL}(p\|q) \ne D_{KL}(q\|p)\)</span> in general (pick
+   any <span class="arithmatex">\(p\ne q\)</span>) — KL divergence is not a true distance metric because it
+   isn't symmetric.</li>
+<li>Prove <span class="arithmatex">\(D_{KL}(p\|q)\ge 0\)</span> for the 2-outcome case using calculus (minimize
+   <span class="arithmatex">\(D_{KL}\)</span> over <span class="arithmatex">\(q_1\in(0,1)\)</span> with <span class="arithmatex">\(p\)</span> fixed, show the minimum is 0 at
+   <span class="arithmatex">\(q=p\)</span>).</li>
+<li>Compute mutual information <span class="arithmatex">\(I(X;Y) = \sum_{x,y}p(x,y)\log\frac{p(x,y)}{p(x)p(y)}\)</span>
+   for a small joint distribution table of your choosing, and explain what
+   <span class="arithmatex">\(I(X;Y)=0\)</span> would mean about <span class="arithmatex">\(X\)</span> and <span class="arithmatex">\(Y\)</span>.</li>
+</ol>
 
 
 

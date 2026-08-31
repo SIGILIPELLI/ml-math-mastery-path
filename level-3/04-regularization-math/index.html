@@ -1400,6 +1400,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04 · Regularization Math (L1/L2)
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1416,6 +1434,91 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-regularized-objective" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The regularized objective
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gradients" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gradients
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-l1-gives-sparsity-geometrically" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why L1 gives sparsity, geometrically
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#worked-numeric-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked numeric example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#numeric-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numeric verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1991,6 +2094,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-regularized-objective" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The regularized objective
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gradients" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gradients
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-l1-gives-sparsity-geometrically" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why L1 gives sparsity, geometrically
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#worked-numeric-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked numeric example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#numeric-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numeric verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2010,8 +2187,93 @@
 
 
 <h1 id="04-regularization-math-l1l2">04 · Regularization Math (L1/L2)<a class="headerlink" href="#04-regularization-math-l1l2" title="Permanent link">&para;</a></h1>
-<p>This module is part of Level 3 · Advanced.</p>
-<p>More lessons are on the way — check back soon.</p>
+<p>Regularization adds a penalty term to the loss so the optimizer is pulled
+toward simpler models, not just ones that fit the training data. The two
+workhorses — L1 (lasso) and L2 (ridge/weight decay) — come from adding a
+norm of the weights to the loss.</p>
+<h2 id="the-regularized-objective">The regularized objective<a class="headerlink" href="#the-regularized-objective" title="Permanent link">&para;</a></h2>
+<div class="arithmatex">\[
+J(w) = L(w) + \lambda R(w)
+\]</div>
+<p>where <span class="arithmatex">\(L\)</span> is the data loss (e.g. MSE or cross-entropy), <span class="arithmatex">\(\lambda \ge 0\)</span>
+controls penalty strength, and <span class="arithmatex">\(R(w)\)</span> is:</p>
+<div class="arithmatex">\[
+R_{L2}(w) = \|w\|_2^2 = \sum_i w_i^2 \qquad
+R_{L1}(w) = \|w\|_1 = \sum_i |w_i|
+\]</div>
+<h2 id="gradients">Gradients<a class="headerlink" href="#gradients" title="Permanent link">&para;</a></h2>
+<p><strong>L2 (ridge):</strong></p>
+<div class="arithmatex">\[
+\nabla_w R_{L2} = 2w \quad\Rightarrow\quad \nabla_w J = \nabla_w L + 2\lambda w
+\]</div>
+<p>The gradient step becomes <span class="arithmatex">\(w \leftarrow w - \eta(\nabla_w L + 2\lambda w) =
+(1-2\eta\lambda)w - \eta\nabla_w L\)</span> — every step <strong>shrinks</strong> <span class="arithmatex">\(w\)</span> toward
+zero multiplicatively before applying the data gradient. This is why L2 is
+called "weight decay."</p>
+<p><strong>L1 (lasso):</strong></p>
+<div class="arithmatex">\[
+\nabla_w R_{L1} = \text{sign}(w) \quad\Rightarrow\quad \nabla_w J = \nabla_w L + \lambda\,\text{sign}(w)
+\]</div>
+<p>(<span class="arithmatex">\(|w|\)</span> is non-differentiable at <span class="arithmatex">\(w=0\)</span>; in practice use the subgradient
+<span class="arithmatex">\(\text{sign}(0)=0\)</span>.) The penalty subtracts a <strong>constant</strong> amount from each
+weight regardless of magnitude, which is why L1 pushes many weights exactly
+to zero (sparsity) while L2 shrinks everything smoothly but rarely to
+exactly zero.</p>
+<h2 id="why-l1-gives-sparsity-geometrically">Why L1 gives sparsity, geometrically<a class="headerlink" href="#why-l1-gives-sparsity-geometrically" title="Permanent link">&para;</a></h2>
+<p>The L2 penalty contour is a circle (smooth, no corners), so the loss
+contour typically touches it at a point where no coordinate is exactly
+zero. The L1 penalty contour is a diamond with corners on the axes — the
+loss contour is likely to first touch a corner, where one or more
+coordinates are exactly zero.</p>
+<h2 id="worked-numeric-example">Worked numeric example<a class="headerlink" href="#worked-numeric-example" title="Permanent link">&para;</a></h2>
+<p>Take a single weight <span class="arithmatex">\(w=3\)</span> under MSE loss <span class="arithmatex">\(L(w) = (w-1)^2\)</span>, so
+<span class="arithmatex">\(\nabla_w L = 2(w-1) = 4\)</span>, with <span class="arithmatex">\(\lambda=0.5,\ \eta=0.1\)</span>.</p>
+<p><strong>L2 step:</strong></p>
+<div class="arithmatex">\[
+\nabla_w J = 4 + 2(0.5)(3) = 4+3 = 7 \quad\Rightarrow\quad w \leftarrow 3 - 0.1(7) = 2.3
+\]</div>
+<p><strong>L1 step:</strong></p>
+<div class="arithmatex">\[
+\nabla_w J = 4 + 0.5\,\text{sign}(3) = 4.5 \quad\Rightarrow\quad w \leftarrow 3 - 0.1(4.5) = 2.55
+\]</div>
+<h2 id="numeric-verification">Numeric verification<a class="headerlink" href="#numeric-verification" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="k">def</span><span class="w"> </span><span class="nf">loss</span><span class="p">(</span><span class="n">w</span><span class="p">):</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="k">return</span> <span class="p">(</span><span class="n">w</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="k">def</span><span class="w"> </span><span class="nf">grad_l2</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">lam</span><span class="p">):</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="k">return</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">w</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">lam</span> <span class="o">*</span> <span class="n">w</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="k">def</span><span class="w"> </span><span class="nf">grad_l1</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">lam</span><span class="p">):</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="k">return</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">w</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">lam</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="n">w</span><span class="p">,</span> <span class="n">lam</span><span class="p">,</span> <span class="n">eta</span> <span class="o">=</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.1</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="n">w_l2</span> <span class="o">=</span> <span class="n">w</span> <span class="o">-</span> <span class="n">eta</span> <span class="o">*</span> <span class="n">grad_l2</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">lam</span><span class="p">)</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="n">w_l1</span> <span class="o">=</span> <span class="n">w</span> <span class="o">-</span> <span class="n">eta</span> <span class="o">*</span> <span class="n">grad_l1</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">lam</span><span class="p">)</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"L2 step: grad=</span><span class="si">{</span><span class="n">grad_l2</span><span class="p">(</span><span class="n">w</span><span class="p">,</span><span class="w"> </span><span class="n">lam</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> w_new=</span><span class="si">{</span><span class="n">w_l2</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"L1 step: grad=</span><span class="si">{</span><span class="n">grad_l1</span><span class="p">(</span><span class="n">w</span><span class="p">,</span><span class="w"> </span><span class="n">lam</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> w_new=</span><span class="si">{</span><span class="n">w_l1</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="c1"># Finite-difference check of the L2 penalty gradient alone</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="n">h</span> <span class="o">=</span> <span class="mf">1e-6</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="n">r</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span> <span class="o">**</span> <span class="mi">2</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="n">num_grad</span> <span class="o">=</span> <span class="p">(</span><span class="n">r</span><span class="p">(</span><span class="n">w</span> <span class="o">+</span> <span class="n">h</span><span class="p">)</span> <span class="o">-</span> <span class="n">r</span><span class="p">(</span><span class="n">w</span> <span class="o">-</span> <span class="n">h</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">h</span><span class="p">)</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"L2 penalty grad analytic=</span><span class="si">{</span><span class="mi">2</span><span class="o">*</span><span class="n">w</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> numeric=</span><span class="si">{</span><span class="n">num_grad</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>L2 step: grad=7.0000 w_new=2.3000
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>L1 step: grad=4.5000 w_new=2.5500
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>L2 penalty grad analytic=6.0000 numeric=6.0000
+</code></pre></div>
+<h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Run gradient descent (20 steps, <span class="arithmatex">\(\eta=0.1\)</span>) on <span class="arithmatex">\(L(w)=(w-1)^2\)</span> starting
+   at <span class="arithmatex">\(w=3\)</span> with L2 penalty <span class="arithmatex">\(\lambda=0.5\)</span>, and separately with L1 penalty
+   <span class="arithmatex">\(\lambda=0.5\)</span>. Plot or print <span class="arithmatex">\(w\)</span> at each step.</li>
+<li>Which one reaches exactly <span class="arithmatex">\(w=0\)</span> for some larger <span class="arithmatex">\(\lambda\)</span>? Explain using
+   the sign-vs-magnitude gradient behavior above.</li>
+<li>Derive the gradient of "elastic net" <span class="arithmatex">\(R = \alpha\|w\|_1 + (1-\alpha)\|w\|_2^2\)</span>
+   and verify it numerically at <span class="arithmatex">\(w=3,\alpha=0.3\)</span>.</li>
+</ol>
 
 
 

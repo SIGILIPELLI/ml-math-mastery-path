@@ -998,6 +998,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 · Jacobians & Hessians
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1014,6 +1032,103 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-jacobian" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Jacobian
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Jacobian">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#worked-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-hessian" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Hessian
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Hessian">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#worked-example_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#numeric-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numeric verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1991,6 +2106,92 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-jacobian" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Jacobian
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Jacobian">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#worked-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-hessian" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Hessian
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Hessian">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#worked-example_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#numeric-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numeric verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2010,8 +2211,93 @@
 
 
 <h1 id="03-jacobians-hessians">03 · Jacobians &amp; Hessians<a class="headerlink" href="#03-jacobians-hessians" title="Permanent link">&para;</a></h1>
-<p>This module is part of Level 2 · Intermediate.</p>
-<p>More lessons are on the way — check back soon.</p>
+<p>The gradient generalizes derivatives for a scalar-valued function of many
+variables. Two more objects generalize further: the <strong>Jacobian</strong> (for
+vector-valued outputs) and the <strong>Hessian</strong> (second derivatives of a scalar
+function) — both used constantly in ML: Jacobians in backprop through
+vector layers, Hessians in second-order optimizers and curvature analysis.</p>
+<h2 id="the-jacobian">The Jacobian<a class="headerlink" href="#the-jacobian" title="Permanent link">&para;</a></h2>
+<p>If <span class="arithmatex">\(\mathbf{f}: \mathbb{R}^n \to \mathbb{R}^m\)</span> maps
+<span class="arithmatex">\(\mathbf{x} = (x_1,\dots,x_n)\)</span> to <span class="arithmatex">\(\mathbf{f}(\mathbf{x}) = (f_1,\dots,f_m)\)</span>,
+the Jacobian is the <span class="arithmatex">\(m \times n\)</span> matrix of all first partial derivatives:</p>
+<div class="arithmatex">\[
+J = \begin{bmatrix}
+\dfrac{\partial f_1}{\partial x_1} &amp; \cdots &amp; \dfrac{\partial f_1}{\partial x_n} \\
+\vdots &amp; \ddots &amp; \vdots \\
+\dfrac{\partial f_m}{\partial x_1} &amp; \cdots &amp; \dfrac{\partial f_m}{\partial x_n}
+\end{bmatrix}
+\]</div>
+<p>Row <span class="arithmatex">\(i\)</span> is <span class="arithmatex">\(\nabla f_i(\mathbf{x})^\top\)</span> — the Jacobian is just all the
+per-output gradients stacked.</p>
+<h3 id="worked-example">Worked example<a class="headerlink" href="#worked-example" title="Permanent link">&para;</a></h3>
+<p><span class="arithmatex">\(\mathbf{f}(x,y) = (x^2y,\ x+y^2)\)</span>, so <span class="arithmatex">\(f_1 = x^2y\)</span>, <span class="arithmatex">\(f_2 = x+y^2\)</span>.</p>
+<div class="arithmatex">\[
+J = \begin{bmatrix} 2xy &amp; x^2 \\ 1 &amp; 2y \end{bmatrix}
+\]</div>
+<p>At <span class="arithmatex">\((x,y)=(1,2)\)</span>:</p>
+<div class="arithmatex">\[
+J(1,2) = \begin{bmatrix} 4 &amp; 1 \\ 1 &amp; 4 \end{bmatrix}
+\]</div>
+<h2 id="the-hessian">The Hessian<a class="headerlink" href="#the-hessian" title="Permanent link">&para;</a></h2>
+<p>For a scalar function <span class="arithmatex">\(f(x,y)\)</span>, the Hessian is the matrix of <strong>second</strong>
+partial derivatives:</p>
+<div class="arithmatex">\[
+H = \begin{bmatrix}
+\dfrac{\partial^2 f}{\partial x^2} &amp; \dfrac{\partial^2 f}{\partial x \partial y} \\[6pt]
+\dfrac{\partial^2 f}{\partial y \partial x} &amp; \dfrac{\partial^2 f}{\partial y^2}
+\end{bmatrix}
+\]</div>
+<p>For smooth functions the mixed partials are equal
+(<span class="arithmatex">\(\partial^2 f/\partial x\partial y = \partial^2 f/\partial y\partial x\)</span>), so
+<span class="arithmatex">\(H\)</span> is symmetric. The Hessian describes local curvature: its eigenvalues
+(Module 4) tell you whether a critical point is a minimum (all positive),
+maximum (all negative), or saddle (mixed signs).</p>
+<h3 id="worked-example_1">Worked example<a class="headerlink" href="#worked-example_1" title="Permanent link">&para;</a></h3>
+<p><span class="arithmatex">\(f(x,y) = x^2y + 3y^2 + 5x\)</span> (same <span class="arithmatex">\(f\)</span> as Level 1 Module 8, where we found
+<span class="arithmatex">\(\nabla f = [2xy+5,\ x^2+6y]\)</span>).</p>
+<div class="arithmatex">\[
+\frac{\partial^2 f}{\partial x^2} = 2y \qquad
+\frac{\partial^2 f}{\partial y^2} = 6 \qquad
+\frac{\partial^2 f}{\partial x \partial y} = 2x
+\]</div>
+<div class="arithmatex">\[
+H(x,y) = \begin{bmatrix} 2y &amp; 2x \\ 2x &amp; 6 \end{bmatrix}
+\]</div>
+<p>At <span class="arithmatex">\((2,1)\)</span>: <span class="arithmatex">\(H(2,1) = \begin{bmatrix} 2 &amp; 4 \\ 4 &amp; 6 \end{bmatrix}\)</span>.</p>
+<h2 id="numeric-verification">Numeric verification<a class="headerlink" href="#numeric-verification" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="k">def</span><span class="w"> </span><span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="k">return</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">y</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">y</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">5</span> <span class="o">*</span> <span class="n">x</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="k">def</span><span class="w"> </span><span class="nf">hessian_numeric</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">):</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">fxx</span> <span class="o">=</span> <span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="o">+</span><span class="n">h</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">+</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="n">h</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span> <span class="o">/</span> <span class="n">h</span><span class="o">**</span><span class="mi">2</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">fyy</span> <span class="o">=</span> <span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">+</span><span class="n">h</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">+</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">-</span><span class="n">h</span><span class="p">))</span> <span class="o">/</span> <span class="n">h</span><span class="o">**</span><span class="mi">2</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="n">fxy</span> <span class="o">=</span> <span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="o">+</span><span class="n">h</span><span class="p">,</span> <span class="n">y</span><span class="o">+</span><span class="n">h</span><span class="p">)</span> <span class="o">-</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="o">+</span><span class="n">h</span><span class="p">,</span> <span class="n">y</span><span class="o">-</span><span class="n">h</span><span class="p">)</span> <span class="o">-</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="n">h</span><span class="p">,</span> <span class="n">y</span><span class="o">+</span><span class="n">h</span><span class="p">)</span> <span class="o">+</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="n">h</span><span class="p">,</span> <span class="n">y</span><span class="o">-</span><span class="n">h</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="n">h</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">fxx</span><span class="p">,</span> <span class="n">fxy</span><span class="p">],</span> <span class="p">[</span><span class="n">fxy</span><span class="p">,</span> <span class="n">fyy</span><span class="p">]])</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="n">H_exact</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">2</span><span class="o">*</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">]])</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="n">H_numeric</span> <span class="o">=</span> <span class="n">hessian_numeric</span><span class="p">(</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"exact Hessian:</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span> <span class="n">H_exact</span><span class="p">)</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"numeric Hessian:</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">H_numeric</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+</code></pre></div>
+<p>Expected output (numeric matches exact up to finite-difference error):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>exact Hessian:
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a> [[2 4]
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a> [4 6]]
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>numeric Hessian:
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a> [[2. 4.]
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a> [4. 6.]]
+</code></pre></div>
+<h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
+<p>For <span class="arithmatex">\(\mathbf{f}(x,y) = (xy,\ x^2 - y^2)\)</span>:</p>
+<ol>
+<li>Compute the Jacobian symbolically and evaluate it at <span class="arithmatex">\((1,1)\)</span>.</li>
+<li>For the scalar <span class="arithmatex">\(g(x,y) = x^3 + xy^2\)</span>, compute the Hessian symbolically.</li>
+<li>Evaluate the Hessian at <span class="arithmatex">\((1,2)\)</span> and classify the point <span class="arithmatex">\((0,0)\)</span> using the
+   sign pattern of the Hessian at the origin (compute it there too).</li>
+<li>Verify your Hessian at <span class="arithmatex">\((1,2)\)</span> with the finite-difference pattern above.</li>
+</ol>
 
 
 

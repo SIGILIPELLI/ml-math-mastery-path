@@ -1110,6 +1110,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    07 · Expectation & Variance
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1126,6 +1144,91 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#expectation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expectation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#variance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Variance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#worked-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-this-matters-for-ml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why this matters for ML
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#numeric-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numeric verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1991,6 +2094,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#expectation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expectation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#variance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Variance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#worked-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-this-matters-for-ml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why this matters for ML
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#numeric-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numeric verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2010,8 +2187,94 @@
 
 
 <h1 id="07-expectation-variance">07 · Expectation &amp; Variance<a class="headerlink" href="#07-expectation-variance" title="Permanent link">&para;</a></h1>
-<p>This module is part of Level 2 · Intermediate.</p>
-<p>More lessons are on the way — check back soon.</p>
+<p>Expectation and variance summarize a random variable with two numbers: where
+it's centered, and how spread out it is. Loss functions are expectations
+over data; variance underlies regularization, bias-variance tradeoff, and
+weight-initialization schemes.</p>
+<h2 id="expectation">Expectation<a class="headerlink" href="#expectation" title="Permanent link">&para;</a></h2>
+<p>For a discrete random variable <span class="arithmatex">\(X\)</span> taking values <span class="arithmatex">\(x_i\)</span> with probabilities
+<span class="arithmatex">\(p_i\)</span>, the <strong>expected value</strong> (mean) is</p>
+<div class="arithmatex">\[
+E[X] = \sum_i x_i\, p_i
+\]</div>
+<p>Expectation is <strong>linear</strong>: for constants <span class="arithmatex">\(a,b\)</span> and random variables <span class="arithmatex">\(X,Y\)</span>:</p>
+<div class="arithmatex">\[
+E[aX+b] = aE[X]+b \qquad E[X+Y] = E[X]+E[Y]
+\]</div>
+<p>(the second holds even when <span class="arithmatex">\(X,Y\)</span> are dependent).</p>
+<h2 id="variance">Variance<a class="headerlink" href="#variance" title="Permanent link">&para;</a></h2>
+<p>Variance measures spread around the mean:</p>
+<div class="arithmatex">\[
+\text{Var}(X) = E\big[(X-E[X])^2\big] = E[X^2] - (E[X])^2
+\]</div>
+<p>The second form (expand the square and use linearity of <span class="arithmatex">\(E\)</span>) is usually
+easier to compute. Standard deviation is <span class="arithmatex">\(\sigma = \sqrt{\text{Var}(X)}\)</span>.</p>
+<p><strong>Scaling rule:</strong> <span class="arithmatex">\(\text{Var}(aX+b) = a^2\text{Var}(X)\)</span> (shifting by <span class="arithmatex">\(b\)</span>
+doesn't change spread; scaling by <span class="arithmatex">\(a\)</span> scales variance by <span class="arithmatex">\(a^2\)</span>).</p>
+<h2 id="worked-example">Worked example<a class="headerlink" href="#worked-example" title="Permanent link">&para;</a></h2>
+<p>A fair die roll <span class="arithmatex">\(X \in \{1,2,3,4,5,6\}\)</span>, each with probability <span class="arithmatex">\(1/6\)</span>.</p>
+<p><strong>Expectation:</strong></p>
+<div class="arithmatex">\[
+E[X] = \frac{1+2+3+4+5+6}{6} = \frac{21}{6} = 3.5
+\]</div>
+<p><strong><span class="arithmatex">\(E[X^2]\)</span>:</strong></p>
+<div class="arithmatex">\[
+E[X^2] = \frac{1+4+9+16+25+36}{6} = \frac{91}{6} \approx 15.1\overline{6}
+\]</div>
+<p><strong>Variance:</strong></p>
+<div class="arithmatex">\[
+\text{Var}(X) = \frac{91}{6} - (3.5)^2 = 15.1\overline{6} - 12.25 = 2.91\overline{6}
+\]</div>
+<p><strong>Standard deviation:</strong> <span class="arithmatex">\(\sigma = \sqrt{2.9167} \approx 1.7078\)</span>.</p>
+<h2 id="why-this-matters-for-ml">Why this matters for ML<a class="headerlink" href="#why-this-matters-for-ml" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Training loss is <span class="arithmatex">\(E[\ell(\hat y, y)]\)</span> over the data distribution —
+  minimizing expected loss is the entire point of training.</li>
+<li><strong>Bias–variance decomposition</strong> (Level 3) splits expected test error into
+  bias<span class="arithmatex">\(^2\)</span> + variance + irreducible noise, directly using these definitions.</li>
+<li>Feature scaling/normalization uses mean and variance (standardize to mean
+  0, variance 1) so gradient descent converges evenly across features.</li>
+</ul>
+<h2 id="numeric-verification">Numeric verification<a class="headerlink" href="#numeric-verification" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">outcomes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">])</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">probs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="mi">6</span><span class="p">)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">E_X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">outcomes</span> <span class="o">*</span> <span class="n">probs</span><span class="p">)</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="n">E_X2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">outcomes</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">probs</span><span class="p">)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">Var_X</span> <span class="o">=</span> <span class="n">E_X2</span> <span class="o">-</span> <span class="n">E_X</span><span class="o">**</span><span class="mi">2</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"E[X]      :"</span><span class="p">,</span> <span class="n">E_X</span><span class="p">)</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"E[X^2]    :"</span><span class="p">,</span> <span class="n">E_X2</span><span class="p">)</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"Var(X)    :"</span><span class="p">,</span> <span class="n">Var_X</span><span class="p">)</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"std(X)    :"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">Var_X</span><span class="p">))</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># Cross-check with a large simulation</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="n">samples</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">5_000_000</span><span class="p">)</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"simulated mean:"</span><span class="p">,</span> <span class="n">samples</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"simulated var :"</span><span class="p">,</span> <span class="n">samples</span><span class="o">.</span><span class="n">var</span><span class="p">())</span>
+</code></pre></div>
+<p>Expected output:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>E[X]      : 3.5
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>E[X^2]    : 15.166666666666666
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Var(X)    : 2.916666666666668
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>std(X)    : 1.707825127659933
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>simulated mean: 3.500...
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>simulated var : 2.916...
+</code></pre></div>
+<h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
+<p>A biased coin lands heads (<span class="arithmatex">\(X=1\)</span>) with probability <span class="arithmatex">\(0.7\)</span> and tails (<span class="arithmatex">\(X=0\)</span>)
+with probability <span class="arithmatex">\(0.3\)</span>.</p>
+<ol>
+<li>Compute <span class="arithmatex">\(E[X]\)</span> and <span class="arithmatex">\(E[X^2]\)</span> by hand (note for a 0/1 variable,
+   <span class="arithmatex">\(X^2 = X\)</span>, so this simplifies).</li>
+<li>Compute <span class="arithmatex">\(\text{Var}(X)\)</span> using the shortcut formula.</li>
+<li>Let <span class="arithmatex">\(Y = 10X + 5\)</span>. Compute <span class="arithmatex">\(E[Y]\)</span> and <span class="arithmatex">\(\text{Var}(Y)\)</span> using the linearity
+   and scaling rules — don't recompute from scratch.</li>
+<li>Verify all four results with a NumPy simulation of 1,000,000 coin flips.</li>
+</ol>
 
 
 

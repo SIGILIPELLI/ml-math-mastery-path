@@ -1940,6 +1940,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10 · Capstone — Linear Regression from Scratch in NumPy
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1956,6 +1974,102 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The problem
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#method-1-normal-equations-closed-form" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method 1: normal equations (closed form)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#method-2-gradient-descent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method 2: gradient descent
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#method-3-svd-based-pseudoinverse-numerically-best" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method 3: SVD-based pseudoinverse (numerically best)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#worked-numeric-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked numeric example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#numeric-verification-all-three-methods-agree" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numeric verification (all three methods agree)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1989,6 +2103,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The problem
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#method-1-normal-equations-closed-form" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method 1: normal equations (closed form)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#method-2-gradient-descent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method 2: gradient descent
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#method-3-svd-based-pseudoinverse-numerically-best" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method 3: SVD-based pseudoinverse (numerically best)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#worked-numeric-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked numeric example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#numeric-verification-all-three-methods-agree" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numeric verification (all three methods agree)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2008,8 +2207,107 @@
 
 
 <h1 id="10-capstone-linear-regression-from-scratch-in-numpy">10 · Capstone — Linear Regression from Scratch in NumPy<a class="headerlink" href="#10-capstone-linear-regression-from-scratch-in-numpy" title="Permanent link">&para;</a></h1>
-<p>This module is part of Level 4 · Master.</p>
-<p>More lessons are on the way — check back soon.</p>
+<p>This final capstone implements linear regression three different ways —
+closed-form normal equations, gradient descent, and SVD-based least
+squares — tying together nearly every module across all four levels.</p>
+<h2 id="the-problem">The problem<a class="headerlink" href="#the-problem" title="Permanent link">&para;</a></h2>
+<p>Fit <span class="arithmatex">\(\hat y = Xw\)</span> (bias folded into <span class="arithmatex">\(X\)</span> as a column of 1s) minimizing MSE:</p>
+<div class="arithmatex">\[
+L(w) = \frac{1}{n}\|Xw - y\|^2
+\]</div>
+<h2 id="method-1-normal-equations-closed-form">Method 1: normal equations (closed form)<a class="headerlink" href="#method-1-normal-equations-closed-form" title="Permanent link">&para;</a></h2>
+<p>Setting <span class="arithmatex">\(\nabla_w L = \frac{2}{n}X^\top(Xw-y) = 0\)</span> gives:</p>
+<div class="arithmatex">\[
+X^\top X w = X^\top y \quad\Rightarrow\quad w^* = (X^\top X)^{-1}X^\top y
+\]</div>
+<p>This requires <span class="arithmatex">\(X^\top X\)</span> to be invertible (Level 2 Module 4/5's
+non-singularity conditions) — fails or becomes numerically unstable when
+features are collinear.</p>
+<h2 id="method-2-gradient-descent">Method 2: gradient descent<a class="headerlink" href="#method-2-gradient-descent" title="Permanent link">&para;</a></h2>
+<div class="arithmatex">\[
+w \leftarrow w - \eta \cdot \frac{2}{n}X^\top(Xw-y)
+\]</div>
+<p>Always works, no invertibility requirement, convex (Level 4 Module 01) so
+guaranteed to reach the global minimum — just slower and requires tuning
+<span class="arithmatex">\(\eta\)</span>.</p>
+<h2 id="method-3-svd-based-pseudoinverse-numerically-best">Method 3: SVD-based pseudoinverse (numerically best)<a class="headerlink" href="#method-3-svd-based-pseudoinverse-numerically-best" title="Permanent link">&para;</a></h2>
+<div class="arithmatex">\[
+w^* = X^+y, \qquad X^+ = V\Sigma^+U^\top \quad (\text{Level 4 Module 06})
+\]</div>
+<p>Works even when <span class="arithmatex">\(X^\top X\)</span> is singular or ill-conditioned, because SVD
+handles near-zero singular values gracefully (via a cutoff) instead of
+dividing by something close to zero the way the normal equations do.</p>
+<h2 id="worked-numeric-example">Worked numeric example<a class="headerlink" href="#worked-numeric-example" title="Permanent link">&para;</a></h2>
+<p><span class="arithmatex">\(X = \begin{pmatrix}1&amp;1\\1&amp;2\\1&amp;3\end{pmatrix}\)</span> (bias column + one feature),
+<span class="arithmatex">\(y=(2,3,5)\)</span>.</p>
+<div class="arithmatex">\[
+X^\top X = \begin{pmatrix}3&amp;6\\6&amp;14\end{pmatrix}, \qquad X^\top y = \begin{pmatrix}10\\23\end{pmatrix}
+\]</div>
+<div class="arithmatex">\[
+(X^\top X)^{-1} = \frac{1}{3(14)-6(6)}\begin{pmatrix}14&amp;-6\\-6&amp;3\end{pmatrix} = \frac{1}{6}\begin{pmatrix}14&amp;-6\\-6&amp;3\end{pmatrix}
+\]</div>
+<div class="arithmatex">\[
+w^* = \frac{1}{6}\begin{pmatrix}14&amp;-6\\-6&amp;3\end{pmatrix}\begin{pmatrix}10\\23\end{pmatrix} = \frac{1}{6}\begin{pmatrix}140-138\\-60+69\end{pmatrix} = \frac{1}{6}\begin{pmatrix}2\\9\end{pmatrix} = \begin{pmatrix}0.3333\\1.5\end{pmatrix}
+\]</div>
+<p>So bias <span class="arithmatex">\(\approx 0.333\)</span>, slope <span class="arithmatex">\(=1.5\)</span>.</p>
+<h2 id="numeric-verification-all-three-methods-agree">Numeric verification (all three methods agree)<a class="headerlink" href="#numeric-verification-all-three-methods-agree" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">X_raw</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">3.0</span><span class="p">]])</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">])</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">X_raw</span><span class="p">])</span>  <span class="c1"># bias column</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Method 1: normal equations</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">w_normal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">X</span><span class="p">)</span> <span class="o">@</span> <span class="n">X</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">y</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"normal equations: w = </span><span class="si">{</span><span class="n">w_normal</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Method 2: gradient descent</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="n">w_gd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="n">eta</span> <span class="o">=</span> <span class="mf">0.05</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5000</span><span class="p">):</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    <span class="n">grad</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">/</span> <span class="n">n</span><span class="p">)</span> <span class="o">*</span> <span class="n">X</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="p">(</span><span class="n">X</span> <span class="o">@</span> <span class="n">w_gd</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    <span class="n">w_gd</span> <span class="o">=</span> <span class="n">w_gd</span> <span class="o">-</span> <span class="n">eta</span> <span class="o">*</span> <span class="n">grad</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"gradient descent:  w = </span><span class="si">{</span><span class="n">w_gd</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="c1"># Method 3: SVD pseudoinverse</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="n">w_svd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">pinv</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">@</span> <span class="n">y</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"SVD pseudoinverse: w = </span><span class="si">{</span><span class="n">w_svd</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="c1"># Cross-check against sklearn-equivalent lstsq</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="n">w_lstsq</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">lstsq</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">rcond</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"np.linalg.lstsq:   w = </span><span class="si">{</span><span class="n">w_lstsq</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="c1"># Final predictions and R^2</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="n">y_pred</span> <span class="o">=</span> <span class="n">X</span> <span class="o">@</span> <span class="n">w_normal</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="n">ss_res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">y</span> <span class="o">-</span> <span class="n">y_pred</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a><span class="n">ss_tot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">y</span> <span class="o">-</span> <span class="n">y</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="n">r2</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">ss_res</span> <span class="o">/</span> <span class="n">ss_tot</span>
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"predictions = </span><span class="si">{</span><span class="n">y_pred</span><span class="si">}</span><span class="s2">, R^2 = </span><span class="si">{</span><span class="n">r2</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>normal equations: w = [0.33333333 1.5       ]
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>gradient descent:  w = [0.33326 1.500018]   (approaches closed form as iterations -&gt; inf)
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>SVD pseudoinverse: w = [0.33333333 1.5       ]
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>np.linalg.lstsq:   w = [0.33333333 1.5       ]
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>predictions = [1.83333333 3.33333333 4.83333333], R^2 = 0.9808
+</code></pre></div>
+<h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Add a third feature that's a near-exact linear combination of the
+   first (e.g. <code>X[:,1]*2 + noise</code>), making <span class="arithmatex">\(X^\top X\)</span> nearly singular.
+   Compare how the normal-equation solution, gradient descent, and SVD
+   pseudoinverse each behave — which stays stable?</li>
+<li>Add L2 regularization to the normal equations (ridge regression):
+   derive <span class="arithmatex">\(w^* = (X^\top X+\lambda I)^{-1}X^\top y\)</span> from the regularized
+   objective (Level 3 Module 04 + this module's derivation) and verify
+   it fixes the near-singular case from step 1.</li>
+<li>Reflect: this single formula, <span class="arithmatex">\((X^\top X)^{-1}X^\top y\)</span>, connects
+   convexity (Level 4-01) and its Hessian proof, MLE under Gaussian noise
+   (Level 3-05), the chain rule (Level 2-02, Level 3-01), matrix inverses
+   and SVD (Level 2-05, Level 4-06), and gradient descent (Level 1-01,
+   Level 2-01) — write a short paragraph tracing how each concept feeds
+   into this one line.</li>
+</ol>
 
 
 

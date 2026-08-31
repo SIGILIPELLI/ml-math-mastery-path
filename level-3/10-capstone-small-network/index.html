@@ -1568,6 +1568,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10 · Capstone — Hand-Derive a Small Network
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1584,6 +1602,80 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-network" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The network
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#forward-pass-concretely" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Forward pass, concretely
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backward-pass-using-the-results-from-modules-01-and-06" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backward pass, using the results from Modules 01 and 06
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#numeric-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numeric verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1991,6 +2083,69 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-network" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The network
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#forward-pass-concretely" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Forward pass, concretely
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backward-pass-using-the-results-from-modules-01-and-06" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backward pass, using the results from Modules 01 and 06
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#numeric-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numeric verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2010,8 +2165,143 @@
 
 
 <h1 id="10-capstone-hand-derive-a-small-network">10 · Capstone — Hand-Derive a Small Network<a class="headerlink" href="#10-capstone-hand-derive-a-small-network" title="Permanent link">&para;</a></h1>
-<p>This module is part of Level 3 · Advanced.</p>
-<p>More lessons are on the way — check back soon.</p>
+<p>This capstone pulls together every Level 3 module — chain rule
+backprop, loss derivatives, softmax/cross-entropy, and numerical
+verification — into one fully hand-derived, fully checked network.</p>
+<h2 id="the-network">The network<a class="headerlink" href="#the-network" title="Permanent link">&para;</a></h2>
+<p>A 2-layer network solving binary classification, input <span class="arithmatex">\(x\in\mathbb{R}^2\)</span>:</p>
+<div class="arithmatex">\[
+z_1 = W_1 x + b_1 \quad (\text{2 hidden units}) \qquad a_1 = \sigma(z_1)
+\]</div>
+<div class="arithmatex">\[
+z_2 = w_2^\top a_1 + b_2 \quad (\text{scalar}) \qquad \hat y = \sigma(z_2)
+\]</div>
+<div class="arithmatex">\[
+L = -\big[y\log\hat y + (1-y)\log(1-\hat y)\big]
+\]</div>
+<h2 id="forward-pass-concretely">Forward pass, concretely<a class="headerlink" href="#forward-pass-concretely" title="Permanent link">&para;</a></h2>
+<div class="arithmatex">\[
+W_1 = \begin{pmatrix}0.5 &amp; -0.3\\ 0.8 &amp; 0.2\end{pmatrix},\ b_1=\begin{pmatrix}0\\0\end{pmatrix},\
+w_2 = \begin{pmatrix}0.6\\-0.4\end{pmatrix},\ b_2=0,\ x=\begin{pmatrix}1\\2\end{pmatrix},\ y=1
+\]</div>
+<div class="arithmatex">\[
+z_1 = \begin{pmatrix}0.5(1)-0.3(2)\\0.8(1)+0.2(2)\end{pmatrix} = \begin{pmatrix}-0.1\\1.2\end{pmatrix}
+\]</div>
+<div class="arithmatex">\[
+a_1 = (\sigma(-0.1), \sigma(1.2)) \approx (0.4750, 0.7685)
+\]</div>
+<div class="arithmatex">\[
+z_2 = 0.6(0.4750) - 0.4(0.7685) \approx 0.2850 - 0.3074 = -0.0224
+\]</div>
+<div class="arithmatex">\[
+\hat y = \sigma(-0.0224) \approx 0.4944
+\]</div>
+<div class="arithmatex">\[
+L = -\log(0.4944) \approx 0.7043
+\]</div>
+<h2 id="backward-pass-using-the-results-from-modules-01-and-06">Backward pass, using the results from Modules 01 and 06<a class="headerlink" href="#backward-pass-using-the-results-from-modules-01-and-06" title="Permanent link">&para;</a></h2>
+<p>Since <span class="arithmatex">\(\hat y=\sigma(z_2)\)</span> with BCE loss, the combined gradient (sigmoid's
+softmax-for-two-classes special case, Module 06) is:</p>
+<div class="arithmatex">\[
+\delta_2 = \frac{\partial L}{\partial z_2} = \hat y - y = 0.4944 - 1 = -0.5056
+\]</div>
+<div class="arithmatex">\[
+\frac{\partial L}{\partial w_2} = \delta_2 \cdot a_1 \approx (-0.2402,\ -0.3886) \qquad \frac{\partial L}{\partial b_2} = \delta_2 \approx -0.5056
+\]</div>
+<p>Backprop into the hidden layer — chain through <span class="arithmatex">\(w_2\)</span>, then through
+sigmoid's own derivative <span class="arithmatex">\(a_1(1-a_1)\)</span> (Module 01):</p>
+<div class="arithmatex">\[
+\delta_1 = \delta_2 \cdot w_2 \odot a_1(1-a_1)
+\]</div>
+<div class="arithmatex">\[
+\delta_2 w_2 = -0.5056\begin{pmatrix}0.6\\-0.4\end{pmatrix} = \begin{pmatrix}-0.3034\\0.2022\end{pmatrix}
+\]</div>
+<div class="arithmatex">\[
+a_1(1-a_1) = (0.4750\times0.5250,\ 0.7685\times0.2315) \approx (0.2494, 0.1779)
+\]</div>
+<div class="arithmatex">\[
+\delta_1 \approx (-0.3034\times0.2494,\ 0.2022\times0.1779) \approx (-0.0757, 0.0360)
+\]</div>
+<div class="arithmatex">\[
+\frac{\partial L}{\partial W_1} = \delta_1 x^\top, \qquad \frac{\partial L}{\partial b_1} = \delta_1
+\]</div>
+<h2 id="numeric-verification">Numeric verification<a class="headerlink" href="#numeric-verification" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="k">def</span><span class="w"> </span><span class="nf">sigmoid</span><span class="p">(</span><span class="n">z</span><span class="p">):</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="k">return</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">z</span><span class="p">))</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">W1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">0.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.3</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">]])</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="n">b1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">w2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.6</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.4</span><span class="p">])</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">b2</span> <span class="o">=</span> <span class="mf">0.0</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">])</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="n">y</span> <span class="o">=</span> <span class="mf">1.0</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="n">W1</span><span class="p">,</span> <span class="n">b1</span><span class="p">,</span> <span class="n">w2</span><span class="p">,</span> <span class="n">b2</span><span class="p">):</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="n">z1</span> <span class="o">=</span> <span class="n">W1</span> <span class="o">@</span> <span class="n">x</span> <span class="o">+</span> <span class="n">b1</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="n">a1</span> <span class="o">=</span> <span class="n">sigmoid</span><span class="p">(</span><span class="n">z1</span><span class="p">)</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    <span class="n">z2</span> <span class="o">=</span> <span class="n">w2</span> <span class="o">@</span> <span class="n">a1</span> <span class="o">+</span> <span class="n">b2</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    <span class="n">y_hat</span> <span class="o">=</span> <span class="n">sigmoid</span><span class="p">(</span><span class="n">z2</span><span class="p">)</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    <span class="n">L</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">y</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">y_hat</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">y_hat</span><span class="p">))</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    <span class="k">return</span> <span class="n">L</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">,</span> <span class="n">a1</span><span class="p">,</span> <span class="n">z1</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="n">L</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">,</span> <span class="n">a1</span><span class="p">,</span> <span class="n">z1</span> <span class="o">=</span> <span class="n">forward</span><span class="p">(</span><span class="n">W1</span><span class="p">,</span> <span class="n">b1</span><span class="p">,</span> <span class="n">w2</span><span class="p">,</span> <span class="n">b2</span><span class="p">)</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"y_hat=</span><span class="si">{</span><span class="n">y_hat</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> L=</span><span class="si">{</span><span class="n">L</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="c1"># Analytic backward</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="n">delta2</span> <span class="o">=</span> <span class="n">y_hat</span> <span class="o">-</span> <span class="n">y</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="n">dW2</span> <span class="o">=</span> <span class="n">delta2</span> <span class="o">*</span> <span class="n">a1</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="n">db2</span> <span class="o">=</span> <span class="n">delta2</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="n">delta1</span> <span class="o">=</span> <span class="p">(</span><span class="n">delta2</span> <span class="o">*</span> <span class="n">w2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">a1</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">a1</span><span class="p">))</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="n">dW1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">delta1</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="n">db1</span> <span class="o">=</span> <span class="n">delta1</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"analytic dW2=</span><span class="si">{</span><span class="n">dW2</span><span class="si">}</span><span class="s2"> db2=</span><span class="si">{</span><span class="n">db2</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"analytic dW1=</span><span class="se">\n</span><span class="si">{</span><span class="n">dW1</span><span class="si">}</span><span class="se">\n</span><span class="s2">db1=</span><span class="si">{</span><span class="n">db1</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a><span class="c1"># Finite-difference gradient check on every parameter</span>
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a><span class="n">h</span> <span class="o">=</span> <span class="mf">1e-6</span>
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a><span class="k">def</span><span class="w"> </span><span class="nf">loss_only</span><span class="p">(</span><span class="n">W1</span><span class="p">,</span> <span class="n">b1</span><span class="p">,</span> <span class="n">w2</span><span class="p">,</span> <span class="n">b2</span><span class="p">):</span>
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>    <span class="k">return</span> <span class="n">forward</span><span class="p">(</span><span class="n">W1</span><span class="p">,</span> <span class="n">b1</span><span class="p">,</span> <span class="n">w2</span><span class="p">,</span> <span class="n">b2</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a><span class="n">dW1_num</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">W1</span><span class="p">)</span>
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>        <span class="n">Wp</span><span class="p">,</span> <span class="n">Wm</span> <span class="o">=</span> <span class="n">W1</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span> <span class="n">W1</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>        <span class="n">Wp</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">+=</span> <span class="n">h</span><span class="p">;</span> <span class="n">Wm</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">-=</span> <span class="n">h</span>
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>        <span class="n">dW1_num</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">loss_only</span><span class="p">(</span><span class="n">Wp</span><span class="p">,</span> <span class="n">b1</span><span class="p">,</span> <span class="n">w2</span><span class="p">,</span> <span class="n">b2</span><span class="p">)</span> <span class="o">-</span> <span class="n">loss_only</span><span class="p">(</span><span class="n">Wm</span><span class="p">,</span> <span class="n">b1</span><span class="p">,</span> <span class="n">w2</span><span class="p">,</span> <span class="n">b2</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">h</span><span class="p">)</span>
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a><span class="n">dW2_num</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">w2</span><span class="p">)</span>
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>    <span class="n">wp</span><span class="p">,</span> <span class="n">wm</span> <span class="o">=</span> <span class="n">w2</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span> <span class="n">w2</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>    <span class="n">wp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">h</span><span class="p">;</span> <span class="n">wm</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-=</span> <span class="n">h</span>
+<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>    <span class="n">dW2_num</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">loss_only</span><span class="p">(</span><span class="n">W1</span><span class="p">,</span> <span class="n">b1</span><span class="p">,</span> <span class="n">wp</span><span class="p">,</span> <span class="n">b2</span><span class="p">)</span> <span class="o">-</span> <span class="n">loss_only</span><span class="p">(</span><span class="n">W1</span><span class="p">,</span> <span class="n">b1</span><span class="p">,</span> <span class="n">wm</span><span class="p">,</span> <span class="n">b2</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">h</span><span class="p">)</span>
+<a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>
+<a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"numeric dW1=</span><span class="se">\n</span><span class="si">{</span><span class="n">dW1_num</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"numeric dW2=</span><span class="si">{</span><span class="n">dW2_num</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>y_hat=0.4944 L=0.7043
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>analytic dW2=[-0.24016 -0.38863] db2=-0.5056
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>analytic dW1=
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>[[-0.0757 -0.1514]
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a> [ 0.036   0.072 ]]
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>db1=[-0.0757  0.036 ]
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>numeric dW1=
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>[[-0.0757 -0.1514]
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a> [ 0.036   0.072 ]]
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>numeric dW2=[-0.24016 -0.38863]
+</code></pre></div>
+<h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Take one gradient descent step (<span class="arithmatex">\(\eta=0.5\)</span>) on all parameters and
+   recompute the forward pass — confirm <span class="arithmatex">\(L\)</span> decreased.</li>
+<li>Add L2 regularization (<span class="arithmatex">\(\lambda=0.1\)</span>) on <span class="arithmatex">\(W_1\)</span> and <span class="arithmatex">\(w_2\)</span> and re-derive
+   the gradients (Module 04); verify with finite differences.</li>
+<li>Extend to a batch of 3 examples and show the gradients are the mean of
+   the per-example gradients (this is the "batch" in batch gradient
+   descent — vectorize with matrix operations rather than a Python loop).</li>
+</ol>
 
 
 

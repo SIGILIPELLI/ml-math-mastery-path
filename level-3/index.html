@@ -1981,6 +1981,25 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modules
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2000,7 +2019,32 @@
 
 
 <h1 id="level-3-advanced-in-progress">Level 3 · Advanced <span class="level-badge">In Progress</span><a class="headerlink" href="#level-3-advanced-in-progress" title="Permanent link">&para;</a></h1>
-<p>More lessons are on the way — check back soon.</p>
+<p>Goal: assemble Level 1–2 tools into the math that actually trains neural
+networks — backpropagation derived from the multivariable chain rule, the
+derivatives behind every common loss function, momentum/Adam as
+refinements of vanilla gradient descent, regularization, maximum likelihood
+estimation as the principle behind most loss functions, softmax/cross-entropy,
+computational graphs and autodiff, batch normalization, and the numerical
+stability tricks production ML code relies on.</p>
+<h2 id="modules">Modules<a class="headerlink" href="#modules" title="Permanent link">&para;</a></h2>
+<ol>
+<li><a href="01-backpropagation-chain-rule/">Backpropagation from the Chain Rule</a></li>
+<li><a href="02-loss-functions-derivatives/">Loss Functions &amp; Their Derivatives</a></li>
+<li><a href="03-momentum-adam/">Optimization Beyond Vanilla GD</a></li>
+<li><a href="04-regularization-math/">Regularization Math (L1/L2)</a></li>
+<li><a href="05-maximum-likelihood-estimation/">Maximum Likelihood Estimation</a></li>
+<li><a href="06-softmax-cross-entropy/">Softmax &amp; Cross-Entropy Derivatives</a></li>
+<li><a href="07-computational-graphs-autodiff/">Computational Graphs &amp; Autodiff</a></li>
+<li><a href="08-batch-normalization-math/">Batch Normalization Math</a></li>
+<li><a href="09-numerical-stability/">Numerical Stability in ML Math</a></li>
+<li><a href="10-capstone-small-network/">Capstone — Hand-Derive a Small Network</a></li>
+</ol>
+<p>By the end of this level you'll be able to hand-derive backpropagation
+through a small network, derive gradients for MSE/cross-entropy/softmax,
+explain why Adam converges faster than vanilla gradient descent, and reason
+about the numerical pitfalls (overflow, underflow, vanishing/exploding
+gradients) that separate textbook math from working code — with every
+derivation checked against NumPy/PyTorch-style autodiff.</p>
 
 
 

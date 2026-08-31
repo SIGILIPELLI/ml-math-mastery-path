@@ -1718,6 +1718,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 · Lagrange Multipliers & Constrained Optimization
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1734,6 +1752,80 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The setup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#worked-example-closest-point-on-a-line-to-the-origin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked example: closest point on a line to the origin
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inequality-constraints-kkt-conditions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inequality constraints: KKT conditions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#numeric-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numeric verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1991,6 +2083,69 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The setup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#worked-example-closest-point-on-a-line-to-the-origin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked example: closest point on a line to the origin
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inequality-constraints-kkt-conditions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inequality constraints: KKT conditions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#numeric-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numeric verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2010,8 +2165,89 @@
 
 
 <h1 id="02-lagrange-multipliers-constrained-optimization">02 · Lagrange Multipliers &amp; Constrained Optimization<a class="headerlink" href="#02-lagrange-multipliers-constrained-optimization" title="Permanent link">&para;</a></h1>
-<p>This module is part of Level 4 · Master.</p>
-<p>More lessons are on the way — check back soon.</p>
+<p>Many ML problems aren't "minimize <span class="arithmatex">\(f\)</span>" but "minimize <span class="arithmatex">\(f\)</span> subject to
+constraints" — SVM margins, probability simplex constraints, resource
+budgets. Lagrange multipliers convert a constrained problem into an
+unconstrained one.</p>
+<h2 id="the-setup">The setup<a class="headerlink" href="#the-setup" title="Permanent link">&para;</a></h2>
+<p>Minimize <span class="arithmatex">\(f(x)\)</span> subject to equality constraint <span class="arithmatex">\(g(x)=0\)</span>. At the
+constrained optimum, the gradient of <span class="arithmatex">\(f\)</span> must be <strong>parallel</strong> to the
+gradient of <span class="arithmatex">\(g\)</span> (otherwise you could slide along the constraint surface
+and decrease <span class="arithmatex">\(f\)</span> further). That parallelism is written:</p>
+<div class="arithmatex">\[
+\nabla f(x) = \lambda \nabla g(x)
+\]</div>
+<p><span class="arithmatex">\(\lambda\)</span> is the Lagrange multiplier. Package this into the <strong>Lagrangian</strong>:</p>
+<div class="arithmatex">\[
+\mathcal{L}(x,\lambda) = f(x) - \lambda g(x)
+\]</div>
+<p>Setting <span class="arithmatex">\(\nabla_x \mathcal{L}=0\)</span> recovers the parallelism condition;
+setting <span class="arithmatex">\(\partial\mathcal{L}/\partial\lambda=0\)</span> recovers the constraint
+<span class="arithmatex">\(g(x)=0\)</span>. Solving the stationary points of <span class="arithmatex">\(\mathcal{L}\)</span> jointly solves the
+constrained problem.</p>
+<h2 id="worked-example-closest-point-on-a-line-to-the-origin">Worked example: closest point on a line to the origin<a class="headerlink" href="#worked-example-closest-point-on-a-line-to-the-origin" title="Permanent link">&para;</a></h2>
+<p>Minimize <span class="arithmatex">\(f(x,y)=x^2+y^2\)</span> subject to <span class="arithmatex">\(g(x,y)=x+y-1=0\)</span>.</p>
+<div class="arithmatex">\[
+\mathcal{L} = x^2+y^2-\lambda(x+y-1)
+\]</div>
+<div class="arithmatex">\[
+\frac{\partial\mathcal{L}}{\partial x}=2x-\lambda=0,\quad
+\frac{\partial\mathcal{L}}{\partial y}=2y-\lambda=0,\quad
+\frac{\partial\mathcal{L}}{\partial\lambda}=-(x+y-1)=0
+\]</div>
+<p>From the first two: <span class="arithmatex">\(x=y=\lambda/2\)</span>. Substituting into the constraint:
+<span class="arithmatex">\(\lambda/2+\lambda/2=1\Rightarrow\lambda=1\Rightarrow x=y=0.5\)</span>.</p>
+<p>Minimum value: <span class="arithmatex">\(f(0.5,0.5)=0.5\)</span>.</p>
+<h2 id="inequality-constraints-kkt-conditions">Inequality constraints: KKT conditions<a class="headerlink" href="#inequality-constraints-kkt-conditions" title="Permanent link">&para;</a></h2>
+<p>For <span class="arithmatex">\(\min f(x)\)</span> s.t. <span class="arithmatex">\(h(x)\le 0\)</span>, the Karush-Kuhn-Tucker (KKT) conditions
+generalize Lagrange multipliers:</p>
+<div class="arithmatex">\[
+\nabla f(x) + \mu \nabla h(x) = 0, \qquad \mu \ge 0, \qquad \mu\, h(x) = 0
+\]</div>
+<p>The last condition (<strong>complementary slackness</strong>) says either the
+constraint is exactly active (<span class="arithmatex">\(h(x)=0\)</span>) or its multiplier is zero — this
+is precisely the mechanism behind SVM support vectors: only points on the
+margin (<span class="arithmatex">\(h(x)=0\)</span>) get nonzero <span class="arithmatex">\(\mu\)</span> (their "support" in support vector
+machine).</p>
+<h2 id="numeric-verification">Numeric verification<a class="headerlink" href="#numeric-verification" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">minimize</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="k">def</span><span class="w"> </span><span class="nf">f</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">v</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="k">return</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">y</span><span class="o">**</span><span class="mi">2</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">constraint</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'type'</span><span class="p">:</span> <span class="s1">'eq'</span><span class="p">,</span> <span class="s1">'fun'</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">}</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">result</span> <span class="o">=</span> <span class="n">minimize</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">constraints</span><span class="o">=</span><span class="p">[</span><span class="n">constraint</span><span class="p">])</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"numeric optimum: x=</span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">, y=</span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">, f=</span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">fun</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"closed-form (Lagrange): x=0.5000, y=0.5000, f=0.5000"</span><span class="p">)</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Verify the parallel-gradients condition at the optimum</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="k">def</span><span class="w"> </span><span class="nf">grad_f</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">2</span><span class="o">*</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">2</span><span class="o">*</span><span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="k">def</span><span class="w"> </span><span class="nf">grad_g</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="n">x_star</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">x</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="n">lam</span> <span class="o">=</span> <span class="n">grad_f</span><span class="p">(</span><span class="n">x_star</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">grad_g</span><span class="p">(</span><span class="n">x_star</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"grad f = </span><span class="si">{</span><span class="n">grad_f</span><span class="p">(</span><span class="n">x_star</span><span class="p">)</span><span class="si">}</span><span class="s2">, lambda*grad g = </span><span class="si">{</span><span class="n">lam</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">grad_g</span><span class="p">(</span><span class="n">x_star</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>numeric optimum: x=0.5000, y=0.5000, f=0.5000
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>closed-form (Lagrange): x=0.5000, y=0.5000, f=0.5000
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>grad f = [1. 1.], lambda*grad g = [1. 1.]
+</code></pre></div>
+<h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Minimize <span class="arithmatex">\(f(x,y)=xy\)</span> subject to <span class="arithmatex">\(x^2+y^2=1\)</span> using Lagrange multipliers
+   by hand, then verify with <code>scipy.optimize.minimize</code>.</li>
+<li>Set up the Lagrangian for maximizing entropy <span class="arithmatex">\(H(p)=-\sum_i p_i\log p_i\)</span>
+   subject to <span class="arithmatex">\(\sum_i p_i = 1\)</span> (the probability simplex constraint), and
+   show the unconstrained-optimum solution is the uniform distribution.</li>
+<li>Explain, in your own words, why complementary slackness (<span class="arithmatex">\(\mu\,h(x)=0\)</span>)
+   is exactly why most points in an SVM's training set have zero influence
+   on the decision boundary — only the "support vectors" do.</li>
+</ol>
 
 
 

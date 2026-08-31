@@ -1456,6 +1456,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06 · Softmax & Cross-Entropy Derivatives
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1472,6 +1490,102 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#softmax" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Softmax
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cross-entropy-loss" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cross-entropy loss
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-jacobian-of-softmax" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Jacobian of softmax
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#combined-gradient-the-famous-p-y" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Combined gradient: the famous \(p - y\)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#worked-numeric-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked numeric example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#numeric-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numeric verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1991,6 +2105,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#softmax" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Softmax
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cross-entropy-loss" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cross-entropy loss
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-jacobian-of-softmax" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Jacobian of softmax
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#combined-gradient-the-famous-p-y" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Combined gradient: the famous \(p - y\)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#worked-numeric-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked numeric example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#numeric-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numeric verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2010,8 +2209,109 @@
 
 
 <h1 id="06-softmax-cross-entropy-derivatives">06 · Softmax &amp; Cross-Entropy Derivatives<a class="headerlink" href="#06-softmax-cross-entropy-derivatives" title="Permanent link">&para;</a></h1>
-<p>This module is part of Level 3 · Advanced.</p>
-<p>More lessons are on the way — check back soon.</p>
+<p>Softmax turns raw scores (logits) into a probability distribution;
+cross-entropy measures how far that distribution is from the true label.
+Together, their combined derivative is the cleanest gradient in all of deep
+learning — and it's worth deriving by hand once.</p>
+<h2 id="softmax">Softmax<a class="headerlink" href="#softmax" title="Permanent link">&para;</a></h2>
+<p>For logits <span class="arithmatex">\(z = (z_1,\dots,z_C)\)</span>:</p>
+<div class="arithmatex">\[
+\text{softmax}(z)_i = \frac{e^{z_i}}{\sum_{j=1}^C e^{z_j}} = p_i
+\]</div>
+<h2 id="cross-entropy-loss">Cross-entropy loss<a class="headerlink" href="#cross-entropy-loss" title="Permanent link">&para;</a></h2>
+<p>For one-hot true label <span class="arithmatex">\(y\)</span> (so <span class="arithmatex">\(y_k=1\)</span> for the true class <span class="arithmatex">\(k\)</span>, else 0):</p>
+<div class="arithmatex">\[
+L = -\sum_{i=1}^C y_i \log p_i = -\log p_k
+\]</div>
+<h2 id="the-jacobian-of-softmax">The Jacobian of softmax<a class="headerlink" href="#the-jacobian-of-softmax" title="Permanent link">&para;</a></h2>
+<div class="arithmatex">\[
+\frac{\partial p_i}{\partial z_j} =
+\begin{cases}
+p_i(1-p_i) &amp; i=j \\
+-p_i p_j &amp; i \ne j
+\end{cases}
+\;=\; p_i(\delta_{ij} - p_j)
+\]</div>
+<p>where <span class="arithmatex">\(\delta_{ij}\)</span> is the Kronecker delta.</p>
+<h2 id="combined-gradient-the-famous-p-y">Combined gradient: the famous <span class="arithmatex">\(p - y\)</span><a class="headerlink" href="#combined-gradient-the-famous-p-y" title="Permanent link">&para;</a></h2>
+<p>Chain rule through <span class="arithmatex">\(L \to p \to z\)</span>:</p>
+<div class="arithmatex">\[
+\frac{\partial L}{\partial z_j} = \sum_i \frac{\partial L}{\partial p_i}\frac{\partial p_i}{\partial z_j}
+= \sum_i \left(-\frac{y_i}{p_i}\right) p_i(\delta_{ij}-p_j)
+= -\sum_i y_i(\delta_{ij}-p_j)
+\]</div>
+<p>Since <span class="arithmatex">\(\sum_i y_i = 1\)</span>:</p>
+<div class="arithmatex">\[
+\frac{\partial L}{\partial z_j} = p_j - y_j
+\]</div>
+<p>The gradient of softmax + cross-entropy with respect to the <strong>logits</strong> is
+simply predicted-minus-true. This is why frameworks fuse these two ops:
+computing them separately (dividing by <span class="arithmatex">\(p_i\)</span>, then multiplying by
+<span class="arithmatex">\(p_i(\delta_{ij}-p_j)\)</span>) is both slower and numerically worse than this
+closed form.</p>
+<h2 id="worked-numeric-example">Worked numeric example<a class="headerlink" href="#worked-numeric-example" title="Permanent link">&para;</a></h2>
+<p>Logits <span class="arithmatex">\(z=(2.0, 1.0, 0.1)\)</span>, true class <span class="arithmatex">\(k=0\)</span> (so <span class="arithmatex">\(y=(1,0,0)\)</span>).</p>
+<div class="arithmatex">\[
+e^z = (7.389, 2.718, 1.105), \qquad \sum = 11.212
+\]</div>
+<div class="arithmatex">\[
+p = (0.6590, 0.2424, 0.0986)
+\]</div>
+<div class="arithmatex">\[
+L = -\log(0.6590) \approx 0.4170
+\]</div>
+<div class="arithmatex">\[
+\nabla_z L = p - y = (-0.3410,\ 0.2424,\ 0.0986)
+\]</div>
+<h2 id="numeric-verification">Numeric verification<a class="headerlink" href="#numeric-verification" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="k">def</span><span class="w"> </span><span class="nf">softmax</span><span class="p">(</span><span class="n">z</span><span class="p">):</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">z</span> <span class="o">=</span> <span class="n">z</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>  <span class="c1"># numerical stability, see Module 09</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">e</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="k">return</span> <span class="n">e</span> <span class="o">/</span> <span class="n">e</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">])</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="n">p</span> <span class="o">=</span> <span class="n">softmax</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="n">L</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">y</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="n">grad_analytic</span> <span class="o">=</span> <span class="n">p</span> <span class="o">-</span> <span class="n">y</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"p = </span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"L = </span><span class="si">{</span><span class="n">L</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"analytic grad = </span><span class="si">{</span><span class="n">grad_analytic</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># Finite-difference check</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="k">def</span><span class="w"> </span><span class="nf">loss</span><span class="p">(</span><span class="n">z</span><span class="p">):</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    <span class="n">p</span> <span class="o">=</span> <span class="n">softmax</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    <span class="k">return</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">y</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="n">h</span> <span class="o">=</span> <span class="mf">1e-6</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="n">grad_num</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">z</span><span class="p">)):</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>    <span class="n">z_plus</span><span class="p">,</span> <span class="n">z_minus</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span> <span class="n">z</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>    <span class="n">z_plus</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">h</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>    <span class="n">z_minus</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-=</span> <span class="n">h</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>    <span class="n">grad_num</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">loss</span><span class="p">(</span><span class="n">z_plus</span><span class="p">)</span> <span class="o">-</span> <span class="n">loss</span><span class="p">(</span><span class="n">z_minus</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">h</span><span class="p">)</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"numeric grad = </span><span class="si">{</span><span class="n">grad_num</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>p = [0.65900114 0.24243297 0.09856589]
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>L = 0.4170
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>analytic grad = [-0.34099886  0.24243297  0.09856589]
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>numeric grad = [-0.34099886  0.24243297  0.09856589]
+</code></pre></div>
+<h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Repeat the derivation and numeric check for true class <span class="arithmatex">\(k=2\)</span> instead of
+   <span class="arithmatex">\(k=0\)</span>.</li>
+<li>Show that for binary classification, sigmoid + binary cross-entropy
+   gives the same clean gradient form <span class="arithmatex">\(\hat p - y\)</span> (treat it as a
+   two-class softmax with <span class="arithmatex">\(z_2=0\)</span>).</li>
+<li>Explain why subtracting <span class="arithmatex">\(\max(z)\)</span> before exponentiating (as in the code
+   above) doesn't change <span class="arithmatex">\(p\)</span> but prevents overflow — tie this to Module 09.</li>
+</ol>
 
 
 

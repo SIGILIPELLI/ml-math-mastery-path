@@ -1484,6 +1484,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    07 · Computational Graphs & Autodiff
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1500,6 +1518,91 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-computational-graph" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The computational graph
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#forward-mode-vs-reverse-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Forward mode vs. reverse mode
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reverse-mode-by-hand" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reverse-mode by hand
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verify-symbolically" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify symbolically
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#numeric-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numeric verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1991,6 +2094,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-computational-graph" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The computational graph
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#forward-mode-vs-reverse-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Forward mode vs. reverse mode
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reverse-mode-by-hand" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reverse-mode by hand
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verify-symbolically" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify symbolically
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#numeric-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numeric verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2010,8 +2187,94 @@
 
 
 <h1 id="07-computational-graphs-autodiff">07 · Computational Graphs &amp; Autodiff<a class="headerlink" href="#07-computational-graphs-autodiff" title="Permanent link">&para;</a></h1>
-<p>This module is part of Level 3 · Advanced.</p>
-<p>More lessons are on the way — check back soon.</p>
+<p>Frameworks like PyTorch and TensorFlow don't use symbolic differentiation
+or numerical finite differences — they use <strong>automatic differentiation
+(autodiff)</strong>, which computes exact derivatives by tracking a computational
+graph of primitive operations and applying the chain rule mechanically.</p>
+<h2 id="the-computational-graph">The computational graph<a class="headerlink" href="#the-computational-graph" title="Permanent link">&para;</a></h2>
+<p>Any expression decomposes into a DAG (directed acyclic graph) of primitive
+operations. For <span class="arithmatex">\(f(x,y) = (x+y) \cdot (x \cdot y)\)</span>, introduce intermediate
+nodes:</p>
+<div class="arithmatex">\[
+a = x + y \qquad b = x \cdot y \qquad f = a \cdot b
+\]</div>
+<h2 id="forward-mode-vs-reverse-mode">Forward mode vs. reverse mode<a class="headerlink" href="#forward-mode-vs-reverse-mode" title="Permanent link">&para;</a></h2>
+<p><strong>Forward mode</strong> propagates derivatives <em>with</em> the computation, tracking
+<span class="arithmatex">\(\dot v = \partial v/\partial x\)</span> for a chosen input <span class="arithmatex">\(x\)</span> alongside each node
+value <span class="arithmatex">\(v\)</span>. Cheap when there are few inputs, many outputs.</p>
+<p><strong>Reverse mode</strong> (what backprop is) does a forward pass to compute all node
+values, then a backward pass computing <span class="arithmatex">\(\bar v = \partial L/\partial v\)</span>
+starting from the output and working back via the chain rule. Cheap when
+there are many inputs (e.g. millions of weights) and one scalar output
+(the loss) — exactly the neural network case, computed in one backward pass
+regardless of parameter count.</p>
+<h2 id="reverse-mode-by-hand">Reverse-mode by hand<a class="headerlink" href="#reverse-mode-by-hand" title="Permanent link">&para;</a></h2>
+<p>For <span class="arithmatex">\(a=x+y,\ b=xy,\ f=ab\)</span>, with <span class="arithmatex">\(x=2, y=3\)</span>:</p>
+<p><strong>Forward:</strong> <span class="arithmatex">\(a = 5,\ b = 6,\ f = 30\)</span></p>
+<p><strong>Backward</strong>, seeding <span class="arithmatex">\(\bar f = \partial f/\partial f = 1\)</span>:</p>
+<div class="arithmatex">\[
+\bar a = \bar f \cdot \frac{\partial f}{\partial a} = 1\cdot b = 6 \qquad
+\bar b = \bar f \cdot \frac{\partial f}{\partial b} = 1\cdot a = 5
+\]</div>
+<p>Each intermediate's gradient is now propagated to <em>its</em> inputs:</p>
+<div class="arithmatex">\[
+\bar x \mathrel{+}= \bar a \cdot \frac{\partial a}{\partial x} = 6\cdot 1 = 6
+\qquad
+\bar x \mathrel{+}= \bar b \cdot \frac{\partial b}{\partial x} = 5\cdot y = 15
+\]</div>
+<div class="arithmatex">\[
+\bar y \mathrel{+}= \bar a \cdot 1 = 6 \qquad \bar y \mathrel{+}= \bar b \cdot x = 10
+\]</div>
+<p>So <span class="arithmatex">\(\partial f/\partial x = 6+15=21\)</span>, <span class="arithmatex">\(\partial f/\partial y = 6+10=16\)</span>.
+Note <span class="arithmatex">\(x\)</span> contributes through <strong>two paths</strong> (<span class="arithmatex">\(a\)</span> and <span class="arithmatex">\(b\)</span>) — autodiff sums
+gradients at every node with multiple consumers, the multivariable chain
+rule's sum rule.</p>
+<h2 id="verify-symbolically">Verify symbolically<a class="headerlink" href="#verify-symbolically" title="Permanent link">&para;</a></h2>
+<p><span class="arithmatex">\(f = (x+y)(xy) = x^2y + xy^2\)</span>, so <span class="arithmatex">\(\partial f/\partial x = 2xy+y^2 =
+2(2)(3)+9=21\)</span> ✓, <span class="arithmatex">\(\partial f/\partial y = x^2+2xy = 4+12=16\)</span> ✓.</p>
+<h2 id="numeric-verification">Numeric verification<a class="headerlink" href="#numeric-verification" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Forward pass</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">a</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="n">b</span> <span class="o">=</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">f</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="n">b</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Reverse pass (manual autodiff)</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="n">f_bar</span> <span class="o">=</span> <span class="mf">1.0</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="n">a_bar</span> <span class="o">=</span> <span class="n">f_bar</span> <span class="o">*</span> <span class="n">b</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="n">b_bar</span> <span class="o">=</span> <span class="n">f_bar</span> <span class="o">*</span> <span class="n">a</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="n">x_bar</span> <span class="o">=</span> <span class="n">a_bar</span> <span class="o">*</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">b_bar</span> <span class="o">*</span> <span class="n">y</span>   <span class="c1"># two paths into x</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="n">y_bar</span> <span class="o">=</span> <span class="n">a_bar</span> <span class="o">*</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">b_bar</span> <span class="o">*</span> <span class="n">x</span>   <span class="c1"># two paths into y</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"f = </span><span class="si">{</span><span class="n">f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"df/dx (autodiff) = </span><span class="si">{</span><span class="n">x_bar</span><span class="si">}</span><span class="s2">, df/dy (autodiff) = </span><span class="si">{</span><span class="n">y_bar</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="c1"># Finite-difference check</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="n">h</span> <span class="o">=</span> <span class="mf">1e-6</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="k">def</span><span class="w"> </span><span class="nf">F</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span> <span class="k">return</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">y</span><span class="p">)</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="n">dfdx_num</span> <span class="o">=</span> <span class="p">(</span><span class="n">F</span><span class="p">(</span><span class="n">x</span><span class="o">+</span><span class="n">h</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">-</span> <span class="n">F</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="n">h</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">h</span><span class="p">)</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="n">dfdy_num</span> <span class="o">=</span> <span class="p">(</span><span class="n">F</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">+</span><span class="n">h</span><span class="p">)</span> <span class="o">-</span> <span class="n">F</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">-</span><span class="n">h</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">h</span><span class="p">)</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"df/dx (numeric) = </span><span class="si">{</span><span class="n">dfdx_num</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">, df/dy (numeric) = </span><span class="si">{</span><span class="n">dfdy_num</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>f = 30.0
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>df/dx (autodiff) = 21.0, df/dy (autodiff) = 16.0
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>df/dx (numeric) = 21.0000, df/dy (numeric) = 16.0000
+</code></pre></div>
+<h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Build the computational graph for <span class="arithmatex">\(g(x) = \sin(x^2) + x\)</span> and compute
+   <span class="arithmatex">\(g'(x)\)</span> at <span class="arithmatex">\(x=1\)</span> via manual reverse-mode autodiff (define nodes
+   <span class="arithmatex">\(u=x^2,\ v=\sin(u),\ g=v+x\)</span>).</li>
+<li>Verify your answer against the symbolic derivative
+   <span class="arithmatex">\(g'(x) = 2x\cos(x^2)+1\)</span> and a finite-difference check.</li>
+<li>Explain why reverse mode needs to store all intermediate node values
+   from the forward pass (this is the "memory cost of backprop" that
+   motivates techniques like gradient checkpointing).</li>
+</ol>
 
 
 

@@ -1054,6 +1054,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 · Matrix Decompositions Overview
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1070,6 +1088,102 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#eigendecomposition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Eigendecomposition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#singular-value-decomposition-svd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Singular Value Decomposition (SVD)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#worked-example-eigendecomposition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked example: eigendecomposition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#worked-example-svd-by-hand-small-case" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked example: SVD by hand (small case)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#connection-to-pca" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connection to PCA
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#numeric-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numeric verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1991,6 +2105,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#eigendecomposition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Eigendecomposition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#singular-value-decomposition-svd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Singular Value Decomposition (SVD)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#worked-example-eigendecomposition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked example: eigendecomposition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#worked-example-svd-by-hand-small-case" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked example: SVD by hand (small case)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#connection-to-pca" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connection to PCA
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#numeric-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numeric verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2010,8 +2209,98 @@
 
 
 <h1 id="05-matrix-decompositions-overview">05 · Matrix Decompositions Overview<a class="headerlink" href="#05-matrix-decompositions-overview" title="Permanent link">&para;</a></h1>
-<p>This module is part of Level 2 · Intermediate.</p>
-<p>More lessons are on the way — check back soon.</p>
+<p>Building on eigenvalues, this module introduces the two decompositions that
+show up everywhere in ML: <strong>eigendecomposition</strong> and the more general
+<strong>Singular Value Decomposition (SVD)</strong> — the engine behind PCA,
+recommender-system factorization, and pseudo-inverses for least squares.</p>
+<h2 id="eigendecomposition">Eigendecomposition<a class="headerlink" href="#eigendecomposition" title="Permanent link">&para;</a></h2>
+<p>If a square matrix <span class="arithmatex">\(A\)</span> (<span class="arithmatex">\(n\times n\)</span>) has <span class="arithmatex">\(n\)</span> linearly independent
+eigenvectors, it can be written as</p>
+<div class="arithmatex">\[
+A = V \Lambda V^{-1}
+\]</div>
+<p>where <span class="arithmatex">\(V\)</span>'s columns are the eigenvectors and <span class="arithmatex">\(\Lambda\)</span> is diagonal with the
+eigenvalues on the diagonal. When <span class="arithmatex">\(A\)</span> is symmetric (e.g. a covariance
+matrix), <span class="arithmatex">\(V\)</span> can be chosen orthogonal, so <span class="arithmatex">\(V^{-1} = V^\top\)</span>:</p>
+<div class="arithmatex">\[
+A = V \Lambda V^\top \qquad (A \text{ symmetric})
+\]</div>
+<h2 id="singular-value-decomposition-svd">Singular Value Decomposition (SVD)<a class="headerlink" href="#singular-value-decomposition-svd" title="Permanent link">&para;</a></h2>
+<p>Eigendecomposition requires a square matrix. <strong>Any</strong> matrix <span class="arithmatex">\(A\)</span> (<span class="arithmatex">\(m\times n\)</span>,
+even non-square) can be factored as</p>
+<div class="arithmatex">\[
+A = U \Sigma V^\top
+\]</div>
+<p>where <span class="arithmatex">\(U\)</span> (<span class="arithmatex">\(m\times m\)</span>) and <span class="arithmatex">\(V\)</span> (<span class="arithmatex">\(n\times n\)</span>) are orthogonal, and <span class="arithmatex">\(\Sigma\)</span>
+(<span class="arithmatex">\(m\times n\)</span>) is diagonal with non-negative <strong>singular values</strong>
+<span class="arithmatex">\(\sigma_1 \geq \sigma_2 \geq \dots \geq 0\)</span> on the diagonal. Singular values
+relate to eigenvalues of <span class="arithmatex">\(A^\top A\)</span>: <span class="arithmatex">\(\sigma_i = \sqrt{\lambda_i(A^\top A)}\)</span>.</p>
+<h2 id="worked-example-eigendecomposition">Worked example: eigendecomposition<a class="headerlink" href="#worked-example-eigendecomposition" title="Permanent link">&para;</a></h2>
+<p>Reuse <span class="arithmatex">\(A = \begin{bmatrix}4&amp;1\\2&amp;3\end{bmatrix}\)</span> from Module 4, with
+<span class="arithmatex">\(\lambda_1=5, \mathbf{v}_1=[1,1]\)</span> and <span class="arithmatex">\(\lambda_2=2, \mathbf{v}_2=[1,-2]\)</span>.</p>
+<div class="arithmatex">\[
+V = \begin{bmatrix}1&amp;1\\1&amp;-2\end{bmatrix} \qquad \Lambda = \begin{bmatrix}5&amp;0\\0&amp;2\end{bmatrix}
+\]</div>
+<div class="arithmatex">\[
+V^{-1} = \frac{1}{\det V}\begin{bmatrix}-2&amp;-1\\-1&amp;1\end{bmatrix}, \quad \det V = 1(-2)-1(1) = -3
+\]</div>
+<div class="arithmatex">\[
+V^{-1} = \begin{bmatrix}2/3 &amp; 1/3\\1/3 &amp; -1/3\end{bmatrix}
+\]</div>
+<p>Reconstructing <span class="arithmatex">\(A = V\Lambda V^{-1}\)</span> should give back the original matrix
+(verified numerically below).</p>
+<h2 id="worked-example-svd-by-hand-small-case">Worked example: SVD by hand (small case)<a class="headerlink" href="#worked-example-svd-by-hand-small-case" title="Permanent link">&para;</a></h2>
+<p>For <span class="arithmatex">\(A = \begin{bmatrix}3&amp;0\\0&amp;-2\end{bmatrix}\)</span> (already diagonal),
+<span class="arithmatex">\(A^\top A = \begin{bmatrix}9&amp;0\\0&amp;4\end{bmatrix}\)</span>, eigenvalues <span class="arithmatex">\(9,4\)</span>, so
+singular values <span class="arithmatex">\(\sigma_1=3, \sigma_2=2\)</span>. Since <span class="arithmatex">\(A\)</span> is diagonal with signs,
+<span class="arithmatex">\(U = \begin{bmatrix}1&amp;0\\0&amp;-1\end{bmatrix}\)</span>, <span class="arithmatex">\(\Sigma=\begin{bmatrix}3&amp;0\\0&amp;2\end{bmatrix}\)</span>,
+<span class="arithmatex">\(V = I\)</span>, and indeed <span class="arithmatex">\(U\Sigma V^\top = \begin{bmatrix}3&amp;0\\0&amp;-2\end{bmatrix}=A\)</span>.</p>
+<h2 id="connection-to-pca">Connection to PCA<a class="headerlink" href="#connection-to-pca" title="Permanent link">&para;</a></h2>
+<p>Given a mean-centered data matrix <span class="arithmatex">\(X\)</span> (<span class="arithmatex">\(n\)</span> samples <span class="arithmatex">\(\times\)</span> <span class="arithmatex">\(p\)</span> features),
+the covariance matrix <span class="arithmatex">\(C = \frac{1}{n-1}X^\top X\)</span> is symmetric. Its
+eigendecomposition <span class="arithmatex">\(C = V\Lambda V^\top\)</span> gives the principal components in
+<span class="arithmatex">\(V\)</span> (directions of max variance) and the variance explained by each in
+<span class="arithmatex">\(\Lambda\)</span>. Equivalently, the SVD of <span class="arithmatex">\(X\)</span> itself gives the same directions
+directly, which is why most PCA implementations use SVD rather than
+eigendecomposition of <span class="arithmatex">\(C\)</span> (better numerical stability).</p>
+<h2 id="numeric-verification">Numeric verification<a class="headerlink" href="#numeric-verification" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>              <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">eigvals</span><span class="p">,</span> <span class="n">V</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eig</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="n">Lambda</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">eigvals</span><span class="p">)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">A_reconstructed</span> <span class="o">=</span> <span class="n">V</span> <span class="o">@</span> <span class="n">Lambda</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">V</span><span class="p">)</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"A reconstructed from eigendecomposition:</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">A_reconstructed</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="n">B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>              <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="n">U</span><span class="p">,</span> <span class="n">S</span><span class="p">,</span> <span class="n">Vt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">svd</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"singular values:"</span><span class="p">,</span> <span class="n">S</span><span class="p">)</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"B reconstructed from SVD:</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">U</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">S</span><span class="p">)</span> <span class="o">@</span> <span class="n">Vt</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+</code></pre></div>
+<p>Expected output:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>A reconstructed from eigendecomposition:
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a> [[4. 1.]
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a> [2. 3.]]
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>singular values: [3. 2.]
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>B reconstructed from SVD:
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a> [[ 3.  0.]
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a> [ 0. -2.]]
+</code></pre></div>
+<h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
+<p>Let <span class="arithmatex">\(D = \begin{bmatrix}2&amp;0\\0&amp;2\end{bmatrix}\)</span> (a scaled identity) and
+<span class="arithmatex">\(E = \begin{bmatrix}0&amp;1\\1&amp;0\end{bmatrix}\)</span> (a swap matrix).</p>
+<ol>
+<li>Find the eigenvalues/eigenvectors of <span class="arithmatex">\(D\)</span> and <span class="arithmatex">\(E\)</span> by hand.</li>
+<li>Confirm both are symmetric and check that their eigenvectors are
+   orthogonal (dot product zero).</li>
+<li>Compute the SVD of <span class="arithmatex">\(F = \begin{bmatrix}1&amp;1\\0&amp;1\end{bmatrix}\)</span> using
+   <code>np.linalg.svd</code> and verify <span class="arithmatex">\(U\Sigma V^\top\)</span> reconstructs <span class="arithmatex">\(F\)</span>.</li>
+<li>Explain in one sentence why SVD works even for non-square matrices while
+   eigendecomposition does not.</li>
+</ol>
 
 
 

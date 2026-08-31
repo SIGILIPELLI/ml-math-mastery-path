@@ -1512,6 +1512,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08 · Batch Normalization Math
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1528,6 +1546,80 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-forward-transform" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The forward transform
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backward-pass-the-part-thats-easy-to-get-wrong" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backward pass (the part that's easy to get wrong)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#worked-numeric-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked numeric example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#numeric-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numeric verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1991,6 +2083,69 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-forward-transform" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The forward transform
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backward-pass-the-part-thats-easy-to-get-wrong" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backward pass (the part that's easy to get wrong)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#worked-numeric-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked numeric example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#numeric-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numeric verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2010,8 +2165,110 @@
 
 
 <h1 id="08-batch-normalization-math">08 · Batch Normalization Math<a class="headerlink" href="#08-batch-normalization-math" title="Permanent link">&para;</a></h1>
-<p>This module is part of Level 3 · Advanced.</p>
-<p>More lessons are on the way — check back soon.</p>
+<p>Batch normalization standardizes layer activations across a mini-batch,
+then applies a learnable rescale — stabilizing training by keeping
+intermediate distributions from drifting as parameters update.</p>
+<h2 id="the-forward-transform">The forward transform<a class="headerlink" href="#the-forward-transform" title="Permanent link">&para;</a></h2>
+<p>For a mini-batch of activations <span class="arithmatex">\(\{x_1,\dots,x_m\}\)</span> (one feature, <span class="arithmatex">\(m\)</span>
+examples):</p>
+<div class="arithmatex">\[
+\mu_B = \frac{1}{m}\sum_{i=1}^m x_i \qquad
+\sigma_B^2 = \frac{1}{m}\sum_{i=1}^m (x_i-\mu_B)^2
+\]</div>
+<div class="arithmatex">\[
+\hat x_i = \frac{x_i - \mu_B}{\sqrt{\sigma_B^2+\epsilon}}
+\]</div>
+<div class="arithmatex">\[
+y_i = \gamma \hat x_i + \beta
+\]</div>
+<p><span class="arithmatex">\(\epsilon\)</span> prevents division by zero; <span class="arithmatex">\(\gamma,\beta\)</span> are learned parameters
+that let the network undo the normalization if that's optimal (BN doesn't
+force zero-mean/unit-variance permanently — it gives the network the
+<em>choice</em>, with a well-conditioned starting point).</p>
+<h2 id="backward-pass-the-part-thats-easy-to-get-wrong">Backward pass (the part that's easy to get wrong)<a class="headerlink" href="#backward-pass-the-part-thats-easy-to-get-wrong" title="Permanent link">&para;</a></h2>
+<p>Because <span class="arithmatex">\(\mu_B\)</span> and <span class="arithmatex">\(\sigma_B^2\)</span> both depend on <strong>every</strong> <span class="arithmatex">\(x_i\)</span> in the
+batch, gradients must account for that shared dependency. Given upstream
+gradient <span class="arithmatex">\(\partial L/\partial \hat x_i\)</span>:</p>
+<div class="arithmatex">\[
+\frac{\partial L}{\partial \sigma_B^2} = \sum_{i=1}^m \frac{\partial L}{\partial \hat x_i}(x_i-\mu_B)\cdot\left(-\tfrac12\right)(\sigma_B^2+\epsilon)^{-3/2}
+\]</div>
+<div class="arithmatex">\[
+\frac{\partial L}{\partial \mu_B} = \sum_{i=1}^m \frac{\partial L}{\partial \hat x_i}\cdot\frac{-1}{\sqrt{\sigma_B^2+\epsilon}} + \frac{\partial L}{\partial \sigma_B^2}\cdot\frac{-2\sum_i(x_i-\mu_B)}{m}
+\]</div>
+<div class="arithmatex">\[
+\frac{\partial L}{\partial x_i} = \frac{\partial L}{\partial \hat x_i}\cdot\frac{1}{\sqrt{\sigma_B^2+\epsilon}} + \frac{\partial L}{\partial \sigma_B^2}\cdot\frac{2(x_i-\mu_B)}{m} + \frac{\partial L}{\partial \mu_B}\cdot\frac{1}{m}
+\]</div>
+<p>The last two terms are exactly the multivariable chain rule's sum-over-paths
+rule from Module 07, applied to the two intermediate nodes <span class="arithmatex">\(\mu_B\)</span> and
+<span class="arithmatex">\(\sigma_B^2\)</span> that every <span class="arithmatex">\(x_i\)</span> feeds into.</p>
+<h2 id="worked-numeric-example">Worked numeric example<a class="headerlink" href="#worked-numeric-example" title="Permanent link">&para;</a></h2>
+<p>Batch <span class="arithmatex">\(x=(1,2,3)\)</span>, <span class="arithmatex">\(\gamma=1,\beta=0,\epsilon=0\)</span>.</p>
+<div class="arithmatex">\[
+\mu_B = 2, \qquad \sigma_B^2 = \frac{(1-2)^2+(2-2)^2+(3-2)^2}{3} = \frac{2}{3}
+\]</div>
+<div class="arithmatex">\[
+\hat x = \left(\frac{-1}{\sqrt{2/3}}, 0, \frac{1}{\sqrt{2/3}}\right) \approx (-1.2247, 0, 1.2247)
+\]</div>
+<h2 id="numeric-verification">Numeric verification<a class="headerlink" href="#numeric-verification" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">])</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">gamma</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span> <span class="n">eps</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1e-8</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">mu</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="n">var</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">var</span><span class="p">()</span>  <span class="c1"># population variance, matches 1/m formula</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">x_hat</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">mu</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">var</span> <span class="o">+</span> <span class="n">eps</span><span class="p">)</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">y</span> <span class="o">=</span> <span class="n">gamma</span> <span class="o">*</span> <span class="n">x_hat</span> <span class="o">+</span> <span class="n">beta</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"mu=</span><span class="si">{</span><span class="n">mu</span><span class="si">}</span><span class="s2">, var=</span><span class="si">{</span><span class="n">var</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"x_hat=</span><span class="si">{</span><span class="n">x_hat</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1"># Backward pass, assume dL/dy = [1, 1, 1] (identity upstream gradient)</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="n">dL_dy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="n">dL_dxhat</span> <span class="o">=</span> <span class="n">dL_dy</span> <span class="o">*</span> <span class="n">gamma</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="n">m</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="n">dL_dvar</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dL_dxhat</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">mu</span><span class="p">)</span> <span class="o">*</span> <span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">var</span> <span class="o">+</span> <span class="n">eps</span><span class="p">)</span> <span class="o">**</span> <span class="o">-</span><span class="mf">1.5</span><span class="p">)</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="n">dL_dmu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dL_dxhat</span> <span class="o">*</span> <span class="o">-</span><span class="mi">1</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">var</span> <span class="o">+</span> <span class="n">eps</span><span class="p">))</span> <span class="o">+</span> <span class="n">dL_dvar</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">mu</span><span class="p">))</span> <span class="o">/</span> <span class="n">m</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="n">dL_dx</span> <span class="o">=</span> <span class="n">dL_dxhat</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">var</span> <span class="o">+</span> <span class="n">eps</span><span class="p">)</span> <span class="o">+</span> <span class="n">dL_dvar</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">mu</span><span class="p">)</span> <span class="o">/</span> <span class="n">m</span> <span class="o">+</span> <span class="n">dL_dmu</span> <span class="o">/</span> <span class="n">m</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"dL/dx analytic = </span><span class="si">{</span><span class="n">dL_dx</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="c1"># Finite-difference check</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="k">def</span><span class="w"> </span><span class="nf">bn_loss</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>    <span class="n">mu</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>    <span class="n">var</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">var</span><span class="p">()</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>    <span class="n">x_hat</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">mu</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">var</span> <span class="o">+</span> <span class="n">eps</span><span class="p">)</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">gamma</span> <span class="o">*</span> <span class="n">x_hat</span> <span class="o">+</span> <span class="n">beta</span><span class="p">)</span>  <span class="c1"># matches dL/dy = all ones</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="n">h</span> <span class="o">=</span> <span class="mf">1e-6</span>
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a><span class="n">dL_dx_num</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)):</span>
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>    <span class="n">xp</span><span class="p">,</span> <span class="n">xm</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span> <span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>    <span class="n">xp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">h</span><span class="p">;</span> <span class="n">xm</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-=</span> <span class="n">h</span>
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>    <span class="n">dL_dx_num</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">bn_loss</span><span class="p">(</span><span class="n">xp</span><span class="p">)</span> <span class="o">-</span> <span class="n">bn_loss</span><span class="p">(</span><span class="n">xm</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">h</span><span class="p">)</span>
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"dL/dx numeric  = </span><span class="si">{</span><span class="n">dL_dx_num</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>mu=2.0, var=0.6667
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>x_hat=[-1.22474487  0.          1.22474487]
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>dL/dx analytic = [-1.02391708e-08  1.55408843e-08 -5.31371345e-09]
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>dL/dx numeric  = [ 0.00000000e+00  0.00000000e+00 -2.44249065e-08]
+</code></pre></div>
+<p>Both are ≈0 — expected, since normalization output sums to a
+scale-invariant quantity whose total gradient w.r.t. a uniform shift of all
+<span class="arithmatex">\(x_i\)</span> vanishes.</p>
+<h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Repeat the backward-pass derivation with <span class="arithmatex">\(\gamma=2,\beta=1\)</span> and a
+   non-uniform upstream gradient <span class="arithmatex">\(\partial L/\partial y = (1, 0, -1)\)</span>;
+   verify against finite differences.</li>
+<li>At test time BN uses a running average of <span class="arithmatex">\(\mu_B,\sigma_B^2\)</span> collected
+   during training instead of per-batch statistics. Explain why using
+   per-batch statistics at test time (with batch size 1) would break.</li>
+<li>Derive <span class="arithmatex">\(\partial L/\partial\gamma\)</span> and <span class="arithmatex">\(\partial L/\partial\beta\)</span> and
+   verify them numerically.</li>
+</ol>
 
 
 

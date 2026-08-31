@@ -1802,6 +1802,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 · Kernel Methods & the Kernel Trick
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1818,6 +1836,113 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-idea-feature-maps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The idea: feature maps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-kernel-trick" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The kernel trick
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifying-a-kernel-matches-its-feature-map" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verifying a kernel matches its feature map
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-rbf-kernel-an-infinite-dimensional-feature-map" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The RBF kernel: an infinite-dimensional feature map
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mercers-condition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mercer's condition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#worked-numeric-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked numeric example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#numeric-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numeric verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1991,6 +2116,102 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-idea-feature-maps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The idea: feature maps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-kernel-trick" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The kernel trick
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifying-a-kernel-matches-its-feature-map" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verifying a kernel matches its feature map
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-rbf-kernel-an-infinite-dimensional-feature-map" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The RBF kernel: an infinite-dimensional feature map
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mercers-condition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mercer's condition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#worked-numeric-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked numeric example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#numeric-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numeric verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2010,8 +2231,102 @@
 
 
 <h1 id="05-kernel-methods-the-kernel-trick">05 · Kernel Methods &amp; the Kernel Trick<a class="headerlink" href="#05-kernel-methods-the-kernel-trick" title="Permanent link">&para;</a></h1>
-<p>This module is part of Level 4 · Master.</p>
-<p>More lessons are on the way — check back soon.</p>
+<p>Kernel methods let linear algorithms (like SVMs) draw non-linear decision
+boundaries — without ever explicitly computing the high-dimensional
+feature space the "non-linear" boundary lives in.</p>
+<h2 id="the-idea-feature-maps">The idea: feature maps<a class="headerlink" href="#the-idea-feature-maps" title="Permanent link">&para;</a></h2>
+<p>If data isn't linearly separable in <span class="arithmatex">\(\mathbb{R}^d\)</span>, map it to a
+higher-dimensional space via <span class="arithmatex">\(\phi:\mathbb{R}^d\to\mathbb{R}^D\)</span> (<span class="arithmatex">\(D\gg d\)</span>)
+where it <em>is</em> linearly separable. E.g. for <span class="arithmatex">\(x=(x_1,x_2)\)</span>:</p>
+<div class="arithmatex">\[
+\phi(x) = (x_1^2,\ \sqrt2\,x_1x_2,\ x_2^2)
+\]</div>
+<p>turns a circular decision boundary in 2D into a linear one in this 3D
+feature space.</p>
+<h2 id="the-kernel-trick">The kernel trick<a class="headerlink" href="#the-kernel-trick" title="Permanent link">&para;</a></h2>
+<p>Many algorithms (SVM, ridge regression, PCA) only need <strong>dot products</strong>
+<span class="arithmatex">\(\phi(x)^\top\phi(z)\)</span> between mapped points, never <span class="arithmatex">\(\phi(x)\)</span> itself. A
+<strong>kernel function</strong> <span class="arithmatex">\(k(x,z)\)</span> computes that dot product directly, in the
+<em>original</em> space — skipping the expensive (or infinite-dimensional!)
+mapping entirely:</p>
+<div class="arithmatex">\[
+k(x,z) = \phi(x)^\top \phi(z)
+\]</div>
+<h2 id="verifying-a-kernel-matches-its-feature-map">Verifying a kernel matches its feature map<a class="headerlink" href="#verifying-a-kernel-matches-its-feature-map" title="Permanent link">&para;</a></h2>
+<p>For <span class="arithmatex">\(\phi(x)=(x_1^2,\sqrt2\,x_1x_2,x_2^2)\)</span>:</p>
+<div class="arithmatex">\[
+\phi(x)^\top\phi(z) = x_1^2z_1^2 + 2x_1x_2z_1z_2 + x_2^2z_2^2 = (x_1z_1+x_2z_2)^2 = (x^\top z)^2
+\]</div>
+<p>So the <strong>polynomial kernel</strong> <span class="arithmatex">\(k(x,z)=(x^\top z)^2\)</span> computes this 3D dot
+product using only a 2D input dot product, squared — no explicit
+3-dimensional vectors ever formed.</p>
+<h2 id="the-rbf-kernel-an-infinite-dimensional-feature-map">The RBF kernel: an infinite-dimensional feature map<a class="headerlink" href="#the-rbf-kernel-an-infinite-dimensional-feature-map" title="Permanent link">&para;</a></h2>
+<div class="arithmatex">\[
+k(x,z) = \exp\left(-\frac{\|x-z\|^2}{2\sigma^2}\right)
+\]</div>
+<p>This corresponds to an <em>infinite-dimensional</em> <span class="arithmatex">\(\phi\)</span> (via a Taylor
+expansion of the exponential) — a feature space you could never construct
+explicitly, but whose dot products the kernel computes in closed form for
+any finite <span class="arithmatex">\(\sigma\)</span>.</p>
+<h2 id="mercers-condition">Mercer's condition<a class="headerlink" href="#mercers-condition" title="Permanent link">&para;</a></h2>
+<p>Not every function <span class="arithmatex">\(k(x,z)\)</span> is a valid kernel. It's valid iff the
+<strong>Gram matrix</strong> <span class="arithmatex">\(K_{ij}=k(x_i,x_j)\)</span> is positive semi-definite for every
+finite set of points <span class="arithmatex">\(\{x_i\}\)</span> — this guarantees a valid <span class="arithmatex">\(\phi\)</span> exists
+(possibly infinite-dimensional) with <span class="arithmatex">\(k(x,z)=\phi(x)^\top\phi(z)\)</span>.</p>
+<h2 id="worked-numeric-example">Worked numeric example<a class="headerlink" href="#worked-numeric-example" title="Permanent link">&para;</a></h2>
+<p><span class="arithmatex">\(x=(1,2), z=(3,1)\)</span>. Direct feature-map dot product:</p>
+<div class="arithmatex">\[
+\phi(x) = (1, 2\sqrt2, 4), \quad \phi(z) = (9, 3\sqrt2, 1)
+\]</div>
+<div class="arithmatex">\[
+\phi(x)^\top\phi(z) = 1(9) + 2\sqrt2(3\sqrt2) + 4(1) = 9+12+4 = 25
+\]</div>
+<p>Kernel trick: <span class="arithmatex">\((x^\top z)^2 = (1\cdot3+2\cdot1)^2 = 5^2 = 25\)</span> ✓ — matches
+exactly, without ever forming <span class="arithmatex">\(\phi\)</span>.</p>
+<h2 id="numeric-verification">Numeric verification<a class="headerlink" href="#numeric-verification" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">])</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="k">def</span><span class="w"> </span><span class="nf">phi</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">])</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">feature_dot</span> <span class="o">=</span> <span class="n">phi</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">@</span> <span class="n">phi</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="n">kernel_direct</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">@</span> <span class="n">z</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"feature-space dot product = </span><span class="si">{</span><span class="n">feature_dot</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"polynomial kernel (x^T z)^2 = </span><span class="si">{</span><span class="n">kernel_direct</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1"># Verify Gram matrix of RBF kernel is PSD for a small point set</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="n">pts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">]])</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="n">sigma</span> <span class="o">=</span> <span class="mf">1.0</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">pts</span><span class="p">)</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="n">K</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>        <span class="n">K</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">pts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-</span><span class="n">pts</span><span class="p">[</span><span class="n">j</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">sigma</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="n">eigvals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigvalsh</span><span class="p">(</span><span class="n">K</span><span class="p">)</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"RBF Gram matrix eigenvalues = </span><span class="si">{</span><span class="n">eigvals</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"all &gt;= 0 (valid kernel)? </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">eigvals</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="o">-</span><span class="mf">1e-10</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>feature-space dot product = 25.0000
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>polynomial kernel (x^T z)^2 = 25.0000
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>RBF Gram matrix eigenvalues = [0.0700 0.2079 0.2079 0.7261 3.7881]
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>all &gt;= 0 (valid kernel)? True
+</code></pre></div>
+<h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Derive the explicit feature map for <span class="arithmatex">\(k(x,z)=(x^\top z + 1)^2\)</span> in 2D
+   (this is the "inhomogeneous" polynomial kernel — it also generates
+   lower-degree terms) and confirm the dot product matches numerically.</li>
+<li>Prove that if <span class="arithmatex">\(k_1\)</span> and <span class="arithmatex">\(k_2\)</span> are valid kernels, so is <span class="arithmatex">\(k_1+k_2\)</span>
+   (using the Gram-matrix PSD definition — sum of PSD matrices is PSD).</li>
+<li>Explain, using the RBF Gram matrix eigenvalues above, what a small
+   <span class="arithmatex">\(\sigma\)</span> (very local kernel) versus a large <span class="arithmatex">\(\sigma\)</span> (very smooth
+   kernel) does to the conditioning of <span class="arithmatex">\(K\)</span>, and why that matters for
+   kernel ridge regression's <span class="arithmatex">\((K+\lambda I)^{-1}\)</span> solve.</li>
+</ol>
 
 
 

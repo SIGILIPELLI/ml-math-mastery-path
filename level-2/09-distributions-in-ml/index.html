@@ -1166,6 +1166,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09 · Distributions Used in ML
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1182,6 +1200,102 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#bernoulli-distribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bernoulli distribution
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#binomial-distribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Binomial distribution
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gaussian-normal-distribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gaussian (Normal) distribution
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#worked-example-binomial" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked example: Binomial
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#worked-example-gaussian-density-value" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked example: Gaussian density value
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#numeric-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numeric verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1991,6 +2105,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#bernoulli-distribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bernoulli distribution
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#binomial-distribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Binomial distribution
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gaussian-normal-distribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gaussian (Normal) distribution
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#worked-example-binomial" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked example: Binomial
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#worked-example-gaussian-density-value" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked example: Gaussian density value
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#numeric-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numeric verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2010,8 +2209,92 @@
 
 
 <h1 id="09-distributions-used-in-ml">09 · Distributions Used in ML<a class="headerlink" href="#09-distributions-used-in-ml" title="Permanent link">&para;</a></h1>
-<p>This module is part of Level 2 · Intermediate.</p>
-<p>More lessons are on the way — check back soon.</p>
+<p>A <strong>probability distribution</strong> describes how likely each outcome of a random
+variable is. A handful of named distributions recur throughout ML — this
+module covers the ones you'll meet immediately: Bernoulli, Binomial, and
+Gaussian (Normal).</p>
+<h2 id="bernoulli-distribution">Bernoulli distribution<a class="headerlink" href="#bernoulli-distribution" title="Permanent link">&para;</a></h2>
+<p>Models a single binary trial (success/failure) with success probability
+<span class="arithmatex">\(p\)</span>. <span class="arithmatex">\(X \in \{0,1\}\)</span> with</p>
+<div class="arithmatex">\[
+P(X=1) = p \qquad P(X=0) = 1-p
+\]</div>
+<div class="arithmatex">\[
+E[X] = p \qquad \text{Var}(X) = p(1-p)
+\]</div>
+<p>This is exactly the distribution behind a single logistic-regression
+prediction / binary classification label.</p>
+<h2 id="binomial-distribution">Binomial distribution<a class="headerlink" href="#binomial-distribution" title="Permanent link">&para;</a></h2>
+<p>The number of successes <span class="arithmatex">\(X\)</span> in <span class="arithmatex">\(n\)</span> independent Bernoulli(<span class="arithmatex">\(p\)</span>) trials:</p>
+<div class="arithmatex">\[
+P(X=k) = \binom{n}{k}p^k(1-p)^{n-k}, \qquad k=0,\dots,n
+\]</div>
+<div class="arithmatex">\[
+E[X] = np \qquad \text{Var}(X) = np(1-p)
+\]</div>
+<p>(A Binomial is a sum of <span class="arithmatex">\(n\)</span> i.i.d. Bernoullis, so its mean/variance are <span class="arithmatex">\(n\)</span>
+times the single-trial values, by linearity of expectation and
+independence.)</p>
+<h2 id="gaussian-normal-distribution">Gaussian (Normal) distribution<a class="headerlink" href="#gaussian-normal-distribution" title="Permanent link">&para;</a></h2>
+<p>A continuous distribution with density</p>
+<div class="arithmatex">\[
+f(x) = \frac{1}{\sigma\sqrt{2\pi}} \exp\!\left(-\frac{(x-\mu)^2}{2\sigma^2}\right)
+\]</div>
+<p>parameterized by mean <span class="arithmatex">\(\mu\)</span> and variance <span class="arithmatex">\(\sigma^2\)</span>. It's the most common
+distribution in ML: the Central Limit Theorem says sums/averages of many
+independent effects tend toward Gaussian, so noise in measurements, weight
+initializations, and many likelihood models assume Gaussian errors.
+Assuming Gaussian-distributed errors and maximizing likelihood (Level 3)
+is exactly what derives the mean-squared-error loss.</p>
+<h2 id="worked-example-binomial">Worked example: Binomial<a class="headerlink" href="#worked-example-binomial" title="Permanent link">&para;</a></h2>
+<p>Flip a fair coin (<span class="arithmatex">\(p=0.5\)</span>) <span class="arithmatex">\(n=10\)</span> times. Probability of exactly <span class="arithmatex">\(k=6\)</span> heads:</p>
+<div class="arithmatex">\[
+P(X=6) = \binom{10}{6}(0.5)^6(0.5)^4 = 210 \cdot (0.5)^{10} = \frac{210}{1024} \approx 0.2051
+\]</div>
+<p><strong>Mean and variance:</strong> <span class="arithmatex">\(E[X] = 10(0.5) = 5\)</span>, <span class="arithmatex">\(\text{Var}(X)=10(0.5)(0.5)=2.5\)</span>.</p>
+<h2 id="worked-example-gaussian-density-value">Worked example: Gaussian density value<a class="headerlink" href="#worked-example-gaussian-density-value" title="Permanent link">&para;</a></h2>
+<p>For a standard normal (<span class="arithmatex">\(\mu=0,\sigma=1\)</span>), the density at <span class="arithmatex">\(x=1\)</span>:</p>
+<div class="arithmatex">\[
+f(1) = \frac{1}{\sqrt{2\pi}} e^{-1/2} \approx 0.3989 \times 0.6065 \approx 0.2420
+\]</div>
+<h2 id="numeric-verification">Numeric verification<a class="headerlink" href="#numeric-verification" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">binom</span><span class="p">,</span> <span class="n">norm</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Binomial</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">n</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">6</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"P(X=6) binomial:"</span><span class="p">,</span> <span class="n">binom</span><span class="o">.</span><span class="n">pmf</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">p</span><span class="p">))</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"Binomial mean, var:"</span><span class="p">,</span> <span class="n">binom</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">p</span><span class="p">),</span> <span class="n">binom</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">p</span><span class="p">))</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Gaussian density at x=1 for standard normal</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"standard normal pdf at x=1:"</span><span class="p">,</span> <span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Cross-check binomial via direct simulation of coin flips</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="n">trials</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">2_000_000</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"simulated P(X=6):"</span><span class="p">,</span> <span class="p">(</span><span class="n">trials</span> <span class="o">==</span> <span class="mi">6</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"simulated mean, var:"</span><span class="p">,</span> <span class="n">trials</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">trials</span><span class="o">.</span><span class="n">var</span><span class="p">())</span>
+</code></pre></div>
+<p>Expected output:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>P(X=6) binomial: 0.2050781250000001
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Binomial mean, var: 5.0 2.5
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>standard normal pdf at x=1: 0.24197072451914337
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>simulated P(X=6): 0.2050...
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>simulated mean, var: 5.000... 2.499...
+</code></pre></div>
+<h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
+<p>Let <span class="arithmatex">\(X \sim \text{Binomial}(n=20, p=0.3)\)</span>.</p>
+<ol>
+<li>Compute <span class="arithmatex">\(P(X=5)\)</span> by hand using the binomial formula (show the
+   combinatorial coefficient).</li>
+<li>Compute <span class="arithmatex">\(E[X]\)</span> and <span class="arithmatex">\(\text{Var}(X)\)</span> using the shortcut formulas.</li>
+<li>Using <code>scipy.stats.norm</code>, evaluate the density of a Gaussian with
+   <span class="arithmatex">\(\mu=5, \sigma=2\)</span> at <span class="arithmatex">\(x=7\)</span> and at <span class="arithmatex">\(x=5\)</span> — explain why the density is
+   higher at <span class="arithmatex">\(x=5\)</span>.</li>
+<li>Verify your binomial answer from step 1 with <code>scipy.stats.binom.pmf</code> and
+   with a NumPy simulation of at least 1,000,000 trials of 20 coin flips
+   each with <span class="arithmatex">\(p=0.3\)</span>.</li>
+</ol>
 
 
 

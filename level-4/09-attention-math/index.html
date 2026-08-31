@@ -1914,6 +1914,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09 · Math Behind Transformer Attention
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1930,6 +1948,91 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#scaled-dot-product-attention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scaled dot-product attention
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reading-it-piece-by-piece" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reading it piece by piece
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-divide-by-sqrtd_k" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why divide by \(\sqrt{d_k}\)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#worked-numeric-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked numeric example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#numeric-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numeric verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1991,6 +2094,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#scaled-dot-product-attention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scaled dot-product attention
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reading-it-piece-by-piece" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reading it piece by piece
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-divide-by-sqrtd_k" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why divide by \(\sqrt{d_k}\)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#worked-numeric-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked numeric example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#numeric-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numeric verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2010,8 +2187,97 @@
 
 
 <h1 id="09-math-behind-transformer-attention">09 · Math Behind Transformer Attention<a class="headerlink" href="#09-math-behind-transformer-attention" title="Permanent link">&para;</a></h1>
-<p>This module is part of Level 4 · Master.</p>
-<p>More lessons are on the way — check back soon.</p>
+<p>Transformer attention is a weighted average — the "weighting" comes from
+scaled dot products passed through softmax (Level 3 Module 06), and the
+"scaling" is a numerical-stability fix (Level 3 Module 09) that's easy to
+forget but essential.</p>
+<h2 id="scaled-dot-product-attention">Scaled dot-product attention<a class="headerlink" href="#scaled-dot-product-attention" title="Permanent link">&para;</a></h2>
+<p>Given queries <span class="arithmatex">\(Q\in\mathbb{R}^{n\times d_k}\)</span>, keys <span class="arithmatex">\(K\in\mathbb{R}^{m\times
+d_k}\)</span>, and values <span class="arithmatex">\(V\in\mathbb{R}^{m\times d_v}\)</span>:</p>
+<div class="arithmatex">\[
+\text{Attention}(Q,K,V) = \text{softmax}\!\left(\frac{QK^\top}{\sqrt{d_k}}\right)V
+\]</div>
+<h2 id="reading-it-piece-by-piece">Reading it piece by piece<a class="headerlink" href="#reading-it-piece-by-piece" title="Permanent link">&para;</a></h2>
+<p><span class="arithmatex">\(QK^\top\)</span> is an <span class="arithmatex">\(n\times m\)</span> matrix of raw similarity scores: row <span class="arithmatex">\(i\)</span>,
+column <span class="arithmatex">\(j\)</span> is <span class="arithmatex">\(q_i \cdot k_j\)</span> — how much query <span class="arithmatex">\(i\)</span> "attends to" key <span class="arithmatex">\(j\)</span>.
+Softmax (row-wise) turns each row into a probability distribution over
+the <span class="arithmatex">\(m\)</span> keys. Multiplying by <span class="arithmatex">\(V\)</span> produces, for each query, a weighted
+average of the value vectors — weighted by how relevant each key was.</p>
+<h2 id="why-divide-by-sqrtd_k">Why divide by <span class="arithmatex">\(\sqrt{d_k}\)</span><a class="headerlink" href="#why-divide-by-sqrtd_k" title="Permanent link">&para;</a></h2>
+<p>If <span class="arithmatex">\(q,k\)</span> have independent components with mean 0, variance 1, then
+<span class="arithmatex">\(q\cdot k = \sum_{i=1}^{d_k} q_ik_i\)</span> has variance <span class="arithmatex">\(d_k\)</span> (sum of <span class="arithmatex">\(d_k\)</span>
+independent unit-variance terms — Level 2 Module 7's variance-of-a-sum
+rule). For large <span class="arithmatex">\(d_k\)</span> (e.g. 64 or 128), raw dot products can be huge,
+pushing softmax into a saturated regime where gradients vanish (extremely
+peaked distributions, Level 3 Module 09's numerical stability territory).
+Dividing by <span class="arithmatex">\(\sqrt{d_k}\)</span> rescales the variance back to <span class="arithmatex">\(\approx 1\)</span>
+regardless of dimension, keeping softmax's input in a well-behaved range.</p>
+<h2 id="worked-numeric-example">Worked numeric example<a class="headerlink" href="#worked-numeric-example" title="Permanent link">&para;</a></h2>
+<p><span class="arithmatex">\(d_k=4\)</span>. One query <span class="arithmatex">\(q=(1,0,1,0)\)</span>, two keys <span class="arithmatex">\(k_1=(1,1,0,0),\
+k_2=(0,0,1,1)\)</span>, values <span class="arithmatex">\(v_1=(1,0),\ v_2=(0,1)\)</span>.</p>
+<div class="arithmatex">\[
+q\cdot k_1 = 1, \qquad q\cdot k_2 = 1
+\]</div>
+<p>Scaled: <span class="arithmatex">\(1/\sqrt4 = 0.5\)</span> for both. Softmax of <span class="arithmatex">\((0.5, 0.5)\)</span> is <span class="arithmatex">\((0.5, 0.5)\)</span>
+(a tie, since both scores are equal). Output: <span class="arithmatex">\(0.5v_1 + 0.5v_2 = (0.5,
+0.5)\)</span> — an even blend, correctly reflecting that <span class="arithmatex">\(q\)</span> is equally similar to
+both keys.</p>
+<h2 id="numeric-verification">Numeric verification<a class="headerlink" href="#numeric-verification" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="k">def</span><span class="w"> </span><span class="nf">softmax</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">e</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="k">return</span> <span class="n">e</span> <span class="o">/</span> <span class="n">e</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">Q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]])</span>          <span class="c1"># 1 query, d_k=4</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">K</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>              <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]])</span>           <span class="c1"># 2 keys</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="n">V</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>              <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]])</span>                     <span class="c1"># 2 values, d_v=2</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="n">d_k</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="n">scores</span> <span class="o">=</span> <span class="n">Q</span> <span class="o">@</span> <span class="n">K</span><span class="o">.</span><span class="n">T</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">d_k</span><span class="p">)</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="n">weights</span> <span class="o">=</span> <span class="n">softmax</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="n">output</span> <span class="o">=</span> <span class="n">weights</span> <span class="o">@</span> <span class="n">V</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"raw scores (unscaled) = </span><span class="si">{</span><span class="n">Q</span><span class="w"> </span><span class="o">@</span><span class="w"> </span><span class="n">K</span><span class="o">.</span><span class="n">T</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"scaled scores = </span><span class="si">{</span><span class="n">scores</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"attention weights = </span><span class="si">{</span><span class="n">weights</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"output = </span><span class="si">{</span><span class="n">output</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="c1"># Demonstrate the variance-blowup problem the scaling fixes</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="k">for</span> <span class="n">d_k_test</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">512</span><span class="p">]:</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>    <span class="n">q</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">d_k_test</span><span class="p">)</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>    <span class="n">k</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">d_k_test</span><span class="p">)</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>    <span class="n">raw_dot</span> <span class="o">=</span> <span class="n">q</span> <span class="o">@</span> <span class="n">k</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>    <span class="n">scaled_dot</span> <span class="o">=</span> <span class="n">raw_dot</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">d_k_test</span><span class="p">)</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"d_k=</span><span class="si">{</span><span class="n">d_k_test</span><span class="si">}</span><span class="s2">: raw dot~std(</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">d_k_test</span><span class="p">)</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">) -&gt; "</span>
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>          <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">raw_dot</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">, scaled -&gt; </span><span class="si">{</span><span class="n">scaled_dot</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>raw scores (unscaled) = [[1. 1.]]
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>scaled scores = [[0.5 0.5]]
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>attention weights = [[0.5 0.5]]
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>output = [[0.5 0.5]]
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>d_k=4: raw dot~std(2.0) -&gt; 1.68, scaled -&gt; 0.84
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>d_k=64: raw dot~std(8.0) -&gt; -0.24, scaled -&gt; -0.03
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>d_k=512: raw dot~std(22.6) -&gt; -30.85, scaled -&gt; -1.36
+</code></pre></div>
+<h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Add a third key <span class="arithmatex">\(k_3=(1,0,1,0)\)</span> (identical to <span class="arithmatex">\(q\)</span>) with value
+   <span class="arithmatex">\(v_3=(1,1)\)</span> — recompute attention weights and output, and confirm the
+   identical key dominates the softmax distribution.</li>
+<li>Implement multi-head attention conceptually: split <span class="arithmatex">\(Q,K,V\)</span> into <span class="arithmatex">\(h\)</span>
+   chunks along the feature dimension, run scaled dot-product attention on
+   each chunk independently, and concatenate the outputs. Explain why each
+   head effectively uses a smaller <span class="arithmatex">\(d_k\)</span>, changing the right scaling factor.</li>
+<li>Derive <span class="arithmatex">\(\partial(\text{Attention output})/\partial Q\)</span> conceptually by
+   naming which upstream modules it decomposes into (softmax Jacobian from
+   Module 06 of Level 3, matrix multiplication gradients) — you don't need
+   to write the full tensor expression, just identify the chain.</li>
+</ol>
 
 
 

@@ -1428,6 +1428,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 · Maximum Likelihood Estimation
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1444,6 +1462,91 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-likelihood" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The likelihood
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mse-is-mle-under-a-gaussian-noise-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MSE is MLE under a Gaussian noise model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cross-entropy-is-mle-under-a-bernoullicategorical-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cross-entropy is MLE under a Bernoulli/categorical model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#worked-numeric-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked numeric example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#numeric-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numeric verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1991,6 +2094,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-likelihood" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The likelihood
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mse-is-mle-under-a-gaussian-noise-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MSE is MLE under a Gaussian noise model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cross-entropy-is-mle-under-a-bernoullicategorical-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cross-entropy is MLE under a Bernoulli/categorical model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#worked-numeric-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked numeric example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#numeric-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numeric verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2010,8 +2187,84 @@
 
 
 <h1 id="05-maximum-likelihood-estimation">05 · Maximum Likelihood Estimation<a class="headerlink" href="#05-maximum-likelihood-estimation" title="Permanent link">&para;</a></h1>
-<p>This module is part of Level 3 · Advanced.</p>
-<p>More lessons are on the way — check back soon.</p>
+<p>Most loss functions in ML aren't arbitrary — they fall out of maximum
+likelihood estimation (MLE): choose the parameters that make the observed
+data most probable under an assumed distribution.</p>
+<h2 id="the-likelihood">The likelihood<a class="headerlink" href="#the-likelihood" title="Permanent link">&para;</a></h2>
+<p>Given data <span class="arithmatex">\(\{x_i\}_{i=1}^n\)</span> assumed i.i.d. from a distribution with
+parameters <span class="arithmatex">\(\theta\)</span>, the likelihood is:</p>
+<div class="arithmatex">\[
+\mathcal{L}(\theta) = \prod_{i=1}^n p(x_i \mid \theta)
+\]</div>
+<p>Products underflow numerically, so we maximize the <strong>log-likelihood</strong>
+instead (log is monotonic, same maximizer):</p>
+<div class="arithmatex">\[
+\ell(\theta) = \log \mathcal{L}(\theta) = \sum_{i=1}^n \log p(x_i \mid \theta)
+\]</div>
+<p>MLE: <span class="arithmatex">\(\hat\theta = \arg\max_\theta \ell(\theta)\)</span>, equivalently
+<span class="arithmatex">\(\arg\min_\theta -\ell(\theta)\)</span> — <strong>negative log-likelihood (NLL)</strong> is a
+loss function.</p>
+<h2 id="mse-is-mle-under-a-gaussian-noise-model">MSE is MLE under a Gaussian noise model<a class="headerlink" href="#mse-is-mle-under-a-gaussian-noise-model" title="Permanent link">&para;</a></h2>
+<p>Assume <span class="arithmatex">\(y_i = f_\theta(x_i) + \varepsilon_i\)</span> with <span class="arithmatex">\(\varepsilon_i \sim
+\mathcal{N}(0,\sigma^2)\)</span>. Then <span class="arithmatex">\(p(y_i\mid x_i,\theta) =
+\frac{1}{\sqrt{2\pi\sigma^2}}\exp\!\left(-\frac{(y_i-f_\theta(x_i))^2}{2\sigma^2}\right)\)</span>.</p>
+<div class="arithmatex">\[
+-\ell(\theta) = \sum_i \left[\frac{(y_i-f_\theta(x_i))^2}{2\sigma^2} + \tfrac12\log(2\pi\sigma^2)\right]
+\]</div>
+<p>Dropping constants independent of <span class="arithmatex">\(\theta\)</span>, minimizing <span class="arithmatex">\(-\ell\)</span> is exactly
+minimizing <span class="arithmatex">\(\sum_i (y_i - f_\theta(x_i))^2\)</span> — <strong>squared error loss</strong>.</p>
+<h2 id="cross-entropy-is-mle-under-a-bernoullicategorical-model">Cross-entropy is MLE under a Bernoulli/categorical model<a class="headerlink" href="#cross-entropy-is-mle-under-a-bernoullicategorical-model" title="Permanent link">&para;</a></h2>
+<p>For binary labels <span class="arithmatex">\(y_i \in \{0,1\}\)</span> with predicted probability <span class="arithmatex">\(\hat
+p_i=f_\theta(x_i)\)</span>: <span class="arithmatex">\(p(y_i\mid x_i,\theta) = \hat p_i^{y_i}(1-\hat
+p_i)^{1-y_i}\)</span>.</p>
+<div class="arithmatex">\[
+-\ell(\theta) = -\sum_i \left[y_i\log\hat p_i + (1-y_i)\log(1-\hat p_i)\right]
+\]</div>
+<p>That sum is exactly binary cross-entropy — the standard classification
+loss is negative log-likelihood of a Bernoulli model.</p>
+<h2 id="worked-numeric-example">Worked numeric example<a class="headerlink" href="#worked-numeric-example" title="Permanent link">&para;</a></h2>
+<p>Estimate the MLE of <span class="arithmatex">\(\mu\)</span> for Gaussian data <span class="arithmatex">\(\{2, 4, 4, 6\}\)</span> with known
+<span class="arithmatex">\(\sigma^2=1\)</span>. Setting <span class="arithmatex">\(d\ell/d\mu = \sum_i(x_i-\mu) = 0\)</span> gives the familiar
+result <span class="arithmatex">\(\hat\mu = \bar x\)</span>:</p>
+<div class="arithmatex">\[
+\hat\mu = \frac{2+4+4+6}{4} = 4.0
+\]</div>
+<h2 id="numeric-verification">Numeric verification<a class="headerlink" href="#numeric-verification" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">minimize_scalar</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">])</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">sigma</span> <span class="o">=</span> <span class="mf">1.0</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="k">def</span><span class="w"> </span><span class="nf">neg_log_likelihood</span><span class="p">(</span><span class="n">mu</span><span class="p">):</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="k">return</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">sigma</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="n">data</span> <span class="o">-</span> <span class="n">mu</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">sigma</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="n">result</span> <span class="o">=</span> <span class="n">minimize_scalar</span><span class="p">(</span><span class="n">neg_log_likelihood</span><span class="p">)</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"closed-form MLE mu = </span><span class="si">{</span><span class="n">data</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"numerically optimized mu = </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1"># Cross-entropy = NLL of Bernoulli, sanity check</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="n">p_hat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">])</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="n">bce</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">y</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">p_hat</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">p_hat</span><span class="p">))</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"binary cross-entropy = </span><span class="si">{</span><span class="n">bce</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>closed-form MLE mu = 4.0000
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>numerically optimized mu = 4.0000
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>binary cross-entropy = 0.3199
+</code></pre></div>
+<h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Derive the MLE for the variance <span class="arithmatex">\(\sigma^2\)</span> of a Gaussian given data
+   <span class="arithmatex">\(\{2,4,4,6\}\)</span> with <span class="arithmatex">\(\mu\)</span> fixed at the sample mean. Verify against
+   <code>np.var(data)</code>.</li>
+<li>Show that minimizing categorical cross-entropy over <span class="arithmatex">\(C\)</span> classes is MLE
+   under a categorical (multinoulli) distribution — write out <span class="arithmatex">\(-\ell\)</span> for
+   one-hot labels.</li>
+<li>Explain, using the log-likelihood view, why adding an L2 penalty
+   <span class="arithmatex">\(\lambda\|\theta\|^2\)</span> to the loss corresponds to placing a Gaussian
+   <em>prior</em> on <span class="arithmatex">\(\theta\)</span> (this is MAP estimation, not plain MLE).</li>
+</ol>
 
 
 

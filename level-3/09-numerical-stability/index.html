@@ -1540,6 +1540,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09 · Numerical Stability in ML Math
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1556,6 +1574,102 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#float-overflowunderflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Float overflow/underflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-log-sum-exp-trick" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The log-sum-exp trick
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cross-entropy-dont-compute-logsoftmaxz-in-two-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cross-entropy: don't compute log(softmax(z)) in two steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#catastrophic-cancellation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Catastrophic cancellation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#worked-numeric-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked numeric example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#numeric-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numeric verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1991,6 +2105,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#float-overflowunderflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Float overflow/underflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-log-sum-exp-trick" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The log-sum-exp trick
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cross-entropy-dont-compute-logsoftmaxz-in-two-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cross-entropy: don't compute log(softmax(z)) in two steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#catastrophic-cancellation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Catastrophic cancellation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#worked-numeric-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked numeric example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#numeric-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numeric verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2010,8 +2209,92 @@
 
 
 <h1 id="09-numerical-stability-in-ml-math">09 · Numerical Stability in ML Math<a class="headerlink" href="#09-numerical-stability-in-ml-math" title="Permanent link">&para;</a></h1>
-<p>This module is part of Level 3 · Advanced.</p>
-<p>More lessons are on the way — check back soon.</p>
+<p>Correct math on paper can still fail in floating point — overflow,
+underflow, and catastrophic cancellation are the usual suspects. This
+module covers the handful of tricks that keep production ML numerically
+sound.</p>
+<h2 id="float-overflowunderflow">Float overflow/underflow<a class="headerlink" href="#float-overflowunderflow" title="Permanent link">&para;</a></h2>
+<p><code>float32</code> overflows above ≈<span class="arithmatex">\(3.4\times10^{38}\)</span> (becomes <code>inf</code>) and
+underflows below ≈<span class="arithmatex">\(1.2\times10^{-38}\)</span> (becomes 0). <span class="arithmatex">\(e^{100}\)</span> alone already
+overflows <code>float32</code>.</p>
+<h2 id="the-log-sum-exp-trick">The log-sum-exp trick<a class="headerlink" href="#the-log-sum-exp-trick" title="Permanent link">&para;</a></h2>
+<p>Softmax needs <span class="arithmatex">\(\sum_j e^{z_j}\)</span>, which overflows for large logits. Subtract
+the max first — mathematically identical, numerically safe:</p>
+<div class="arithmatex">\[
+\text{softmax}(z)_i = \frac{e^{z_i}}{\sum_j e^{z_j}} = \frac{e^{z_i-c}}{\sum_j e^{z_j-c}} \quad \text{for any constant } c
+\]</div>
+<p>Choosing <span class="arithmatex">\(c=\max_j z_j\)</span> makes every exponent <span class="arithmatex">\(\le 0\)</span>, so every term is in
+<span class="arithmatex">\((0,1]\)</span> — no overflow, and the largest term is exactly <span class="arithmatex">\(e^0=1\)</span>.</p>
+<p>For log-probabilities directly, the <strong>log-sum-exp</strong> identity avoids ever
+forming the sum in an unstable range:</p>
+<div class="arithmatex">\[
+\log\sum_j e^{z_j} = c + \log\sum_j e^{z_j-c}, \qquad c=\max_j z_j
+\]</div>
+<h2 id="cross-entropy-dont-compute-logsoftmaxz-in-two-steps">Cross-entropy: don't compute log(softmax(z)) in two steps<a class="headerlink" href="#cross-entropy-dont-compute-logsoftmaxz-in-two-steps" title="Permanent link">&para;</a></h2>
+<p>Computing <span class="arithmatex">\(p=\text{softmax}(z)\)</span> then <span class="arithmatex">\(\log p\)</span> risks <span class="arithmatex">\(\log(0)\)</span> if some
+<span class="arithmatex">\(p_i\)</span> underflows to exactly 0. Fusing them:</p>
+<div class="arithmatex">\[
+\log p_k = z_k - \log\sum_j e^{z_j} = z_k - \left(c + \log\sum_j e^{z_j-c}\right)
+\]</div>
+<p>avoids ever materializing a probability that could be exactly zero.</p>
+<h2 id="catastrophic-cancellation">Catastrophic cancellation<a class="headerlink" href="#catastrophic-cancellation" title="Permanent link">&para;</a></h2>
+<p>Subtracting two nearly-equal large floats destroys precision: computing
+variance as <span class="arithmatex">\(\frac{1}{n}\sum x_i^2 - \bar x^2\)</span> can go <strong>negative</strong> due to
+rounding when values are large and variance is small. The two-pass formula
+<span class="arithmatex">\(\frac{1}{n}\sum(x_i-\bar x)^2\)</span> is more stable because it never subtracts
+two large near-equal numbers.</p>
+<h2 id="worked-numeric-example">Worked numeric example<a class="headerlink" href="#worked-numeric-example" title="Permanent link">&para;</a></h2>
+<p>Logits <span class="arithmatex">\(z = (1000, 1001, 999)\)</span>. Naive softmax:</p>
+<div class="arithmatex">\[
+e^{1000} = \text{overflow} \to \text{inf}, \qquad \text{inf}/\text{inf} = \text{NaN}
+\]</div>
+<p>Stable version with <span class="arithmatex">\(c=1001\)</span>: exponents become <span class="arithmatex">\((-1,0,-2)\)</span>, giving
+<span class="arithmatex">\(e^{-1}=0.3679,\ e^0=1,\ e^{-2}=0.1353\)</span>, sum<span class="arithmatex">\(=1.5032\)</span>, so
+<span class="arithmatex">\(p\approx(0.2447, 0.6652, 0.0900)\)</span> — a valid distribution.</p>
+<h2 id="numeric-verification">Numeric verification<a class="headerlink" href="#numeric-verification" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1000.0</span><span class="p">,</span> <span class="mf">1001.0</span><span class="p">,</span> <span class="mf">999.0</span><span class="p">])</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Naive (unstable)</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="k">with</span> <span class="n">np</span><span class="o">.</span><span class="n">errstate</span><span class="p">(</span><span class="n">over</span><span class="o">=</span><span class="s1">'ignore'</span><span class="p">,</span> <span class="n">invalid</span><span class="o">=</span><span class="s1">'ignore'</span><span class="p">):</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">e_naive</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">p_naive</span> <span class="o">=</span> <span class="n">e_naive</span> <span class="o">/</span> <span class="n">e_naive</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"naive softmax = </span><span class="si">{</span><span class="n">p_naive</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>  <span class="c1"># nan, nan, nan</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Stable</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="n">c</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="n">e_stable</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">z</span> <span class="o">-</span> <span class="n">c</span><span class="p">)</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="n">p_stable</span> <span class="o">=</span> <span class="n">e_stable</span> <span class="o">/</span> <span class="n">e_stable</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"stable softmax = </span><span class="si">{</span><span class="n">p_stable</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"sums to = </span><span class="si">{</span><span class="n">p_stable</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="c1"># Variance stability comparison</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1e8</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">1e8</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">1e8</span> <span class="o">+</span> <span class="mi">3</span><span class="p">])</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="n">naive_var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>       <span class="c1"># cancellation-prone</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="n">stable_var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">x</span> <span class="o">-</span> <span class="n">x</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>          <span class="c1"># two-pass, stable</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"naive var = </span><span class="si">{</span><span class="n">naive_var</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>   <span class="c1"># may be wildly wrong / negative</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"stable var (matches np.var) = </span><span class="si">{</span><span class="n">stable_var</span><span class="si">}</span><span class="s2">, np.var = </span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">var</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>naive softmax = [nan nan nan]
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>stable softmax = [0.24472847 0.66524096 0.09003057]
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>sums to = 1.000000
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>naive var = ...  (unstable, sensitive to platform — may print 0.0 or a
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>                   wrong nonzero value due to float64 precision limits)
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>stable var (matches np.var) = 0.6666666666666666, np.var = 0.6666666666666666
+</code></pre></div>
+<h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Implement <code>log_softmax(z)</code> using the log-sum-exp trick and verify
+   <code>np.exp(log_softmax(z))</code> matches the stable softmax above to 6 decimal
+   places.</li>
+<li>Show that gradient clipping (capping <span class="arithmatex">\(\|\nabla L\|\)</span> at a threshold
+   before the update) prevents the "exploding gradient" failure mode in
+   RNNs, using a toy example where an unclipped update overshoots badly.</li>
+<li>Explain why <code>1e-8</code> (or similar small <span class="arithmatex">\(\epsilon\)</span>) is added inside square
+   roots and denominators throughout ML code (BatchNorm, Adam, etc.) rather
+   than checking for exact zero.</li>
+</ol>
 
 
 

@@ -942,6 +942,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 · Gradient Descent Step-by-Step
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -958,6 +976,91 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-update-rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The update rule
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-subtract-the-gradient" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why subtract the gradient
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#worked-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#learning-rate-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Learning rate matters
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#numeric-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numeric verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1991,6 +2094,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-update-rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The update rule
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-subtract-the-gradient" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why subtract the gradient
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#worked-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#learning-rate-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Learning rate matters
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#numeric-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numeric verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2010,8 +2187,91 @@
 
 
 <h1 id="01-gradient-descent-step-by-step">01 · Gradient Descent Step-by-Step<a class="headerlink" href="#01-gradient-descent-step-by-step" title="Permanent link">&para;</a></h1>
-<p>This module is part of Level 2 · Intermediate.</p>
-<p>More lessons are on the way — check back soon.</p>
+<p>Level 1 ended with the gradient <span class="arithmatex">\(\nabla f\)</span> as the direction of steepest
+<em>increase</em>. Gradient descent is the algorithm that uses <span class="arithmatex">\(-\nabla f\)</span> to
+iteratively walk <strong>downhill</strong> toward a minimum — this is literally how every
+model in this course gets trained.</p>
+<h2 id="the-update-rule">The update rule<a class="headerlink" href="#the-update-rule" title="Permanent link">&para;</a></h2>
+<p>Given a cost function <span class="arithmatex">\(J(\theta)\)</span> over parameters <span class="arithmatex">\(\theta\)</span>, gradient descent
+repeats:</p>
+<div class="arithmatex">\[
+\theta_{t+1} = \theta_t - \alpha \, \nabla J(\theta_t)
+\]</div>
+<p>where <span class="arithmatex">\(\alpha\)</span> is the <strong>learning rate</strong>, a small positive scalar controlling
+step size. Each step moves <span class="arithmatex">\(\theta\)</span> a little in the direction that decreases
+<span class="arithmatex">\(J\)</span> fastest, based on the local gradient.</p>
+<h2 id="why-subtract-the-gradient">Why subtract the gradient<a class="headerlink" href="#why-subtract-the-gradient" title="Permanent link">&para;</a></h2>
+<p>Near <span class="arithmatex">\(\theta_t\)</span>, a first-order (linear) approximation gives</p>
+<div class="arithmatex">\[
+J(\theta_t - \alpha \nabla J(\theta_t)) \approx J(\theta_t) - \alpha \lVert \nabla J(\theta_t) \rVert^2
+\]</div>
+<p>Since <span class="arithmatex">\(\alpha &gt; 0\)</span> and <span class="arithmatex">\(\lVert \nabla J \rVert^2 \geq 0\)</span>, this approximation is
+always <span class="arithmatex">\(\leq J(\theta_t)\)</span> — moving opposite the gradient decreases the cost
+(for small enough <span class="arithmatex">\(\alpha\)</span>; too large an <span class="arithmatex">\(\alpha\)</span> can overshoot).</p>
+<h2 id="worked-example">Worked example<a class="headerlink" href="#worked-example" title="Permanent link">&para;</a></h2>
+<p>Let <span class="arithmatex">\(J(\theta) = (\theta - 3)^2 + 2\)</span>, a simple 1-D parabola with minimum at
+<span class="arithmatex">\(\theta = 3\)</span>. Its derivative is</p>
+<div class="arithmatex">\[
+J'(\theta) = 2(\theta - 3)
+\]</div>
+<p>Start at <span class="arithmatex">\(\theta_0 = 0\)</span> with learning rate <span class="arithmatex">\(\alpha = 0.3\)</span>.</p>
+<p><strong>Step 1:</strong></p>
+<div class="arithmatex">\[
+J'(0) = 2(0-3) = -6 \qquad \theta_1 = 0 - 0.3(-6) = 1.8
+\]</div>
+<p><strong>Step 2:</strong></p>
+<div class="arithmatex">\[
+J'(1.8) = 2(1.8-3) = -2.4 \qquad \theta_2 = 1.8 - 0.3(-2.4) = 2.52
+\]</div>
+<p><strong>Step 3:</strong></p>
+<div class="arithmatex">\[
+J'(2.52) = 2(2.52-3) = -0.96 \qquad \theta_3 = 2.52 - 0.3(-0.96) = 2.808
+\]</div>
+<p>Each step gets closer to <span class="arithmatex">\(\theta = 3\)</span>, and the distance to the minimum
+shrinks by a constant factor (<span class="arithmatex">\(1 - 2\alpha = 0.4\)</span>) every step, since this
+particular <span class="arithmatex">\(J\)</span> is quadratic.</p>
+<h2 id="learning-rate-matters">Learning rate matters<a class="headerlink" href="#learning-rate-matters" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Too small <span class="arithmatex">\(\alpha\)</span>: convergence is correct but painfully slow.</li>
+<li>Too large <span class="arithmatex">\(\alpha\)</span>: for this quadratic, <span class="arithmatex">\(\alpha &gt; 1\)</span> causes divergence
+  (since the contraction factor <span class="arithmatex">\(|1-2\alpha|\)</span> exceeds 1); values between 0
+  and 1 converge, with <span class="arithmatex">\(\alpha\)</span> near 0.5 converging in a single step here.</li>
+</ul>
+<h2 id="numeric-verification">Numeric verification<a class="headerlink" href="#numeric-verification" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="k">def</span><span class="w"> </span><span class="nf">J</span><span class="p">(</span><span class="n">theta</span><span class="p">):</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="k">return</span> <span class="p">(</span><span class="n">theta</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">2</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="k">def</span><span class="w"> </span><span class="nf">dJ</span><span class="p">(</span><span class="n">theta</span><span class="p">):</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="k">return</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">theta</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">theta</span> <span class="o">=</span> <span class="mf">0.0</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.3</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="n">history</span> <span class="o">=</span> <span class="p">[</span><span class="n">theta</span><span class="p">]</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="n">theta</span> <span class="o">=</span> <span class="n">theta</span> <span class="o">-</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">dJ</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="n">history</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"theta after each step:"</span><span class="p">,</span> <span class="n">history</span><span class="p">)</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"J at final theta:"</span><span class="p">,</span> <span class="n">J</span><span class="p">(</span><span class="n">theta</span><span class="p">))</span>
+</code></pre></div>
+<p>Expected output (matches the hand computation):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>theta after each step: [0.0, 1.8, 2.52, 2.808]
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>J at final theta: 2.036864
+</code></pre></div>
+<h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
+<p>Let <span class="arithmatex">\(J(\theta) = \theta^2 - 4\theta + 10\)</span>.</p>
+<ol>
+<li>Find <span class="arithmatex">\(J'(\theta)\)</span> and the exact minimizer <span class="arithmatex">\(\theta^*\)</span> by setting
+   <span class="arithmatex">\(J'(\theta^*) = 0\)</span>.</li>
+<li>Starting at <span class="arithmatex">\(\theta_0 = 0\)</span> with <span class="arithmatex">\(\alpha = 0.2\)</span>, hand-compute <span class="arithmatex">\(\theta_1\)</span>,
+   <span class="arithmatex">\(\theta_2\)</span>, <span class="arithmatex">\(\theta_3\)</span>.</li>
+<li>Implement the loop in NumPy and confirm your three values match.</li>
+<li>Try <span class="arithmatex">\(\alpha = 1.1\)</span> for 5 steps and observe (print, don't just guess)
+   whether the sequence diverges — explain why using the contraction factor
+   <span class="arithmatex">\(|1 - 2\alpha|\)</span>.</li>
+</ol>
 
 
 
