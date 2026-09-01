@@ -1,8 +1,8 @@
 site_name: ML Math Foundations Mastery Path
 site_description: A structured, module-wise course on the mathematical foundations of AI/ML — derivatives and calculus, vectors and linear algebra, probability and statistics — and how they underpin machine learning algorithms like gradient descent and backpropagation.
-site_url: https://sigilipelli.github.io/ml-math-skillmastery/
-repo_url: https://github.com/SIGILIPELLI/ml-math-skillmastery
-repo_name: ml-math-skillmastery
+site_url: https://sigilipelli.github.io/ml-math-mastery-path/
+repo_url: https://github.com/SIGILIPELLI/ml-math-mastery-path
+repo_name: ml-math-mastery-path
 
 theme:
   name: material
