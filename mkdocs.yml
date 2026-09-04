@@ -59,6 +59,7 @@ extra_css:
 nav:
   - Home: index.md
   - Privacy Policy: privacy.md
+  - License: license.md
   - "Level 1 · Entry":
       - Overview: level-1/index.md
       - "01 · Why Math Matters for ML": level-1/01-why-math-matters.md
