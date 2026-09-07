@@ -94,6 +94,36 @@ d_k=64: raw dot~std(8.0) -> -0.24, scaled -> -0.03
 d_k=512: raw dot~std(22.6) -> -30.85, scaled -> -1.36
 ```
 
+## How It Actually Works
+
+Scaled dot-product attention divides $QK^T$ by $\sqrt{d_k}$ before the
+softmax, and that scaling factor is a numerical-stability fix, not a
+modeling choice with a deep theoretical motivation beyond that. If $q$ and
+$k$ have components that are independent with unit variance, their dot
+product $q\cdot k=\sum_{i=1}^{d_k}q_ik_i$ has variance growing linearly
+with $d_k$ — for large $d_k$ (hundreds, in real transformers), raw
+attention scores become large in magnitude, pushing softmax's inputs into
+a region where it saturates: one score dominates completely, gradients
+through the other, non-max scores vanish (their softmax output and
+gradient both underflow toward exactly 0.0), and the max-subtraction trick
+from Module 06 of Level 3 alone can't fix a genuinely saturated,
+near-one-hot softmax distribution. Dividing by $\sqrt{d_k}$ keeps the score
+variance at approximately 1 regardless of dimension, keeping softmax in
+its well-behaved, non-saturated regime.
+
+At the systems level, computing full attention materializes an
+$n\times n$ score matrix for a sequence of length $n$ — $O(n^2)$ memory,
+which is why long-context transformers were memory-bound long before they
+were compute-bound. **FlashAttention** restructures the *same* mathematical
+computation (softmax-weighted sum over $V$) to never materialize the full
+$n\times n$ matrix in slow GPU memory at all: it processes $Q$, $K$, $V$ in
+blocks small enough to fit in fast on-chip SRAM, and uses an online,
+numerically stable running version of softmax (tracking a running max and
+running sum as in the log-sum-exp trick, updated incrementally block by
+block) to compute the exact same output with $O(n)$ memory instead of
+$O(n^2)$ — a case where a purely computational rewrite (no change to the
+underlying math at all) unlocked much longer context lengths in practice.
+
 ## Exercise
 
 1. Add a third key $k_3=(1,0,1,0)$ (identical to $q$) with value

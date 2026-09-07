@@ -105,6 +105,31 @@ H(p,q) - H(p) = 0.3567  (should equal KL(p||q))
 H(p2)=0.8018, H(p2,q2)=0.9927, KL(p2||q2)=0.1909
 ```
 
+## How It Actually Works
+
+Entropy, $H(p) = -\sum_i p_i \log p_i$, and KL divergence,
+$D_{KL}(p\|q) = \sum_i p_i\log(p_i/q_i)$, both have a computational
+landmine baked into their definitions: $p_i\log p_i \to 0$ as $p_i\to0$
+mathematically (the limit exists and is well-defined), but computed
+naively, `p_i * log(p_i)` for `p_i = 0.0` gives `0.0 * -inf`, which
+IEEE-754 defines as `NaN`, not `0.0` — the mathematical limit and the
+naive floating-point evaluation disagree at exactly this common edge case
+(any distribution with a zero-probability outcome, extremely common for
+one-hot labels or sparse predicted distributions). Real implementations
+guard this explicitly — e.g. `scipy.stats.entropy` and PyTorch's
+`kl_div` special-case (or mask out) zero-probability terms rather than
+evaluating the formula literally.
+
+KL divergence has a second, more severe failure mode: if $q_i=0$ where
+$p_i>0$, $\log(p_i/q_i) = \log(\infty) = +\infty$, correctly reflecting
+that KL divergence is genuinely infinite in that case (not just a computing
+artifact) — this is precisely why KL divergence isn't used as a training
+loss when the model's predicted distribution $q$ could assign exact zero
+probability to an observed outcome, and why practical implementations add
+a small smoothing constant to $q$ or clip it away from exactly 0, changing
+the loss landscape slightly but keeping every gradient finite and
+computable.
+
 ## Exercise
 
 1. Show numerically that $D_{KL}(p\|q) \ne D_{KL}(q\|p)$ in general (pick

@@ -103,6 +103,31 @@ A v = [3.53553391 3.53553391], lambda*v = [3.53553391 3.53553391]
 A v = [-0.89442719 -1.78885438], lambda*v = [-0.89442719 -1.78885438]
 ```
 
+## How It Actually Works
+
+Finding eigenvalues by solving the characteristic polynomial
+$\det(A-\lambda I)=0$, as you likely did by hand for a $2\times2$ matrix,
+is almost never how a computer does it. Root-finding on a polynomial of
+degree $n\geq 5$ has no closed-form formula (Abel-Ruffini), and even for
+smaller $n$, computing the polynomial's coefficients from $A$ and then
+finding its roots is numerically **unstable** — tiny changes in $A$'s
+entries can produce wildly different computed roots, because polynomial
+root-finding is famously ill-conditioned (Wilkinson's classic example shows
+a degree-20 polynomial whose roots shift by 4+ orders of magnitude from a
+$2^{-23}$ perturbation in one coefficient).
+
+Production libraries (LAPACK, called by `numpy.linalg.eig`) instead use
+**iterative similarity transformations**: reduce $A$ to upper Hessenberg
+form via Householder reflections (cheap, numerically stable, preserves
+eigenvalues), then repeatedly apply the **QR algorithm** — factor the
+current matrix as $QR$, multiply back as $RQ$, and repeat — which
+provably converges to a matrix whose diagonal holds the eigenvalues,
+without ever forming a characteristic polynomial. For the symmetric case
+(common in ML: covariance matrices, Hessians), a specialized, faster, and
+even more stable variant (the symmetric QR algorithm, or divide-and-conquer
+methods) is used instead, exploiting the fact that symmetric matrices have
+real eigenvalues and orthogonal eigenvectors.
+
 ## Exercise
 
 $$

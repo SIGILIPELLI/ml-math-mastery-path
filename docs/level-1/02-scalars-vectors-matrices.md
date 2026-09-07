@@ -101,6 +101,30 @@ row 1 (house 1): [1.5 3. ]
 column 1 (sqft feature): [1.5 2.  1.2]
 ```
 
+## How It Actually Works
+
+A vector or matrix "of numbers" is, in memory, a single contiguous block of
+bytes plus a small header describing shape and stride. A NumPy array of
+`dtype=float64` storing a $3\times 3$ matrix uses exactly $9 \times 8 = 72$
+bytes laid out **row-major** (C order): row 0's three floats, then row 1's,
+then row 2's — so `A[i, j]` is really `buffer[i*ncols + j]`. Column-major
+(Fortran order, used by MATLAB and BLAS internally) instead lays out
+`buffer[j*nrows + i]`. This is not a cosmetic detail: it determines which
+direction of iteration is cache-friendly. Looping over a row-major matrix
+row-by-row touches consecutive memory addresses (fast, good cache reuse);
+looping column-by-column jumps `ncols` floats at a time (cache misses,
+slow) — the same mathematical matrix, traversed the "wrong" way, can run
+an order of magnitude slower.
+
+Every "vector" is also just a 1-D case of this same layout, and every
+operation you write in NumPy (`A + B`, `A @ B`) is dispatched to compiled C
+or Fortran routines (BLAS/LAPACK) rather than looping in Python — this is
+why `A @ B` for a $1000\times 1000$ matrix finishes in milliseconds while a
+hand-written Python triple-loop over the same matrices takes minutes: the
+math is identical, but one path does 64-bit floating-point multiply-adds in
+vectorized CPU instructions (SIMD, operating on 4-8 floats per instruction)
+while the other does one Python-object-boxed multiplication at a time.
+
 ## Exercise
 
 Given the matrix

@@ -83,6 +83,33 @@ convex (all >= 0)? True
 convexity inequality violations out of 1000 random checks: 0
 ```
 
+## How It Actually Works
+
+Verifying that a function is convex mathematically (checking
+$\nabla^2 f \succeq 0$ everywhere) is different from how an optimizer
+actually *exploits* convexity computationally. A convex loss surface
+guarantees that gradient descent's local, greedy steps — using only
+first-order (gradient) information computed at the current point, with no
+knowledge of the global shape — cannot get trapped in a bad local minimum,
+which is what makes the convergence guarantees in this module possible at
+all for non-convex-in-general ML problems restricted to convex special
+cases like linear/logistic regression.
+
+The **condition number** $\kappa = \lambda_{\max}/\lambda_{\min}$ of the
+Hessian (Level 2 Module 03-04) has a direct, measurable computational
+consequence for how fast gradient descent actually converges: the
+worst-case convergence rate for a convex quadratic is
+$\left(\frac{\kappa-1}{\kappa+1}\right)^2$ per iteration — for a
+well-conditioned problem ($\kappa\approx1$) this shrinks the error almost
+to zero in a few steps, but for an ill-conditioned one ($\kappa=10^4$,
+common with unnormalized features of very different scales), each step
+reduces error by less than 0.02%, requiring tens of thousands of iterations
+for the same accuracy. This single number is the actual, computable reason
+feature scaling/normalization (subtracting mean, dividing by standard
+deviation) speeds up training in practice: it directly reduces $\kappa$
+of the resulting loss surface, without changing the location of the
+minimum at all.
+
 ## Exercise
 
 1. Check whether $g(w) = w_1^2 - 2w_2^2$ is convex by computing its Hessian

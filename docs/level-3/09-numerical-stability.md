@@ -98,6 +98,38 @@ naive var = ...  (unstable, sensitive to platform — may print 0.0 or a
 stable var (matches np.var) = 0.6666666666666666, np.var = 0.6666666666666666
 ```
 
+## How It Actually Works
+
+Every numerical instability this module discusses traces back to the same
+root cause: IEEE-754 floating point stores a number as
+$(-1)^s \times 1.f \times 2^{e-\text{bias}}$ — a sign bit, an 11-bit (for
+float64) or 8-bit (float32) exponent, and a finite-length fraction $f$.
+This has two immediate consequences worth internalizing precisely.
+**Relative** precision is roughly constant (about 15-17 decimal digits for
+float64, ~7 for float32) but **absolute** precision depends on magnitude:
+the gap between adjacent representable floats near $1.0$ is about
+$2.2\times10^{-16}$ (machine epsilon), but near $10^{10}$ it's about
+$2\times10^{-6}$ — meaning `1e10 + 1e-10` is computed as exactly `1e10`,
+the small addend simply vanishes, with no warning. **Catastrophic
+cancellation** (subtracting two nearly-equal large floats, as seen in the
+naive variance formula, finite-difference derivatives, and softmax-without-
+max-subtraction) doesn't introduce new error so much as *reveal* error that
+was already present in each operand relative to the much smaller result.
+
+The specific fixes this module likely enumerates — max-subtraction in
+softmax, $\epsilon$ terms in denominators, log-space probability
+arithmetic, Welford's variance algorithm, computing in float64 for
+accumulation even when storing in float16/32 — are not a random grab-bag
+of tricks; they are all instances of one underlying strategy: **keep
+intermediate magnitudes bounded and comparable in scale**, because every
+floating-point operation's error is proportional to the magnitude of its
+inputs, not to the "true" mathematical answer. This is also the underlying
+justification for mixed-precision training's specific design (float16
+compute, float32 master weights and loss accumulation, and **loss
+scaling** — multiplying the loss by a constant like 1024 before the
+backward pass so small gradients don't underflow float16's limited
+exponent range, then dividing back out before the optimizer step).
+
 ## Exercise
 
 1. Implement `log_softmax(z)` using the log-sum-exp trick and verify

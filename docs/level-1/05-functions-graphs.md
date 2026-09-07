@@ -103,6 +103,32 @@ secant slope from x=1 to x=1.01: 2.0100
 secant slope from x=1 to x=1.001: 2.0010
 ```
 
+## How It Actually Works
+
+Evaluating $f(x)$ on a computer for anything beyond polynomials — $\exp$,
+$\log$, $\sin$ — does not use a closed-form formula at all. The CPU/GPU's
+math library approximates these with a **minimax polynomial or rational
+approximation** (Remez algorithm) valid over a reduced input range, plus a
+range-reduction step: e.g. `exp(x)` is computed by writing
+$x = k\ln 2 + r$ for integer $k$ and small remainder $r$, computing
+$e^r$ with a short polynomial (accurate because $r$ is small), then
+reconstructing $e^x = 2^k e^r$ by directly manipulating the floating-point
+exponent bits (a cheap, exact operation) — this is why `exp` is fast and
+accurate across a huge range of inputs despite the "true" Taylor series
+converging slowly for large $x$.
+
+This also explains a subtlety in the "average vs. instantaneous rate of
+change" idea from this module: computing $\frac{f(x+h)-f(x)}{h}$ for very
+small $h$ on a computer runs into **catastrophic cancellation** — $f(x+h)$
+and $f(x)$ are nearly equal floats, so subtracting them cancels almost all
+significant digits, leaving mostly rounding noise in the numerator while
+$h$ shrinks the denominator, amplifying that noise. There is a real
+floating-point sweet spot for $h$ (roughly $\sqrt{\varepsilon_{machine}}
+\approx 10^{-8}$ for float64) below which the *numerical* derivative
+estimate gets worse, not better, even though the *mathematical* limit
+$h\to 0$ keeps improving — a gap between the math and the computation that
+becomes central once you compute derivatives numerically in later modules.
+
 ## Exercise
 
 Let $f(x) = x^2 + 1$.

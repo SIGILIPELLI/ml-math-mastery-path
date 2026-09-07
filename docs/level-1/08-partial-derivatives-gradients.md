@@ -112,6 +112,30 @@ numeric gradient: [8.99998 10.00003]
 
 (f(2,1) = 4*1 + 3*1 + 10 = 4+3+10 = 11, confirming the function value too.)
 
+## How It Actually Works
+
+Computing a gradient $\nabla f = \left(\frac{\partial f}{\partial x_1},
+\ldots, \frac{\partial f}{\partial x_n}\right)$ for a function of many
+variables has a cost that depends entirely on *how* you compute it, not
+just on the math. Naive finite differences require evaluating $f$ once at
+the base point and once per perturbed coordinate — $n+1$ evaluations of
+$f$ to get an $n$-dimensional gradient. For a neural network with millions
+of parameters, that is computationally hopeless.
+
+**Reverse-mode automatic differentiation** (the mechanism behind
+`.backward()` in PyTorch and `tf.GradientTape` in TensorFlow, built up fully
+in Level 3) computes the *entire* gradient — all $n$ partial derivatives —
+in roughly the same cost as **one extra pass over the computation**,
+regardless of $n$. It works by first running $f$ forward while recording
+every elementary operation as a node in a computational graph, then walking
+that graph backward from the output, applying the chain rule at each node
+to accumulate $\frac{\partial f}{\partial (\text{each intermediate value})}$,
+until every input's partial derivative has been accumulated. This
+asymmetry — cheap for "many inputs, one output" (exactly the shape of a
+loss function) — is precisely why gradient descent is computationally
+feasible for models with billions of parameters: the cost of one gradient
+is roughly 2-3x the cost of one forward pass, not $n\times$ it.
+
 ## Exercise
 
 Let $g(x,y) = 3x^2 + 2xy + y^2$.

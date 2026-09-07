@@ -100,6 +100,33 @@ P(A or B) ~ 0.666996
 P(A|B)    ~ 0.665933
 ```
 
+## How It Actually Works
+
+The "random" numbers behind any Monte Carlo verification you run
+(`np.random.rand()`, sampling from a distribution) are not random at all —
+they come from a **deterministic pseudo-random number generator (PRNG)**,
+typically a variant of the Mersenne Twister (NumPy's legacy default) or
+PCG64 (NumPy's current default), seeded with an initial state and then
+advanced by a fixed recurrence that produces a long, statistically
+uniform-looking sequence of integers, which are then bit-manipulated into
+floats uniformly distributed on $[0,1)$. Given the same seed, you get
+*exactly* the same "random" sequence every time — which is precisely why
+setting a seed makes ML experiments reproducible.
+
+Sampling from a non-uniform distribution (Bernoulli, Gaussian, ...) from
+this uniform stream uses specific numerical algorithms: **inverse transform
+sampling** computes $F^{-1}(u)$ for uniform $u$ where $F$ is the target
+CDF (exact when $F^{-1}$ has a closed form, e.g. exponential); Gaussian
+sampling commonly uses the **Box-Muller transform** (turning two uniform
+samples into two independent standard normal samples via
+$z_1 = \sqrt{-2\ln u_1}\cos(2\pi u_2)$) or the **ziggurat algorithm** for
+speed. Also worth knowing: probabilities are frequently computed and
+combined in **log-space** ($\log p$ instead of $p$) throughout ML code,
+because multiplying many probabilities less than 1 quickly underflows to
+exactly 0.0 in floating point, while summing their logs stays numerically
+representable — this single trick reappears in Bayes' theorem, MLE, and
+softmax modules ahead.
+
 ## Exercise
 
 A fair coin is flipped twice. Let $A$ = "first flip is heads",

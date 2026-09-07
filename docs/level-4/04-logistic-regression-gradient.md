@@ -117,6 +117,37 @@ Hessian=
 eigenvalues=[0.     1.2225]  (should be >= 0)
 ```
 
+## How It Actually Works
+
+The sigmoid function, $\sigma(z) = 1/(1+e^{-z})$, computed exactly as
+written overflows for very negative $z$: `exp(-z)` for `z = -1000` returns
+`inf`, giving `1/(1+inf) = 0.0` — which is actually the mathematically
+correct limit, just reached via an intermediate overflow rather than
+smoothly. The more dangerous case is the paired **log-loss** computation,
+$-\left[y\log\sigma(z) + (1-y)\log(1-\sigma(z))\right]$: if $\sigma(z)$
+has already rounded to exactly `0.0` or `1.0` in floating point (which
+happens for any $|z|$ larger than about 36 in float64), the subsequent
+`log(0)` returns `-inf`, and if that term is then multiplied by `y=0`
+elsewhere in the formula, you get `0 * -inf = NaN`.
+
+Every production implementation (scikit-learn, PyTorch's
+`BCEWithLogitsLoss`) sidesteps this by computing loss directly from the
+raw logit $z$ rather than from $\sigma(z)$, using the mathematically
+equivalent but numerically safe identity
+$-\left[yz - \log(1+e^{z})\right]$, further rewritten with the
+log-sum-exp trick to stay stable for both large positive and large
+negative $z$:
+
+$$
+\log(1+e^z) = \max(z,0) + \log\left(1+e^{-|z|}\right)
+$$
+
+This guarantees the argument to the final `exp` is always $\leq 0$
+(so it can never overflow), which is exactly why every framework's
+`BCEWithLogitsLoss`/`binary_cross_entropy_with_logits` function explicitly
+warns against manually chaining a separate `sigmoid()` and `log_loss()` —
+mathematically identical, numerically much less safe.
+
 ## Exercise
 
 1. Implement full-batch gradient descent for logistic regression on a

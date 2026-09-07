@@ -128,6 +128,33 @@ exactly the signal gradient descent uses to know which way to step.
   cost function has the shape it does, and how it connects to the general ML
   training loop.
 
+## How It Actually Works
+
+None of this happens in exact arithmetic. Every number here — $w$, $x_i$,
+$J(w)$ — lives in a computer as a 64-bit (or, in most deep learning
+frameworks, 32-bit) IEEE-754 floating-point value: a sign bit, an exponent,
+and a fraction (mantissa) that together approximate a real number, not
+represent it exactly. A float64 has about 15-17 significant decimal digits
+of precision; float32 has about 7. That precision limit is why "training
+diverges" and "loss becomes `NaN`" are numerical events, not just
+mathematical ones.
+
+Concretely: `grad(2.0)` above is computed by evaluating
+`np.mean(2 * x * (pred - y))` — a sequence of floating-point multiplications
+and additions, each rounded to the nearest representable float. For three
+numbers this rounding error is invisible (parts in $10^{-16}$), but the
+*same* mechanism, repeated over millions of parameters and thousands of
+training steps, is exactly how small per-step rounding errors compound into
+visible instability. A `NaN` in `loss` almost always means a floating-point
+**overflow** happened somewhere upstream — e.g. `np.exp(1000)` computed
+during a softmax or cross-entropy step returns `inf`, and `inf - inf` or
+`inf * 0` is defined by IEEE-754 to be `NaN`, which then poisons every
+downstream computation because any arithmetic involving `NaN` produces
+`NaN`. This is the mechanical reason later modules (softmax, cross-entropy,
+numerical stability) teach specific rewrites of the math — not because the
+formulas are wrong, but because the *order of floating-point operations*
+matters even when the underlying algebra is identical.
+
 ## Exercise
 
 1. Using the three points $(1,2), (2,3), (3,5)$ above, compute $J(w)$ by hand

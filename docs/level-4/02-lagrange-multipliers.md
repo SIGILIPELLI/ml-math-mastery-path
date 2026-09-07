@@ -94,6 +94,34 @@ closed-form (Lagrange): x=0.5000, y=0.5000, f=0.5000
 grad f = [1. 1.], lambda*grad g = [1. 1.]
 ```
 
+## How It Actually Works
+
+Solving a constrained optimization problem by setting up the Lagrangian
+and solving $\nabla L = 0$ by hand works for small, clean problems; real
+constrained solvers (used inside SVM training, portfolio optimization, and
+constrained neural-network training) instead run **iterative** algorithms
+on the KKT system. Interior-point methods, for instance, replace hard
+inequality constraints $g(x)\leq0$ with a **log-barrier** term
+$-\mu\sum_i\log(-g_i(x))$ added to the objective, which is smooth and
+finite as long as $x$ stays strictly feasible, and which mathematically
+approaches the true constrained problem as the barrier weight $\mu\to0$.
+This converts a constrained problem into a sequence of unconstrained
+(smooth, differentiable, autodiff-friendly) problems that gradient/Newton
+methods can solve directly — a specific numerical strategy for turning
+"solve the KKT conditions" into "run ordinary unconstrained optimization
+several times with a shrinking parameter."
+
+A separate class, **active-set / SQP methods**, instead numerically tracks
+*which* inequality constraints are currently tight (active,
+$g_i(x)=0$) at each iterate, treats those as equality constraints for a
+local step, and updates the active set as the iterate moves — this is
+closer to directly solving small linear systems built from the Lagrangian's
+KKT conditions at each step, rather than the smooth-approximation approach
+of interior-point methods. Both are genuinely iterative numerical
+procedures with their own convergence and stability considerations; neither
+solves the Lagrangian symbolically the way the by-hand examples in this
+module do.
+
 ## Exercise
 
 1. Minimize $f(x,y)=xy$ subject to $x^2+y^2=1$ using Lagrange multipliers

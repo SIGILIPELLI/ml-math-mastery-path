@@ -104,6 +104,31 @@ inside the derivative of $\ln p$ and $\ln(1-p)$ (2), and gradient descent
 itself (1) — this is precisely the recipe Level 3 will scale up to full
 logistic regression and neural networks.
 
+## How It Actually Works
+
+This capstone's real engineering lesson is that "probability" and
+"optimization" code paths interact through floating point in a specific,
+recurring way: fitting a distribution by maximum likelihood means
+maximizing $\sum_i \log p(x_i;\theta)$, and every gradient step through
+that sum needs $\nabla_\theta \log p(x_i;\theta)$ computed via autodiff
+through the **log-density expression directly** (Module 09's lesson) rather
+than through `log(pdf(...))`, or the gradient itself becomes `-inf` or
+`NaN` wherever any individual $p(x_i;\theta)$ has underflowed for the
+current parameter guess — which happens routinely during early, poorly-
+initialized optimization steps, not just at convergence.
+
+Combining this module's two threads (Monte Carlo estimation and gradient-
+based optimization) is also exactly the computational shape of modern
+generative modeling: variational autoencoders and diffusion models both
+optimize an expectation over a distribution, $E_{q}[\ldots]$, by drawing
+Monte Carlo samples from $q$ using the PRNG mechanism from Module 06 and
+then backpropagating through those samples via the **reparameterization
+trick** — rewriting a sample $z\sim\mathcal{N}(\mu,\sigma^2)$ as
+$z = \mu + \sigma\epsilon$ for $\epsilon\sim\mathcal{N}(0,1)$, so autodiff
+can differentiate the *deterministic* function of $\mu,\sigma,\epsilon$
+instead of trying to (impossibly) differentiate through the sampling
+operation itself.
+
 ## Exercise
 
 Using $n_1=15, n_0=5$ (so $n=20$, $p^\star=0.75$):

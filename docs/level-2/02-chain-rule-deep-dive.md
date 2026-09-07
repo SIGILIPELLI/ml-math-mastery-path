@@ -96,6 +96,29 @@ t=1.0: exact=15.00000, numeric=15.00000
 t=2.0: exact=240.00000, numeric=240.00000
 ```
 
+## How It Actually Works
+
+The vector chain rule $\nabla_x (g\circ f)(x) = J_f(x)^T \nabla_g f(x)$ is
+where the "computational graph" picture becomes unavoidable. In reverse-mode
+autodiff, each elementary operation in your function is a node, and each
+edge carries a **vector-Jacobian product (VJP)**, not a full Jacobian
+matrix. Concretely, backpropagating through a layer $y = f(x)$ never
+constructs the (potentially huge) Jacobian $J_f$ explicitly; instead, given
+the upstream gradient $\bar{y} = \partial L/\partial y$, the framework calls
+a function that computes $\bar{x} = J_f(x)^T \bar{y}$ directly — for a
+matrix multiply $y = Wx$, this VJP is just another matrix multiply,
+$\bar{x} = W^T\bar{y}$, computed with the same BLAS routines as the forward
+pass, never forming $J_f$ (which for a layer with $m$ inputs and $n$
+outputs would be an $n\times m$ matrix, potentially far larger than $W$
+itself).
+
+This is the actual reason deep learning frameworks scale to networks with
+billions of parameters: every "chain rule step" in the graph is
+implemented as a hand-written, matrix-shaped VJP function (`grad_fn` in
+PyTorch) rather than as generic Jacobian-matrix multiplication, keeping
+memory and compute proportional to the size of the tensors themselves,
+not to the (much larger) size of their Jacobians.
+
 ## Exercise
 
 Let $z = f(x,y) = \sin(x) y^2$, $x(t) = t$, $y(t) = t^2$.

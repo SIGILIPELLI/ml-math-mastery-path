@@ -104,6 +104,34 @@ simulated mean: 3.500...
 simulated var : 2.916...
 ```
 
+## How It Actually Works
+
+The textbook formula for variance,
+$\text{Var}(X) = E[X^2] - (E[X])^2$, is a well-known numerical trap: when
+$E[X^2]$ and $(E[X])^2$ are close in magnitude (common when the data has a
+large mean and small spread — e.g. measurements around $10^6$ varying by
+$1$), subtracting two nearly-equal large floats causes **catastrophic
+cancellation**, wiping out most of the significant digits and sometimes
+even producing a *negative* computed variance for data that mathematically
+has strictly positive variance.
+
+Production numerical code avoids this entirely with **Welford's online
+algorithm**, which updates a running mean and a running sum of squared
+deviations from the *current* mean incrementally, one data point at a
+time, without ever computing $E[X^2]$ as a separate large quantity:
+
+$$
+\delta_n = x_n - \bar{x}_{n-1}, \quad
+\bar{x}_n = \bar{x}_{n-1} + \frac{\delta_n}{n}, \quad
+M_{2,n} = M_{2,n-1} + \delta_n(x_n - \bar{x}_n)
+$$
+
+with $\text{Var} = M_{2,n}/n$. This is mathematically equivalent to the
+two-pass formula but numerically stable regardless of the data's mean, and
+it's what `numpy.var`, pandas, and most statistics libraries actually
+implement — a case where the "obvious" rearrangement of a correct formula
+is a real correctness bug in floating point, not just a style choice.
+
 ## Exercise
 
 A biased coin lands heads ($X=1$) with probability $0.7$ and tails ($X=0$)

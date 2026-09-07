@@ -102,6 +102,32 @@ L1 step: grad=4.5000 w_new=2.5500
 L2 penalty grad analytic=6.0000 numeric=6.0000
 ```
 
+## How It Actually Works
+
+L2 regularization ($+\frac{\lambda}{2}\|\theta\|^2$ added to the loss) has
+a clean gradient, $\lambda\theta$, and is straightforward to implement as
+an addition to the analytically or autodiff-computed gradient before the
+optimizer step. But there's a real implementation subtlety exposed once
+Adam enters the picture: adding $\lambda\theta$ to the *loss* before Adam's
+moment estimates are computed means the weight decay term gets divided by
+$\sqrt{v_t}+\epsilon$ along with the "real" gradient — which couples the
+effective decay strength to each parameter's gradient history, an
+interaction not present in plain SGD. **AdamW** (the modern default in
+most deep learning frameworks) fixes this by implementing weight decay as
+a *separate* arithmetic step, applied directly to the parameters
+($\theta \leftarrow \theta(1-\alpha\lambda)$) outside of the Adam moment
+computation entirely — same regularization intent, mechanically different
+(and empirically better) computation.
+
+L1 regularization ($\lambda\|\theta\|_1$) has a genuine computational
+wrinkle this module's math glosses over: $|\theta|$ is not differentiable
+at $\theta=0$. Autodiff frameworks handle this by defining a **subgradient**
+convention at that single point — typically `sign(0) = 0` — so
+`torch.abs(x).backward()` returns a valid (if not unique) gradient rather
+than raising an error or returning `NaN`; this is a deliberate engineering
+choice about how to numerically handle a mathematically non-smooth point,
+not a limitation of the calculus itself.
+
 ## Exercise
 
 1. Run gradient descent (20 steps, $\eta=0.1$) on $L(w)=(w-1)^2$ starting

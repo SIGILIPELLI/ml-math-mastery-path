@@ -116,6 +116,34 @@ Both are ≈0 — expected, since normalization output sums to a
 scale-invariant quantity whose total gradient w.r.t. a uniform shift of all
 $x_i$ vanishes.
 
+## How It Actually Works
+
+Batch norm's formula,
+$\hat{x} = \frac{x-\mu_B}{\sqrt{\sigma_B^2+\epsilon}}$, has an $\epsilon$
+(typically $10^{-5}$) that exists for exactly one reason: numerical safety
+against division by (near-)zero when a batch's variance $\sigma_B^2$ is
+tiny — which happens routinely for a feature that's nearly constant across
+a mini-batch, especially early in training or for small batch sizes. This
+is analogous to Adam's $\epsilon$ from Module 03 but shows up in the
+*forward* pass rather than the optimizer.
+
+The running statistics used at inference time
+($\mu_{\text{running}}, \sigma^2_{\text{running}}$) are maintained as
+exponential moving averages updated during training — the same
+computational pattern as Adam's moment estimates — which is why batch norm
+behaves differently in "train mode" (uses the current batch's live
+statistics) versus "eval mode" (uses the frozen running averages); getting
+this switch wrong (a very common real bug — forgetting `model.eval()`) is a
+pure implementation/state-management issue, not a mathematical one.
+Backpropagating through normalization is also more involved than it looks:
+because $\mu_B$ and $\sigma_B^2$ are themselves functions of every element
+in the batch, the gradient with respect to one input $x_i$ has
+contributions flowing back through $\mu_B$ and $\sigma_B^2$ as well as
+directly — three separate paths through the computational graph that
+autodiff sums automatically via the multivariate chain rule, but which
+early hand-derived implementations of batch norm got wrong before the
+correct formula (involving all three terms) was published.
+
 ## Exercise
 
 1. Repeat the backward-pass derivation with $\gamma=2,\beta=1$ and a

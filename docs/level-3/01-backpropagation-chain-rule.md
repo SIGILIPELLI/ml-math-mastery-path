@@ -125,6 +125,33 @@ analytic dL/dw=-0.2110 dL/db=-0.1055
 numeric  dL/dw=-0.2110 dL/db=-0.1055
 ```
 
+## How It Actually Works
+
+Backpropagation is reverse-mode automatic differentiation, and its actual
+implementation has two computational phases that are easy to gloss over
+when you only see the chain-rule algebra. In the **forward pass**, the
+framework doesn't just compute the output — it builds a **computational
+graph** in memory: a directed acyclic graph where each node is an
+elementary operation (`matmul`, `add`, `relu`, ...) and each node retains a
+reference to (a) the operation that produced it and (b) whichever
+intermediate values it will need to compute its local derivative (e.g. a
+`relu` node needs to remember which entries were positive; a `matmul` node
+needs to remember both input tensors). This is why training uses
+noticeably more memory than inference alone — every layer's activations
+must stay alive in memory until backward pass reaches that layer.
+
+In the **backward pass**, the framework performs a **topological sort** of
+the graph (so every node is processed only after all nodes that depend on
+it) and walks it in reverse, calling each node's stored `grad_fn` with the
+accumulated upstream gradient to produce gradients for its inputs, summing
+contributions when a value was used in multiple places (the multivariate
+chain rule's sum-over-paths, applied mechanically). For very deep networks
+where storing every activation is too expensive, **gradient checkpointing**
+trades compute for memory: it discards some activations after the forward
+pass and recomputes them on demand during the backward pass — a direct,
+deliberate exploitation of the fact that forward computation is cheap
+relative to the memory cost of storing it.
+
 ## Exercise
 
 Extend the network with a second layer: $z_1=wx+b$, $a_1=\sigma(z_1)$,

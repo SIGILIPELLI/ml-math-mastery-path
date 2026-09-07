@@ -106,6 +106,33 @@ B reconstructed from SVD:
  [ 0. -2.]]
 ```
 
+## How It Actually Works
+
+None of LU, QR, or Cholesky decomposition are computed by "doing the
+algebra" the way you would on paper — each has a specific numerically
+stable algorithm behind the one-line `scipy.linalg.lu(A)` call. **LU**
+decomposition via naive Gaussian elimination can fail catastrophically on
+matrices where a pivot element is very small (dividing by a near-zero
+number massively amplifies rounding error), so real implementations use
+**partial pivoting**: at each elimination step, swap rows so the
+largest-magnitude candidate becomes the pivot, which is provably far more
+stable and is what the "P" in `PA = LU` represents. **QR** decomposition is
+typically computed via **Householder reflections** — a sequence of
+orthogonal (norm-preserving, hence numerically stable) transformations that
+zero out sub-diagonal entries one column at a time — rather than the
+Gram-Schmidt process taught algebraically, because classical Gram-Schmidt
+loses orthogonality badly in floating point (modified Gram-Schmidt helps
+but Householder is still preferred in production code).
+
+**Cholesky** decomposition ($A = LL^T$ for symmetric positive-definite $A$)
+computes $L$ column by column using only square roots and dot products of
+already-computed entries, and is roughly twice as fast as LU because it
+exploits symmetry — this is exactly why it's the standard choice for
+solving the normal equations or Gaussian-process kernel systems (Level 4)
+where the matrix is guaranteed symmetric positive-definite, and why
+solvers explicitly check for that structure before choosing which
+decomposition to run.
+
 ## Exercise
 
 Let $D = \begin{bmatrix}2&0\\0&2\end{bmatrix}$ (a scaled identity) and

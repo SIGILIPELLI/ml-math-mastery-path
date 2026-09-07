@@ -109,6 +109,32 @@ np.linalg.lstsq:   w = [0.33333333 1.5       ]
 predictions = [1.83333333 3.33333333 4.83333333], R^2 = 0.9808
 ```
 
+## How It Actually Works
+
+Implementing linear regression "from scratch" via all three methods this
+capstone likely compares — normal equations, gradient descent, and a
+library call — is a direct, hands-on tour of the numerical trade-offs
+covered across this entire course. The normal equations
+$(X^TX)^{-1}X^Ty$ are exact algebra but numerically the least safe path
+(Level 1 Module 09's squared condition number); gradient descent avoids
+ever inverting a matrix but its accuracy and speed depend entirely on
+learning rate and the condition number of the loss surface (Level 4 Module
+01); and a production call like `np.linalg.lstsq` sidesteps both issues
+by solving via SVD or QR (Level 2 Module 05), never forming $X^TX$ and
+never depending on a tuned learning rate.
+
+Running "numeric verification (all three methods agree)" is itself worth
+being precise about: agreement to 4-6 significant digits, not bit-for-bit
+identical results, is the expected and correct outcome — each method
+accumulates floating-point rounding error through a genuinely different
+sequence of operations (matrix inversion vs. iterative updates vs.
+orthogonal decomposition), so their results are mathematically equal in
+exact arithmetic but numerically distinct in float64. This is the same
+standard used to validate real ML library code: cross-checking independent
+numerical paths to the same answer, rather than expecting exact equality,
+is how you distinguish "a genuine bug" from "ordinary floating-point
+disagreement between algorithms."
+
 ## Exercise
 
 1. Add a third feature that's a near-exact linear combination of the

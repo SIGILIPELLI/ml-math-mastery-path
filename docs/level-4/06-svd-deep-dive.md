@@ -102,6 +102,32 @@ rank-2 approximation Frobenius error = 1.2069
 theoretical min error (sqrt sum of dropped sigma^2) = 1.2069
 ```
 
+## How It Actually Works
+
+Computing the SVD $A=U\Sigma V^T$ by finding eigenvalues/eigenvectors of
+$A^TA$ (since $A^TA = V\Sigma^2V^T$) is how the relationship is usually
+*taught*, but it is a poor way to actually *compute* it: forming $A^TA$
+squares $A$'s condition number exactly as in the normal-equations case
+(Level 1 Module 09), destroying numerical accuracy for the smaller singular
+values before you even start looking for eigenvectors. Production SVD
+solvers (LAPACK's `gesdd`/`gesvd`, called by `numpy.linalg.svd`) never form
+$A^TA$; they use a two-phase algorithm: first reduce $A$ to **bidiagonal**
+form via a sequence of Householder reflections applied alternately from
+the left and right (numerically stable, since Householder transformations
+are orthogonal), then apply an iterative algorithm (the Golub-Kahan
+implicit QR algorithm, or divide-and-conquer for large matrices) to the
+much smaller bidiagonal matrix to extract singular values and vectors —
+operating on $A$'s own conditioning throughout, not $A^TA$'s squared one.
+
+This distinction has a direct, practical consequence for PCA (which this
+module likely connects SVD to): computing PCA via eigendecomposition of the
+covariance matrix $X^TX/n$ is the textbook approach but the less accurate
+one; `sklearn.decomposition.PCA` actually computes the SVD of the
+(mean-centered) data matrix $X$ directly and derives the components from
+$V$, precisely to avoid ever forming $X^TX$ and the numerical error that
+squaring the condition number would introduce, especially for
+high-dimensional, correlated features.
+
 ## Exercise
 
 1. Compute the SVD of a $3\times2$ non-square matrix by hand (choose small

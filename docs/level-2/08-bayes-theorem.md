@@ -96,6 +96,31 @@ P(D | +)    : 0.16666666666666669
 simulated P(D | +): 0.1667...
 ```
 
+## How It Actually Works
+
+Bayes' theorem, $P(A|B) = \frac{P(B|A)P(A)}{P(B)}$, looks like a single
+division, but applying it repeatedly (as Naive Bayes does, multiplying
+likelihoods across many features) multiplies many probabilities together —
+each less than 1 — and the product **underflows to exactly 0.0** in
+floating point after only a few dozen features, since float64 can't
+represent numbers below roughly $10^{-308}$ and this product shrinks
+geometrically. A classifier comparing two computed 0.0 values can no longer
+tell which class was more likely, even though the true (infinitesimally
+small but distinct) probabilities differed.
+
+The fix used in every real implementation (scikit-learn's `GaussianNB`
+included) is to work in **log-space**: since $\log$ is monotonic, comparing
+$\log P(A|B)$ values ranks identically to comparing $P(A|B)$ values
+directly, but $\log$ turns the underflowing product of likelihoods into a
+sum, $\log P(B|A) = \sum_i \log P(b_i|A)$, which stays numerically
+representable across hundreds of features. When you eventually do need an
+actual probability (not just a ranking) recovered from log-probabilities,
+you need the **log-sum-exp trick**:
+$\log\sum_i e^{x_i} = m + \log\sum_i e^{x_i - m}$ where $m=\max_i x_i$,
+which prevents `exp` from overflowing on the largest term while keeping
+the result exact — this exact trick reappears verbatim in the softmax and
+cross-entropy module ahead.
+
 ## Exercise
 
 A factory has two machines: Machine A makes 60% of products with a 2%

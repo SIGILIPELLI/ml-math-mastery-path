@@ -137,6 +137,33 @@ normal-equation [w, b]: [1.5        0.33333333]
 gradient at optimum: [0. 0.]
 ```
 
+## How It Actually Works
+
+The closed-form solution $\boldsymbol{\beta} = (X^TX)^{-1}X^Ty$ is
+mathematically correct but is almost never computed that way in real
+numerical software — for two computational reasons. First, forming
+$X^TX$ and inverting it explicitly squares the **condition number** of the
+problem: if $X$ has condition number $\kappa$, then $X^TX$ has condition
+number $\kappa^2$, which means floating-point rounding error in the
+solution gets amplified quadratically compared to working with $X$
+directly. If $X$'s columns are even mildly correlated (a common real-world
+case — this is literally why Level 3 has a whole module on
+regularization), $X^TX$ can become numerically close to singular, and
+`inv()` on it returns a wildly inaccurate result even though it doesn't
+throw an error.
+
+Second, computing a matrix inverse is wasteful: LAPACK's actual solvers
+(and what `np.linalg.lstsq` calls) instead compute a **QR decomposition**
+$X = QR$ ($Q$ orthogonal, $R$ upper triangular) and solve
+$R\boldsymbol{\beta} = Q^Ty$ by back-substitution, or use the **SVD**
+$X = U\Sigma V^T$ and solve via $\boldsymbol{\beta} = V\Sigma^{+}U^Ty$
+(Level 4's SVD module covers this pseudo-inverse construction). Both avoid
+ever forming $X^TX$, keep the effective condition number at $\kappa$ instead
+of $\kappa^2$, and are what `scikit-learn`'s `LinearRegression` actually
+calls under the hood — the formula you derived by hand is exact algebra,
+but production code solves the same problem through a numerically
+safer route.
+
 ## Exercise
 
 Using the points $(1,1), (2,2), (3,2), (4,3)$:

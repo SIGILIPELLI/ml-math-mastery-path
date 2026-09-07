@@ -99,6 +99,34 @@ theta after each step: [0.0, 1.8, 2.52, 2.808]
 J at final theta: 2.036864
 ```
 
+## How It Actually Works
+
+A gradient descent update, $\theta \leftarrow \theta - \alpha\nabla J(\theta)$,
+is a single line of code but hides several floating-point failure modes
+that this module's "learning rate matters" section only gestures at.
+If $\alpha\nabla J(\theta)$ overflows float32's range (roughly
+$3.4\times10^{38}$) — which happens when the gradient itself is huge
+(exploding gradients) — the update produces `inf`, and the next loss
+evaluation computes `inf - inf` or similar, yielding `NaN` that never
+recovers, because every subsequent arithmetic operation touching a `NaN`
+value stays `NaN` (IEEE-754's defined "poisoning" behavior). Too small an
+$\alpha$ has the opposite numerical failure: if $\alpha\nabla J(\theta)$ is
+smaller than float32's precision relative to $\theta$'s magnitude (roughly
+$\theta \times 1.2\times10^{-7}$), the update rounds to exactly zero —
+$\theta$ stops changing even though the mathematical gradient is nonzero,
+a phenomenon distinct from mathematical convergence and purely an artifact
+of finite precision.
+
+This is also why real training loops rarely use plain gradient descent:
+momentum-based optimizers (Level 3 Module 03) maintain an exponentially
+weighted running average of past gradients specifically to smooth out the
+per-step floating-point noise that arises from mini-batch sampling, and
+mixed-precision training (float16 forward/backward, float32 master weights)
+exists precisely because float16's ~3 decimal digits of precision would
+otherwise let exactly this kind of "update rounds to zero" problem destroy
+training — the master weights are kept in float32 so the accumulation of
+many small updates doesn't get lost to rounding.
+
 ## Exercise
 
 Let $J(\theta) = \theta^2 - 4\theta + 10$.

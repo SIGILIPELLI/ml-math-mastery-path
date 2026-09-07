@@ -135,6 +135,31 @@ multiplication (also called the Hadamard product), not matrix
 multiplication — always use `@` or `np.matmul` for the linear-algebra
 product.
 
+## How It Actually Works
+
+Matrix multiplication $C = AB$ for $n\times n$ matrices is defined by
+$C_{ij} = \sum_k A_{ik}B_{kj}$ — a triple loop, $O(n^3)$ multiply-adds. No
+production library actually runs that triple loop naively: LAPACK/BLAS
+implementations (OpenBLAS, MKL, Accelerate) **block** the matrices into
+small tiles (e.g. $64\times 64$) sized to fit in L1/L2 CPU cache, and reuse
+each loaded tile for many multiply-adds before evicting it, because a cache
+miss (fetching from RAM) costs roughly 100x longer than an L1 cache hit.
+They also use SIMD instructions (AVX-512 on modern CPUs) to perform 8-16
+float32 multiply-adds per clock cycle, and multithread across cores. The
+"same" $O(n^3)$ algorithm can run 50-100x faster purely from this memory
+and instruction-level engineering — which is why `A @ B` in NumPy calls out
+to compiled BLAS rather than iterating in Python.
+
+There is also an asymptotically faster algorithm: Strassen's algorithm
+computes a $2\times2$ block matrix product using 7 multiplications instead
+of 8 by combining sums and differences of blocks cleverly, giving
+$O(n^{\log_2 7}) \approx O(n^{2.807})$ instead of $O(n^3)$. It's rarely used
+in practice below very large $n$ because it trades exact arithmetic
+structure for extra additions and is less numerically stable (its recursive
+subtraction/addition steps amplify rounding error more than direct
+multiply-add), which matters more for ML matrices than the asymptotic
+speedup.
+
 ## Exercise
 
 Given

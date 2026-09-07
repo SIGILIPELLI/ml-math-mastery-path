@@ -100,6 +100,33 @@ df/dx (autodiff) = 21.0, df/dy (autodiff) = 16.0
 df/dx (numeric) = 21.0000, df/dy (numeric) = 16.0000
 ```
 
+## How It Actually Works
+
+There are two fundamentally different modes of automatic differentiation,
+and the distinction is about the *order* in which the chain rule's
+multiplications are carried out through the graph, which has real
+computational consequences. **Forward-mode** autodiff propagates
+derivatives *alongside* the forward computation: each intermediate value
+$v$ carries a paired "tangent" $\dot v = \partial v/\partial x$ for one
+chosen input $x$ (this is exactly what **dual numbers**, $a+b\varepsilon$
+with $\varepsilon^2=0$, implement algebraically — arithmetic on dual
+numbers automatically produces both a value and its derivative). Forward
+mode costs one pass per *input* you want a derivative with respect to —
+fine for few inputs, hopeless for a neural network with millions of
+parameters.
+
+**Reverse-mode** autodiff (what every deep learning framework uses) instead
+runs the forward pass once, recording the graph, then propagates
+derivatives backward from the single output — costing one pass regardless
+of how many inputs there are, but requiring the whole graph to be stored in
+memory until the backward pass completes. The chain rule is identical
+algebra in both directions; the difference is purely about which
+intermediate products get computed and cached first. This is a genuine
+compute/memory trade-off decided per-use-case: forward mode is used inside
+some Hessian-vector-product implementations (Level 2 Module 03) precisely
+because that inner computation has few "inputs" (the direction vector $v$)
+and benefits from forward mode's lower memory use.
+
 ## Exercise
 
 1. Build the computational graph for $g(x) = \sin(x^2) + x$ and compute

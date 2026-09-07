@@ -89,6 +89,35 @@ posterior mean = 0.6667
 numerically integrated posterior mean = 0.6667
 ```
 
+## How It Actually Works
+
+Computing a posterior $p(\theta|D) = p(D|\theta)p(\theta)/p(D)$ exactly
+requires the normalizing constant
+$p(D) = \int p(D|\theta)p(\theta)\,d\theta$ — an integral that is only
+tractable in closed form for special conjugate pairs like this module's
+Beta-Bernoulli example. For virtually every realistic model, $p(D)$ has no
+closed form and can't even be estimated by direct numerical integration
+once $\theta$ has more than a handful of dimensions (grid-based
+quadrature's cost grows exponentially with dimension — the "curse of
+dimensionality").
+
+**Markov Chain Monte Carlo (MCMC)** methods sidestep the integral entirely
+by constructing a Markov chain whose stationary distribution *is* the
+posterior, without ever needing $p(D)$: the **Metropolis-Hastings**
+algorithm, for instance, proposes a new $\theta'$ from the current $\theta$,
+and accepts it with probability
+$\min\left(1, \frac{p(D|\theta')p(\theta')}{p(D|\theta)p(\theta)}\right)$
+— notice $p(D)$ cancels exactly in this ratio, so the intractable
+normalizing constant never needs to be computed at all. Run for enough
+steps, the chain's visited states form samples from the true posterior,
+even though no step ever evaluated $p(D)$. Modern practice largely uses
+**Hamiltonian Monte Carlo** (used by Stan, PyMC, NumPyro) instead, which
+uses the *gradient* of the log-posterior (computed via autodiff, exactly
+the mechanism from Level 3) to propose much more efficient moves through
+parameter space than Metropolis-Hastings' undirected random walk — a
+direct application of automatic differentiation to make sampling-based
+Bayesian inference computationally practical in high dimensions.
+
 ## Exercise
 
 1. Repeat with a stronger prior Beta(10,10) (representing a strong belief

@@ -89,6 +89,34 @@ numerically optimized mu = 4.0000
 binary cross-entropy = 0.3199
 ```
 
+## How It Actually Works
+
+Maximizing the likelihood $L(\theta) = \prod_i p(x_i;\theta)$ directly is a
+numerical non-starter for any real dataset: multiplying even a few hundred
+probabilities (each $\leq 1$, typically much less than 1 for continuous
+densities) underflows float64 to exactly `0.0` almost immediately, at
+which point the "likelihood" carries zero information about which $\theta$
+is better. This is precisely why every practical implementation maximizes
+the **log-likelihood** instead,
+$\ell(\theta) = \sum_i \log p(x_i;\theta)$ — mathematically equivalent
+(since $\log$ is monotonic, the maximizing $\theta$ is identical) but
+numerically stable, because summing many log-probabilities (each a
+moderate negative number) stays comfortably within float64's range where
+their product would not.
+
+This also determines *how* MLE is actually solved computationally: for
+most models (anything beyond simple closed-form cases like a Gaussian's
+mean and variance), there is no algebraic solution to
+$\nabla_\theta \ell(\theta) = 0$, so real code runs gradient-based
+optimization — computing $\nabla_\theta \ell(\theta)$ via autodiff through
+the log-density expression directly (never through $\log(p(\cdot))$ after
+$p$ has been computed, for the underflow reasons from Level 2 Module 09),
+and applying gradient ascent (or, equivalently, gradient descent on the
+negative log-likelihood, which is the actual "loss function" minimized when
+you train a classifier with cross-entropy — cross-entropy loss *is*
+negative log-likelihood under a categorical model, computed via the fused,
+numerically stable softmax-cross-entropy kernel from Module 06.
+
 ## Exercise
 
 1. Derive the MLE for the variance $\sigma^2$ of a Gaussian given data

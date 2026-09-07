@@ -110,6 +110,34 @@ GD converged to x=2.2500 in 2029 iterations
 Newton converged to x=2.2500 in 6 iterations
 ```
 
+## How It Actually Works
+
+Newton's method, $\theta_{t+1} = \theta_t - H^{-1}\nabla f(\theta_t)$,
+is never implemented by literally inverting $H$: forming $H^{-1}$
+explicitly costs $O(n^3)$ and is numerically wasteful for the same reason
+inverting $X^TX$ was in Level 1 Module 09. Real implementations instead
+solve the **linear system** $H\Delta = \nabla f(\theta_t)$ for the step
+$\Delta$ directly — via Cholesky decomposition if $H$ is confirmed
+positive-definite (guaranteeing a descent direction), or via the
+**conjugate gradient** method for very large $n$, which finds (an
+approximation to) the solution using only repeated Hessian-vector products
+$Hv$ (Level 2 Module 03's Pearlmutter trick) — never forming or storing $H$
+itself, which is essential once $n$ is in the millions.
+
+**Quasi-Newton methods** like BFGS go further: they never compute the true
+Hessian at all, instead maintaining a running low-rank approximation
+$B_t \approx H$ updated after each step using only the observed gradient
+difference $y_t = \nabla f(\theta_{t+1}) - \nabla f(\theta_t)$ and step
+$s_t = \theta_{t+1}-\theta_t$, via the BFGS update formula — pure
+first-order information (gradients you already compute for descent)
+combined algebraically to approximate curvature you never directly
+measure. **L-BFGS** (the version actually used in ML, e.g.
+`scipy.optimize`'s default for smooth problems) stores only the last $m$
+(typically 5-20) such $(s_t,y_t)$ pairs instead of a full $n\times n$
+matrix, making it $O(mn)$ in memory rather than $O(n^2)$ — a specific
+engineering trade-off between how much curvature history is kept and how
+much memory the optimizer consumes.
+
 ## Exercise
 
 1. Run Newton's method starting near a point where $f''(x) < 0$ (e.g.

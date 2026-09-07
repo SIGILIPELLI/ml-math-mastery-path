@@ -116,6 +116,34 @@ BCE: 0.28986... grad wrt y_hat: [-0.625  0.7142857] grad wrt z: [-0.1  0.15]
 numeric grad wrt y_hat: [-0.625  0.7142857]
 ```
 
+## How It Actually Works
+
+Cross-entropy loss, $L = -\sum_i y_i\log \hat{y}_i$, is almost never
+computed as written when $\hat{y}$ comes from a softmax, because doing so
+computes `exp` (in softmax) followed immediately by `log` (in cross-entropy)
+— two operations that can each independently overflow or underflow before
+you even get to combine them. Real implementations (PyTorch's
+`CrossEntropyLoss`, TensorFlow's
+`softmax_cross_entropy_with_logits`) fuse softmax and cross-entropy into a
+single numerically stable kernel that operates directly on the raw logits
+$z$:
+
+$$
+L = -z_y + \log\sum_j e^{z_j} = -z_y + \left(m + \log\sum_j e^{z_j - m}\right),
+\quad m = \max_j z_j
+$$
+
+using the log-sum-exp trick from Module 06/08 of Level 2 — this avoids ever
+computing an intermediate probability that could have already underflowed
+to `0.0` (which would make `log(0)` produce `-inf`). The gradient of this
+fused operation, $\hat{y} - y$ (softmax output minus one-hot label), is
+also computed as a single analytic formula rather than by chaining
+separately-differentiated softmax and log-loss gradients, both for
+numerical stability and because the fused gradient is algebraically far
+simpler than the product of the two separate Jacobians would suggest —
+a case where "fusing" operations at the implementation level changes both
+speed and numerical accuracy, not just code organization.
+
 ## Exercise
 
 Given $\hat y = [0.6, 0.9]$, $y = [0, 1]$:

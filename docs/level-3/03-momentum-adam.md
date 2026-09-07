@@ -113,6 +113,33 @@ adam step 4: theta=1.1926
 adam step 5: theta=1.4808
 ```
 
+## How It Actually Works
+
+Adam's per-parameter state — the running first moment $m_t$ and second
+moment $v_t$ — is maintained as ordinary floating-point exponential moving
+averages, updated every step for every one of possibly billions of
+parameters, which means Adam's memory footprint is **2x the model size**
+just for optimizer state (plus the parameters and gradients themselves) —
+often the actual memory bottleneck in large-model training, not the
+activations. Numerically, $v_t$ (an average of squared gradients) is always
+non-negative by construction, but floating-point rounding can make it
+computed as an extremely small positive number or even flirt with zero in
+low-precision (float16) training; this is exactly why Adam's update
+divides by $\sqrt{v_t}+\epsilon$ rather than $\sqrt{v_t}$ — that $\epsilon$
+(typically $10^{-8}$) exists purely to prevent a division by (near-)zero
+that would otherwise blow up the update, and choosing $\epsilon$ too small
+for float16 training is a well-known real-world source of NaN losses.
+
+The bias-correction step,
+$\hat{m}_t = m_t/(1-\beta_1^t)$, is also a purely computational fix: at
+$t=1$, $m_1 = (1-\beta_1)g_1$ is much smaller in magnitude than $g_1$
+itself (since $\beta_1\approx0.9$ means only 10% of $g_1$ is captured on
+the first step), so early updates would be artificially tiny without
+correction — dividing by $(1-\beta_1^t)$, which starts near 0 and
+approaches 1 as $t$ grows, exactly compensates for this "cold start" bias
+in the exponential moving average's own arithmetic, not for any property
+of the loss surface.
+
 ## Exercise
 
 Using $J(\theta)=\theta^2$ ($J'(\theta)=2\theta$), start $\theta_0=5$.

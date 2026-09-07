@@ -112,6 +112,33 @@ exact  h'(2): 42
 numeric h'(2): 42.00899999999978
 ```
 
+## How It Actually Works
+
+A computer algebra system applies the rules from this module (power, sum,
+product, chain) not to a formula written as text, but to an **expression
+tree** — a data structure where each node is an operation (`+`, `*`, `**`,
+`sin`, ...) and each leaf is a variable or constant. Differentiating
+$f(x) = (3x^2+1)^5$ means walking this tree: the root node is `pow`, whose
+derivative rule says "multiply by the exponent, reduce the power by one,
+and multiply by the derivative of the inner subtree" — i.e. the chain rule
+is applied as a **local, per-node rewrite**, recursively, exactly the way
+you apply it by hand, just done systematically over the whole tree instead
+of by pattern-matching a page of algebra.
+
+This is mechanically identical to what a deep learning framework's autodiff
+engine does, with one key difference: a symbolic system builds and returns
+the *new tree* representing $f'(x)$ as a formula (which you could then
+print, simplify, or evaluate at many points), whereas autodiff (Level 1
+Module 08 onward) evaluates the derivative rule at each node **numerically,
+for one specific input**, immediately, without ever materializing a symbolic
+formula. Symbolic differentiation of a deeply composed function like a
+50-layer neural network would produce an expression with an
+astronomically large number of terms (each chain-rule application can
+roughly double term count); autodiff sidesteps this entirely by carrying
+only numeric derivative *values* through the same computational graph,
+which is why every ML framework uses autodiff, not a symbolic differentiator,
+to train models.
+
 ## Exercise
 
 1. Using the power, constant-multiple, and sum rules, differentiate

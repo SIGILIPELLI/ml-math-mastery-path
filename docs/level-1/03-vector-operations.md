@@ -125,6 +125,31 @@ cos(theta) = 0.9746
 theta (deg)= 12.9
 ```
 
+## How It Actually Works
+
+The dot product $\mathbf{a}\cdot\mathbf{b} = \sum_i a_i b_i$ looks like one
+operation mathematically, but on hardware it is computed as a sequence of
+**fused multiply-adds** (FMA): for each $i$, compute $a_i b_i$ and add it to
+a running accumulator, ideally in a single rounded step rather than two
+(computing the product, rounding, then adding, rounding again — FMA avoids
+the intermediate rounding, which measurably improves accuracy for long
+sums). The order in which terms are summed also matters: floating-point
+addition is not associative, so
+$(a_1b_1 + a_2b_2) + a_3b_3$ can give a very slightly different result than
+$a_1b_1 + (a_2b_2 + a_3b_3)$. For a handful of terms this is invisible, but
+BLAS routines computing dot products over thousands of dimensions use
+pairwise (tree-structured) summation instead of naive left-to-right
+summation specifically because it keeps rounding error growing as
+$O(\log n)$ instead of $O(n)$.
+
+The norm $\|\mathbf{v}\| = \sqrt{\sum_i v_i^2}$ has its own numerical trap:
+squaring large values can overflow, and squaring tiny values can underflow
+to exactly 0.0, silently losing them from the sum. Production linear
+algebra libraries (LAPACK's `nrm2`) compute norms using a scaled algorithm
+that divides by the largest element first, so intermediate `v_i^2` terms
+stay near 1.0 instead of overflowing or vanishing — a rewrite of the
+identical formula purely for floating-point safety.
+
 ## Exercise
 
 Let $\mathbf{a} = \begin{bmatrix}2\\0\end{bmatrix}$ and

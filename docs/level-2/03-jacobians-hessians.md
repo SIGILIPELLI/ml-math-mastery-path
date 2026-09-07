@@ -103,6 +103,30 @@ numeric Hessian:
  [4. 6.]]
 ```
 
+## How It Actually Works
+
+Computing a full Hessian $H_{ij} = \frac{\partial^2 f}{\partial
+x_i \partial x_j}$ costs $O(n^2)$ memory and, via naive methods, $O(n^2)$
+or worse in compute — infeasible for $n$ in the millions. Real optimizers
+that need Hessian information (Level 4's numerical optimization methods
+module) almost never materialize $H$ itself; they compute **Hessian-vector
+products** $Hv$ instead, using the *Pearlmutter trick*: differentiate the
+scalar $\left(\nabla f(x)\right)^Tv$ (a dot product of the gradient with a
+fixed vector $v$) with reverse-mode autodiff a second time. Since
+$\nabla_x\left[(\nabla f(x))^Tv\right] = Hv$, this "double backward" pass
+costs about the same as two ordinary gradient evaluations — $O(n)$, not
+$O(n^2)$ — and never needs to store the $n\times n$ matrix at all. This
+is literally forward-over-reverse (or reverse-over-reverse) autodiff:
+autodiff applied to a computational graph that itself contains an autodiff
+call.
+
+This is also why quasi-Newton methods like L-BFGS (Level 4) exist: they
+approximate the Hessian's action using only a short history of past
+gradient differences (a handful of $O(n)$ vectors) rather than ever
+computing or storing $H$, trading exact second-order information for a
+computationally tractable approximation that still captures curvature well
+enough to converge much faster than plain gradient descent.
+
 ## Exercise
 
 For $\mathbf{f}(x,y) = (xy,\ x^2 - y^2)$:

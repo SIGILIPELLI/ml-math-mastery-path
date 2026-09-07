@@ -155,6 +155,36 @@ numeric dW1=
 numeric dW2=[-0.24016 -0.38863]
 ```
 
+## How It Actually Works
+
+Implementing forward and backward passes "from scratch" in this capstone
+means, mechanically, building a small computational graph by hand: every
+matrix multiply, activation function, and loss evaluation you write in the
+forward pass must have a matching, explicitly coded backward function that
+you call in reverse order during backprop — exactly the `grad_fn`
+machinery that Module 01 and Level 2's chain-rule modules described a
+framework doing automatically. Writing this by hand is instructive
+precisely because it exposes the bookkeeping a framework normally hides:
+you must decide what to cache from the forward pass (pre-activation values
+for ReLU's derivative, the softmax output for the fused cross-entropy
+gradient), and you must correctly sum gradients at every node whose output
+feeds into more than one downstream computation (a shared weight matrix
+used at two points, for instance) — a bug here (overwriting instead of
+accumulating) is one of the most common real implementation mistakes when
+building autodiff by hand.
+
+The "numeric verification" step in this capstone is not optional
+scaffolding — it is the single most important debugging tool for exactly
+this kind of hand-written backward pass: comparing your analytic gradient
+against a central finite difference,
+$\frac{f(\theta+h)-f(\theta-h)}{2h}$ (more accurate than the one-sided
+version from Module 06 of Level 1, since it cancels the first-order
+truncation error, leaving $O(h^2)$ error instead of $O(h)$), for a handful
+of parameters is the standard way real ML engineers catch backward-pass
+bugs before trusting a training run — matching to 4-6 significant digits
+is the usual bar, since perfect agreement is impossible given floating-
+point round-off in both computations.
+
 ## Exercise
 
 1. Take one gradient descent step ($\eta=0.5$) on all parameters and

@@ -149,6 +149,32 @@ $J$ dropped from $14.0$ to $8.57$ after a single step in the
 $-\nabla J$ direction — exactly the mechanism that trains every ML model
 built on gradient descent, from linear regression to deep neural networks.
 
+## How It Actually Works
+
+This capstone combines two computational mechanisms from earlier modules,
+and it's worth being precise about which one does the real work in
+practice. The **finite-difference check** you ran in Step 6 evaluates the
+cost function at $\theta \pm h$ and divides by $2h$ — useful as a
+sanity check specifically *because* it is a completely independent
+computational path from the analytic gradient formula, so agreement
+between the two (to about 6-7 significant digits for float64 with a
+well-chosen $h$) is strong evidence the analytic formula and its code are
+correct. It is never used as the actual training mechanism, because its
+cost scales as $O(n)$ evaluations of $J$ for $n$ parameters, and each
+evaluation carries the truncation/round-off trade-off from Module 06.
+
+The **analytic gradient** used for the actual descent step, by contrast,
+is the pattern every real training loop uses: compute it once (here, by
+hand-derived formula; in Level 3, via reverse-mode autodiff over a
+computational graph), then apply
+$\theta \leftarrow \theta - \alpha\nabla J(\theta)$ — a single vectorized
+floating-point update per parameter, applied element-wise using the exact
+IEEE-754 arithmetic and the same BLAS-backed vector operations from Module
+02-04. Every subsequent module's "numeric verification" section follows
+this same two-track pattern: a fast analytic/autodiff path for training,
+and a slow, independent finite-difference path used only to catch bugs
+before trusting the fast path.
+
 ## Exercise (final Level 1 check)
 
 Given $K(w,b) = (2w+1)^2 + 3b^2 - wb$:

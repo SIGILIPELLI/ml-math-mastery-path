@@ -101,6 +101,31 @@ simulated P(X=6): 0.2050...
 simulated mean, var: 5.000... 2.499...
 ```
 
+## How It Actually Works
+
+Evaluating a Gaussian's density,
+$p(x) = \frac{1}{\sqrt{2\pi\sigma^2}}e^{-(x-\mu)^2/2\sigma^2}$, directly can
+silently underflow: for $x$ several standard deviations from $\mu$, the
+exponent is a large negative number, and `exp` of a sufficiently negative
+float64 input returns exactly `0.0` (below roughly $e^{-745}$), not a tiny
+positive number — the density hasn't mathematically vanished, but the
+floating-point representation has. This matters enormously for
+maximum-likelihood fitting (Level 3), which needs $\log p(x)$, not $p(x)$
+itself: computing `np.log(p(x))` after $p(x)$ has already underflowed to
+`0.0` gives `-inf`, whereas the mathematically correct log-density,
+$-\frac{(x-\mu)^2}{2\sigma^2} - \frac{1}{2}\log(2\pi\sigma^2)$, is a
+perfectly finite, well-behaved number.
+
+The general principle — used throughout every ML library that fits
+distributions — is to implement `log_pdf(x)` as its own closed-form
+expression (computed directly from $x$, $\mu$, $\sigma$, never by calling
+`log(pdf(x))`), because the log-density formula avoids the intermediate
+`exp` entirely. This is also why sampling from complex distributions in
+practice uses algorithms like **rejection sampling** or **MCMC** (Level 4)
+rather than inverting the CDF directly when no closed form exists — the
+computational mechanism has to be engineered around exactly these floating-
+point edge cases, not just derived from the probability formula.
+
 ## Exercise
 
 Let $X \sim \text{Binomial}(n=20, p=0.3)$.

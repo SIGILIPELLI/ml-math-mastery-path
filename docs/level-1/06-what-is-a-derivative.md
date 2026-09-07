@@ -105,6 +105,37 @@ plugging a tiny $h$ into the definition — is a standard way to **sanity
 check** a hand-derived (symbolic) derivative or a backpropagation
 implementation, and we'll reuse it in the capstone and again in Level 3.
 
+## How It Actually Works
+
+There are three genuinely different ways to get $f'(x)$ out of a computer,
+and this module's finite-difference check uses only one of them:
+
+1. **Numerical (finite) differences** — compute
+   $\frac{f(x+h)-f(x)}{h}$ directly, as done above. This has two competing
+   error sources: *truncation error* from approximating a limit with a
+   finite $h$ (shrinks as $h\to 0$, roughly $O(h)$ for forward differences),
+   and *round-off error* from floating-point subtraction of nearly-equal
+   numbers (grows as $h\to 0$, roughly $O(\varepsilon_{machine}/h)$). Adding
+   these, the total error is minimized around $h \approx
+   \sqrt{\varepsilon_{machine}}$ — for float64 ($\varepsilon_{machine}
+   \approx 2.2\times10^{-16}$), that's $h\approx 10^{-8}$, matching common
+   defaults in gradient-checking libraries.
+2. **Symbolic differentiation** — a computer algebra system applies the
+   power/sum/chain rules to an expression tree and produces a new,
+   exact-in-principle formula (what you did by hand for $f'(x)=2x$). This
+   is exact but can produce exploding expression sizes for deeply nested
+   functions (this is why frameworks like SymPy are used for math, not for
+   training neural networks).
+3. **Automatic differentiation (autodiff)** — used by every deep learning
+   framework — evaluates $f$ forward while simultaneously propagating exact
+   derivative information alongside each intermediate value, using the
+   chain rule mechanically at each elementary operation (add, multiply,
+   `exp`, ...). It is *not* symbolic (no giant formula is built) and *not*
+   numerical (no $h$, no round-off/truncation trade-off) — it computes
+   derivatives that are exact to floating-point precision, at roughly the
+   cost of one extra forward pass. Module 08 and Level 3's backpropagation
+   module build this mechanism from scratch.
+
 ## Exercise
 
 1. Using the first-principles definition, prove that the derivative of

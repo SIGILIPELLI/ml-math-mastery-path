@@ -111,6 +111,31 @@ RBF Gram matrix eigenvalues = [0.0700 0.2079 0.2079 0.7261 3.7881]
 all >= 0 (valid kernel)? True
 ```
 
+## How It Actually Works
+
+The kernel trick's computational payoff is concrete and measurable: for a
+polynomial kernel of degree $d$ over $p$ raw features, the explicit feature
+map $\phi(x)$ has $O(p^d)$ dimensions, but $K(x,y)=(x^Ty+c)^d$ computes the
+same inner product $\phi(x)^T\phi(y)$ in $O(p)$ time — for the RBF kernel,
+$\phi$ is formally infinite-dimensional, yet $K(x,y)=\exp(-\|x-y\|^2/2\sigma^2)$
+still costs $O(p)$ per pair. This is why kernel methods can use feature
+spaces no explicit computation could ever construct.
+
+The real computational bottleneck kernel methods hit instead is the
+**kernel (Gram) matrix** $K\in\mathbb{R}^{n\times n}$, one entry per pair
+of the $n$ training points — $O(n^2)$ memory and $O(n^2)$ to $O(n^3)$
+compute to build and factor, which is why kernel SVMs and kernel ridge
+regression scale poorly past tens of thousands of examples regardless of
+how cheap each individual $K(x_i,x_j)$ evaluation is. Solving kernel ridge
+regression, $\alpha = (K+\lambda I)^{-1}y$, is done via **Cholesky
+decomposition** of $K+\lambda I$ (guaranteed symmetric positive-definite for
+$\lambda>0$ and a valid kernel, by Mercer's theorem) rather than by explicit
+matrix inversion, for the same $O(n^3)$-but-more-stable reasons as the
+normal-equations discussion in Level 1 Module 09 — and the $\lambda I$ term
+isn't just regularization mathematically, it's also what keeps the system
+well-conditioned enough for Cholesky to succeed numerically when $K$ alone
+is near-singular (common when training points are nearly duplicated).
+
 ## Exercise
 
 1. Derive the explicit feature map for $k(x,z)=(x^\top z + 1)^2$ in 2D

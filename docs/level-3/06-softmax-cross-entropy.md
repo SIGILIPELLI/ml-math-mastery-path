@@ -120,6 +120,34 @@ analytic grad = [-0.34099886  0.24243297  0.09856589]
 numeric grad = [-0.34099886  0.24243297  0.09856589]
 ```
 
+## How It Actually Works
+
+Softmax, $\text{softmax}(z)_i = e^{z_i}/\sum_j e^{z_j}$, computed exactly
+as written will overflow for any logit larger than about 709 (float64) or
+88 (float32) — trivially exceeded once a network is even moderately
+confident, since raw logits routinely reach the hundreds after a few
+training epochs. The universal fix, used in literally every production
+implementation, is the **max-subtraction trick**: since
+$\text{softmax}(z)_i = \text{softmax}(z-c)_i$ for *any* constant $c$
+(subtracting a constant from every logit doesn't change the ratio),
+choosing $c=\max_j z_j$ guarantees the largest exponent computed is
+$e^0=1$ and every other term is $\leq 1$ — mathematically identical
+output, but now numerically overflow-proof:
+
+$$
+\text{softmax}(z)_i = \frac{e^{z_i - \max_j z_j}}{\sum_k e^{z_k-\max_j z_j}}
+$$
+
+This is the same log-sum-exp identity used throughout Levels 2-3. In
+practice, softmax is virtually never computed as a standalone step before
+cross-entropy either — frameworks fuse the two into one kernel that works
+directly on logits (Module 02's fused loss) both to save an intermediate
+`exp`+`log` round trip and because the fused gradient, $\hat{y}-y$, is
+what actually gets backpropagated; a hand-rolled `softmax()` then
+`cross_entropy()` pipeline is a common source of training instability in
+practice precisely because it reintroduces the overflow/underflow risk the
+fused kernel was built to avoid.
+
 ## Exercise
 
 1. Repeat the derivation and numeric check for true class $k=2$ instead of
