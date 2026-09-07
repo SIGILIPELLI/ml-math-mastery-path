@@ -1233,6 +1233,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2261,6 +2272,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2368,6 +2390,28 @@ may differ from the hand solution but the direction ratio matches: the
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>A v = [3.53553391 3.53553391], lambda*v = [3.53553391 3.53553391]
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>A v = [-0.89442719 -1.78885438], lambda*v = [-0.89442719 -1.78885438]
 </code></pre></div>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>Finding eigenvalues by solving the characteristic polynomial
+<span class="arithmatex">\(\det(A-\lambda I)=0\)</span>, as you likely did by hand for a <span class="arithmatex">\(2\times2\)</span> matrix,
+is almost never how a computer does it. Root-finding on a polynomial of
+degree <span class="arithmatex">\(n\geq 5\)</span> has no closed-form formula (Abel-Ruffini), and even for
+smaller <span class="arithmatex">\(n\)</span>, computing the polynomial's coefficients from <span class="arithmatex">\(A\)</span> and then
+finding its roots is numerically <strong>unstable</strong> — tiny changes in <span class="arithmatex">\(A\)</span>'s
+entries can produce wildly different computed roots, because polynomial
+root-finding is famously ill-conditioned (Wilkinson's classic example shows
+a degree-20 polynomial whose roots shift by 4+ orders of magnitude from a
+<span class="arithmatex">\(2^{-23}\)</span> perturbation in one coefficient).</p>
+<p>Production libraries (LAPACK, called by <code>numpy.linalg.eig</code>) instead use
+<strong>iterative similarity transformations</strong>: reduce <span class="arithmatex">\(A\)</span> to upper Hessenberg
+form via Householder reflections (cheap, numerically stable, preserves
+eigenvalues), then repeatedly apply the <strong>QR algorithm</strong> — factor the
+current matrix as <span class="arithmatex">\(QR\)</span>, multiply back as <span class="arithmatex">\(RQ\)</span>, and repeat — which
+provably converges to a matrix whose diagonal holds the eigenvalues,
+without ever forming a characteristic polynomial. For the symmetric case
+(common in ML: covariance matrices, Hessians), a specialized, faster, and
+even more stable variant (the symmetric QR algorithm, or divide-and-conquer
+methods) is used instead, exploiting the fact that symmetric matrices have
+real eigenvalues and orthogonal eigenvectors.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <div class="arithmatex">\[
 B = \begin{bmatrix} 2 &amp; 0 \\ 0 &amp; 5 \end{bmatrix}

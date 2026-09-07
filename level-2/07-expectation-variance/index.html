@@ -1317,6 +1317,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2261,6 +2272,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2369,6 +2391,29 @@ E[X^2] = \frac{1+4+9+16+25+36}{6} = \frac{91}{6} \approx 15.1\overline{6}
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>simulated mean: 3.500...
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>simulated var : 2.916...
 </code></pre></div>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>The textbook formula for variance,
+<span class="arithmatex">\(\text{Var}(X) = E[X^2] - (E[X])^2\)</span>, is a well-known numerical trap: when
+<span class="arithmatex">\(E[X^2]\)</span> and <span class="arithmatex">\((E[X])^2\)</span> are close in magnitude (common when the data has a
+large mean and small spread — e.g. measurements around <span class="arithmatex">\(10^6\)</span> varying by
+<span class="arithmatex">\(1\)</span>), subtracting two nearly-equal large floats causes <strong>catastrophic
+cancellation</strong>, wiping out most of the significant digits and sometimes
+even producing a <em>negative</em> computed variance for data that mathematically
+has strictly positive variance.</p>
+<p>Production numerical code avoids this entirely with <strong>Welford's online
+algorithm</strong>, which updates a running mean and a running sum of squared
+deviations from the <em>current</em> mean incrementally, one data point at a
+time, without ever computing <span class="arithmatex">\(E[X^2]\)</span> as a separate large quantity:</p>
+<div class="arithmatex">\[
+\delta_n = x_n - \bar{x}_{n-1}, \quad
+\bar{x}_n = \bar{x}_{n-1} + \frac{\delta_n}{n}, \quad
+M_{2,n} = M_{2,n-1} + \delta_n(x_n - \bar{x}_n)
+\]</div>
+<p>with <span class="arithmatex">\(\text{Var} = M_{2,n}/n\)</span>. This is mathematically equivalent to the
+two-pass formula but numerically stable regardless of the data's mean, and
+it's what <code>numpy.var</code>, pandas, and most statistics libraries actually
+implement — a case where the "obvious" rearrangement of a correct formula
+is a real correctness bug in floating point, not just a style choice.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>A biased coin lands heads (<span class="arithmatex">\(X=1\)</span>) with probability <span class="arithmatex">\(0.7\)</span> and tails (<span class="arithmatex">\(X=0\)</span>)
 with probability <span class="arithmatex">\(0.3\)</span>.</p>

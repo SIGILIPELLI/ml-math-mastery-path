@@ -1710,6 +1710,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2239,6 +2250,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2363,6 +2385,31 @@ rule from Module 07, applied to the two intermediate nodes <span class="arithmat
 <p>Both are ≈0 — expected, since normalization output sums to a
 scale-invariant quantity whose total gradient w.r.t. a uniform shift of all
 <span class="arithmatex">\(x_i\)</span> vanishes.</p>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>Batch norm's formula,
+<span class="arithmatex">\(\hat{x} = \frac{x-\mu_B}{\sqrt{\sigma_B^2+\epsilon}}\)</span>, has an <span class="arithmatex">\(\epsilon\)</span>
+(typically <span class="arithmatex">\(10^{-5}\)</span>) that exists for exactly one reason: numerical safety
+against division by (near-)zero when a batch's variance <span class="arithmatex">\(\sigma_B^2\)</span> is
+tiny — which happens routinely for a feature that's nearly constant across
+a mini-batch, especially early in training or for small batch sizes. This
+is analogous to Adam's <span class="arithmatex">\(\epsilon\)</span> from Module 03 but shows up in the
+<em>forward</em> pass rather than the optimizer.</p>
+<p>The running statistics used at inference time
+(<span class="arithmatex">\(\mu_{\text{running}}, \sigma^2_{\text{running}}\)</span>) are maintained as
+exponential moving averages updated during training — the same
+computational pattern as Adam's moment estimates — which is why batch norm
+behaves differently in "train mode" (uses the current batch's live
+statistics) versus "eval mode" (uses the frozen running averages); getting
+this switch wrong (a very common real bug — forgetting <code>model.eval()</code>) is a
+pure implementation/state-management issue, not a mathematical one.
+Backpropagating through normalization is also more involved than it looks:
+because <span class="arithmatex">\(\mu_B\)</span> and <span class="arithmatex">\(\sigma_B^2\)</span> are themselves functions of every element
+in the batch, the gradient with respect to one input <span class="arithmatex">\(x_i\)</span> has
+contributions flowing back through <span class="arithmatex">\(\mu_B\)</span> and <span class="arithmatex">\(\sigma_B^2\)</span> as well as
+directly — three separate paths through the computational graph that
+autodiff sums automatically via the multivariate chain rule, but which
+early hand-derived implementations of batch norm got wrong before the
+correct formula (involving all three terms) was published.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Repeat the backward-pass derivation with <span class="arithmatex">\(\gamma=2,\beta=1\)</span> and a

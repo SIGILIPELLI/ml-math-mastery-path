@@ -1412,6 +1412,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2283,6 +2294,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2391,6 +2413,28 @@ reasoning about what the data implies about <span class="arithmatex">\(p\)</span
 inside the derivative of <span class="arithmatex">\(\ln p\)</span> and <span class="arithmatex">\(\ln(1-p)\)</span> (2), and gradient descent
 itself (1) — this is precisely the recipe Level 3 will scale up to full
 logistic regression and neural networks.</p>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>This capstone's real engineering lesson is that "probability" and
+"optimization" code paths interact through floating point in a specific,
+recurring way: fitting a distribution by maximum likelihood means
+maximizing <span class="arithmatex">\(\sum_i \log p(x_i;\theta)\)</span>, and every gradient step through
+that sum needs <span class="arithmatex">\(\nabla_\theta \log p(x_i;\theta)\)</span> computed via autodiff
+through the <strong>log-density expression directly</strong> (Module 09's lesson) rather
+than through <code>log(pdf(...))</code>, or the gradient itself becomes <code>-inf</code> or
+<code>NaN</code> wherever any individual <span class="arithmatex">\(p(x_i;\theta)\)</span> has underflowed for the
+current parameter guess — which happens routinely during early, poorly-
+initialized optimization steps, not just at convergence.</p>
+<p>Combining this module's two threads (Monte Carlo estimation and gradient-
+based optimization) is also exactly the computational shape of modern
+generative modeling: variational autoencoders and diffusion models both
+optimize an expectation over a distribution, <span class="arithmatex">\(E_{q}[\ldots]\)</span>, by drawing
+Monte Carlo samples from <span class="arithmatex">\(q\)</span> using the PRNG mechanism from Module 06 and
+then backpropagating through those samples via the <strong>reparameterization
+trick</strong> — rewriting a sample <span class="arithmatex">\(z\sim\mathcal{N}(\mu,\sigma^2)\)</span> as
+<span class="arithmatex">\(z = \mu + \sigma\epsilon\)</span> for <span class="arithmatex">\(\epsilon\sim\mathcal{N}(0,1)\)</span>, so autodiff
+can differentiate the <em>deterministic</em> function of <span class="arithmatex">\(\mu,\sigma,\epsilon\)</span>
+instead of trying to (impossibly) differentiate through the sampling
+operation itself.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Using <span class="arithmatex">\(n_1=15, n_0=5\)</span> (so <span class="arithmatex">\(n=20\)</span>, <span class="arithmatex">\(p^\star=0.75\)</span>):</p>
 <ol>

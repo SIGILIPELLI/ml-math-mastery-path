@@ -1217,6 +1217,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2285,6 +2296,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2394,6 +2416,27 @@ H(x,y) = \begin{bmatrix} 2y &amp; 2x \\ 2x &amp; 6 \end{bmatrix}
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a> [[2. 4.]
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a> [4. 6.]]
 </code></pre></div>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>Computing a full Hessian <span class="arithmatex">\(H_{ij} = \frac{\partial^2 f}{\partial
+x_i \partial x_j}\)</span> costs <span class="arithmatex">\(O(n^2)\)</span> memory and, via naive methods, <span class="arithmatex">\(O(n^2)\)</span>
+or worse in compute — infeasible for <span class="arithmatex">\(n\)</span> in the millions. Real optimizers
+that need Hessian information (Level 4's numerical optimization methods
+module) almost never materialize <span class="arithmatex">\(H\)</span> itself; they compute <strong>Hessian-vector
+products</strong> <span class="arithmatex">\(Hv\)</span> instead, using the <em>Pearlmutter trick</em>: differentiate the
+scalar <span class="arithmatex">\(\left(\nabla f(x)\right)^Tv\)</span> (a dot product of the gradient with a
+fixed vector <span class="arithmatex">\(v\)</span>) with reverse-mode autodiff a second time. Since
+<span class="arithmatex">\(\nabla_x\left[(\nabla f(x))^Tv\right] = Hv\)</span>, this "double backward" pass
+costs about the same as two ordinary gradient evaluations — <span class="arithmatex">\(O(n)\)</span>, not
+<span class="arithmatex">\(O(n^2)\)</span> — and never needs to store the <span class="arithmatex">\(n\times n\)</span> matrix at all. This
+is literally forward-over-reverse (or reverse-over-reverse) autodiff:
+autodiff applied to a computational graph that itself contains an autodiff
+call.</p>
+<p>This is also why quasi-Newton methods like L-BFGS (Level 4) exist: they
+approximate the Hessian's action using only a short history of past
+gradient differences (a handful of <span class="arithmatex">\(O(n)\)</span> vectors) rather than ever
+computing or storing <span class="arithmatex">\(H\)</span>, trading exact second-order information for a
+computationally tractable approximation that still captures curvature well
+enough to converge much faster than plain gradient descent.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>For <span class="arithmatex">\(\mathbf{f}(x,y) = (xy,\ x^2 - y^2)\)</span>:</p>
 <ol>

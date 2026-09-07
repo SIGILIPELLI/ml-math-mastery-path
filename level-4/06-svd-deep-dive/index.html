@@ -2041,6 +2041,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2261,6 +2272,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2374,6 +2396,29 @@ diagonal entry is negative, <span class="arithmatex">\(U=\begin{pmatrix}1&amp;0\
 <a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>rank-2 approximation Frobenius error = 1.2069
 <a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>theoretical min error (sqrt sum of dropped sigma^2) = 1.2069
 </code></pre></div>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>Computing the SVD <span class="arithmatex">\(A=U\Sigma V^T\)</span> by finding eigenvalues/eigenvectors of
+<span class="arithmatex">\(A^TA\)</span> (since <span class="arithmatex">\(A^TA = V\Sigma^2V^T\)</span>) is how the relationship is usually
+<em>taught</em>, but it is a poor way to actually <em>compute</em> it: forming <span class="arithmatex">\(A^TA\)</span>
+squares <span class="arithmatex">\(A\)</span>'s condition number exactly as in the normal-equations case
+(Level 1 Module 09), destroying numerical accuracy for the smaller singular
+values before you even start looking for eigenvectors. Production SVD
+solvers (LAPACK's <code>gesdd</code>/<code>gesvd</code>, called by <code>numpy.linalg.svd</code>) never form
+<span class="arithmatex">\(A^TA\)</span>; they use a two-phase algorithm: first reduce <span class="arithmatex">\(A\)</span> to <strong>bidiagonal</strong>
+form via a sequence of Householder reflections applied alternately from
+the left and right (numerically stable, since Householder transformations
+are orthogonal), then apply an iterative algorithm (the Golub-Kahan
+implicit QR algorithm, or divide-and-conquer for large matrices) to the
+much smaller bidiagonal matrix to extract singular values and vectors —
+operating on <span class="arithmatex">\(A\)</span>'s own conditioning throughout, not <span class="arithmatex">\(A^TA\)</span>'s squared one.</p>
+<p>This distinction has a direct, practical consequence for PCA (which this
+module likely connects SVD to): computing PCA via eigendecomposition of the
+covariance matrix <span class="arithmatex">\(X^TX/n\)</span> is the textbook approach but the less accurate
+one; <code>sklearn.decomposition.PCA</code> actually computes the SVD of the
+(mean-centered) data matrix <span class="arithmatex">\(X\)</span> directly and derives the components from
+<span class="arithmatex">\(V\)</span>, precisely to avoid ever forming <span class="arithmatex">\(X^TX\)</span> and the numerical error that
+squaring the condition number would introduce, especially for
+high-dimensional, correlated features.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Compute the SVD of a <span class="arithmatex">\(3\times2\)</span> non-square matrix by hand (choose small

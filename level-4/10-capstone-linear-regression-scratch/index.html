@@ -2162,6 +2162,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2274,6 +2285,17 @@
     <span class="md-ellipsis">
       
         Numeric verification (all three methods agree)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
       
     </span>
   </a>
@@ -2396,6 +2418,29 @@ w^* = \frac{1}{6}\begin{pmatrix}14&amp;-6\\-6&amp;3\end{pmatrix}\begin{pmatrix}1
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>np.linalg.lstsq:   w = [0.33333333 1.5       ]
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>predictions = [1.83333333 3.33333333 4.83333333], R^2 = 0.9808
 </code></pre></div>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>Implementing linear regression "from scratch" via all three methods this
+capstone likely compares — normal equations, gradient descent, and a
+library call — is a direct, hands-on tour of the numerical trade-offs
+covered across this entire course. The normal equations
+<span class="arithmatex">\((X^TX)^{-1}X^Ty\)</span> are exact algebra but numerically the least safe path
+(Level 1 Module 09's squared condition number); gradient descent avoids
+ever inverting a matrix but its accuracy and speed depend entirely on
+learning rate and the condition number of the loss surface (Level 4 Module
+01); and a production call like <code>np.linalg.lstsq</code> sidesteps both issues
+by solving via SVD or QR (Level 2 Module 05), never forming <span class="arithmatex">\(X^TX\)</span> and
+never depending on a tuned learning rate.</p>
+<p>Running "numeric verification (all three methods agree)" is itself worth
+being precise about: agreement to 4-6 significant digits, not bit-for-bit
+identical results, is the expected and correct outcome — each method
+accumulates floating-point rounding error through a genuinely different
+sequence of operations (matrix inversion vs. iterative updates vs.
+orthogonal decomposition), so their results are mathematically equal in
+exact arithmetic but numerically distinct in float64. This is the same
+standard used to validate real ML library code: cross-checking independent
+numerical paths to the same answer, rather than expecting exact equality,
+is how you distinguish "a genuine bug" from "ordinary floating-point
+disagreement between algorithms."</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Add a third feature that's a near-exact linear combination of the

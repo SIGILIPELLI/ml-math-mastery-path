@@ -1177,6 +1177,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2261,6 +2272,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2360,6 +2382,26 @@ dot products along the computational graph.</p>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>t=1.0: exact=15.00000, numeric=15.00000
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>t=2.0: exact=240.00000, numeric=240.00000
 </code></pre></div>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>The vector chain rule <span class="arithmatex">\(\nabla_x (g\circ f)(x) = J_f(x)^T \nabla_g f(x)\)</span> is
+where the "computational graph" picture becomes unavoidable. In reverse-mode
+autodiff, each elementary operation in your function is a node, and each
+edge carries a <strong>vector-Jacobian product (VJP)</strong>, not a full Jacobian
+matrix. Concretely, backpropagating through a layer <span class="arithmatex">\(y = f(x)\)</span> never
+constructs the (potentially huge) Jacobian <span class="arithmatex">\(J_f\)</span> explicitly; instead, given
+the upstream gradient <span class="arithmatex">\(\bar{y} = \partial L/\partial y\)</span>, the framework calls
+a function that computes <span class="arithmatex">\(\bar{x} = J_f(x)^T \bar{y}\)</span> directly — for a
+matrix multiply <span class="arithmatex">\(y = Wx\)</span>, this VJP is just another matrix multiply,
+<span class="arithmatex">\(\bar{x} = W^T\bar{y}\)</span>, computed with the same BLAS routines as the forward
+pass, never forming <span class="arithmatex">\(J_f\)</span> (which for a layer with <span class="arithmatex">\(m\)</span> inputs and <span class="arithmatex">\(n\)</span>
+outputs would be an <span class="arithmatex">\(n\times m\)</span> matrix, potentially far larger than <span class="arithmatex">\(W\)</span>
+itself).</p>
+<p>This is the actual reason deep learning frameworks scale to networks with
+billions of parameters: every "chain rule step" in the graph is
+implemented as a hand-written, matrix-shaped VJP function (<code>grad_fn</code> in
+PyTorch) rather than as generic Jacobian-matrix multiplication, keeping
+memory and compute proportional to the size of the tensors themselves,
+not to the (much larger) size of their Jacobians.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Let <span class="arithmatex">\(z = f(x,y) = \sin(x) y^2\)</span>, <span class="arithmatex">\(x(t) = t\)</span>, <span class="arithmatex">\(y(t) = t^2\)</span>.</p>
 <ol>

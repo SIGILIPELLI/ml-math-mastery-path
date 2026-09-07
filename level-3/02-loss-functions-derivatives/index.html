@@ -1542,6 +1542,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2239,6 +2250,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2356,6 +2378,30 @@ L_{BCE} = -\frac{1}{2}\big[\ln(0.8) + \ln(0.7)\big] \approx -\frac{1}{2}(-0.2231
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>BCE: 0.28986... grad wrt y_hat: [-0.625  0.7142857] grad wrt z: [-0.1  0.15]
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>numeric grad wrt y_hat: [-0.625  0.7142857]
 </code></pre></div>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>Cross-entropy loss, <span class="arithmatex">\(L = -\sum_i y_i\log \hat{y}_i\)</span>, is almost never
+computed as written when <span class="arithmatex">\(\hat{y}\)</span> comes from a softmax, because doing so
+computes <code>exp</code> (in softmax) followed immediately by <code>log</code> (in cross-entropy)
+— two operations that can each independently overflow or underflow before
+you even get to combine them. Real implementations (PyTorch's
+<code>CrossEntropyLoss</code>, TensorFlow's
+<code>softmax_cross_entropy_with_logits</code>) fuse softmax and cross-entropy into a
+single numerically stable kernel that operates directly on the raw logits
+<span class="arithmatex">\(z\)</span>:</p>
+<div class="arithmatex">\[
+L = -z_y + \log\sum_j e^{z_j} = -z_y + \left(m + \log\sum_j e^{z_j - m}\right),
+\quad m = \max_j z_j
+\]</div>
+<p>using the log-sum-exp trick from Module 06/08 of Level 2 — this avoids ever
+computing an intermediate probability that could have already underflowed
+to <code>0.0</code> (which would make <code>log(0)</code> produce <code>-inf</code>). The gradient of this
+fused operation, <span class="arithmatex">\(\hat{y} - y\)</span> (softmax output minus one-hot label), is
+also computed as a single analytic formula rather than by chaining
+separately-differentiated softmax and log-loss gradients, both for
+numerical stability and because the fused gradient is algebraically far
+simpler than the product of the two separate Jacobians would suggest —
+a case where "fusing" operations at the implementation level changes both
+speed and numerical accuracy, not just code organization.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Given <span class="arithmatex">\(\hat y = [0.6, 0.9]\)</span>, <span class="arithmatex">\(y = [0, 1]\)</span>:</p>
 <ol>

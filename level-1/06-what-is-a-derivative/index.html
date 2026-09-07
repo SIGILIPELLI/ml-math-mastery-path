@@ -902,6 +902,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2239,6 +2250,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2348,6 +2370,36 @@ exact):</p>
 plugging a tiny <span class="arithmatex">\(h\)</span> into the definition — is a standard way to <strong>sanity
 check</strong> a hand-derived (symbolic) derivative or a backpropagation
 implementation, and we'll reuse it in the capstone and again in Level 3.</p>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>There are three genuinely different ways to get <span class="arithmatex">\(f'(x)\)</span> out of a computer,
+and this module's finite-difference check uses only one of them:</p>
+<ol>
+<li><strong>Numerical (finite) differences</strong> — compute
+   <span class="arithmatex">\(\frac{f(x+h)-f(x)}{h}\)</span> directly, as done above. This has two competing
+   error sources: <em>truncation error</em> from approximating a limit with a
+   finite <span class="arithmatex">\(h\)</span> (shrinks as <span class="arithmatex">\(h\to 0\)</span>, roughly <span class="arithmatex">\(O(h)\)</span> for forward differences),
+   and <em>round-off error</em> from floating-point subtraction of nearly-equal
+   numbers (grows as <span class="arithmatex">\(h\to 0\)</span>, roughly <span class="arithmatex">\(O(\varepsilon_{machine}/h)\)</span>). Adding
+   these, the total error is minimized around <span class="arithmatex">\(h \approx
+   \sqrt{\varepsilon_{machine}}\)</span> — for float64 (<span class="arithmatex">\(\varepsilon_{machine}
+   \approx 2.2\times10^{-16}\)</span>), that's <span class="arithmatex">\(h\approx 10^{-8}\)</span>, matching common
+   defaults in gradient-checking libraries.</li>
+<li><strong>Symbolic differentiation</strong> — a computer algebra system applies the
+   power/sum/chain rules to an expression tree and produces a new,
+   exact-in-principle formula (what you did by hand for <span class="arithmatex">\(f'(x)=2x\)</span>). This
+   is exact but can produce exploding expression sizes for deeply nested
+   functions (this is why frameworks like SymPy are used for math, not for
+   training neural networks).</li>
+<li><strong>Automatic differentiation (autodiff)</strong> — used by every deep learning
+   framework — evaluates <span class="arithmatex">\(f\)</span> forward while simultaneously propagating exact
+   derivative information alongside each intermediate value, using the
+   chain rule mechanically at each elementary operation (add, multiply,
+   <code>exp</code>, ...). It is <em>not</em> symbolic (no giant formula is built) and <em>not</em>
+   numerical (no <span class="arithmatex">\(h\)</span>, no round-off/truncation trade-off) — it computes
+   derivatives that are exact to floating-point precision, at roughly the
+   cost of one extra forward pass. Module 08 and Level 3's backpropagation
+   module build this mechanism from scratch.</li>
+</ol>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Using the first-principles definition, prove that the derivative of

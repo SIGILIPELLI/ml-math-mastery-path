@@ -762,6 +762,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2239,6 +2250,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2376,6 +2398,30 @@ exactly the signal gradient descent uses to know which way to step.</p>
   cost function has the shape it does, and how it connects to the general ML
   training loop.</li>
 </ul>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>None of this happens in exact arithmetic. Every number here — <span class="arithmatex">\(w\)</span>, <span class="arithmatex">\(x_i\)</span>,
+<span class="arithmatex">\(J(w)\)</span> — lives in a computer as a 64-bit (or, in most deep learning
+frameworks, 32-bit) IEEE-754 floating-point value: a sign bit, an exponent,
+and a fraction (mantissa) that together approximate a real number, not
+represent it exactly. A float64 has about 15-17 significant decimal digits
+of precision; float32 has about 7. That precision limit is why "training
+diverges" and "loss becomes <code>NaN</code>" are numerical events, not just
+mathematical ones.</p>
+<p>Concretely: <code>grad(2.0)</code> above is computed by evaluating
+<code>np.mean(2 * x * (pred - y))</code> — a sequence of floating-point multiplications
+and additions, each rounded to the nearest representable float. For three
+numbers this rounding error is invisible (parts in <span class="arithmatex">\(10^{-16}\)</span>), but the
+<em>same</em> mechanism, repeated over millions of parameters and thousands of
+training steps, is exactly how small per-step rounding errors compound into
+visible instability. A <code>NaN</code> in <code>loss</code> almost always means a floating-point
+<strong>overflow</strong> happened somewhere upstream — e.g. <code>np.exp(1000)</code> computed
+during a softmax or cross-entropy step returns <code>inf</code>, and <code>inf - inf</code> or
+<code>inf * 0</code> is defined by IEEE-754 to be <code>NaN</code>, which then poisons every
+downstream computation because any arithmetic involving <code>NaN</code> produces
+<code>NaN</code>. This is the mechanical reason later modules (softmax, cross-entropy,
+numerical stability) teach specific rewrites of the math — not because the
+formulas are wrong, but because the <em>order of floating-point operations</em>
+matters even when the underlying algebra is identical.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Using the three points <span class="arithmatex">\((1,2), (2,3), (3,5)\)</span> above, compute <span class="arithmatex">\(J(w)\)</span> by hand

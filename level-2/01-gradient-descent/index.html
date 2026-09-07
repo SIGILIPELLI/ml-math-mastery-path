@@ -1149,6 +1149,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2261,6 +2272,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2365,6 +2387,31 @@ particular <span class="arithmatex">\(J\)</span> is quadratic.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>theta after each step: [0.0, 1.8, 2.52, 2.808]
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>J at final theta: 2.036864
 </code></pre></div>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>A gradient descent update, <span class="arithmatex">\(\theta \leftarrow \theta - \alpha\nabla J(\theta)\)</span>,
+is a single line of code but hides several floating-point failure modes
+that this module's "learning rate matters" section only gestures at.
+If <span class="arithmatex">\(\alpha\nabla J(\theta)\)</span> overflows float32's range (roughly
+<span class="arithmatex">\(3.4\times10^{38}\)</span>) — which happens when the gradient itself is huge
+(exploding gradients) — the update produces <code>inf</code>, and the next loss
+evaluation computes <code>inf - inf</code> or similar, yielding <code>NaN</code> that never
+recovers, because every subsequent arithmetic operation touching a <code>NaN</code>
+value stays <code>NaN</code> (IEEE-754's defined "poisoning" behavior). Too small an
+<span class="arithmatex">\(\alpha\)</span> has the opposite numerical failure: if <span class="arithmatex">\(\alpha\nabla J(\theta)\)</span> is
+smaller than float32's precision relative to <span class="arithmatex">\(\theta\)</span>'s magnitude (roughly
+<span class="arithmatex">\(\theta \times 1.2\times10^{-7}\)</span>), the update rounds to exactly zero —
+<span class="arithmatex">\(\theta\)</span> stops changing even though the mathematical gradient is nonzero,
+a phenomenon distinct from mathematical convergence and purely an artifact
+of finite precision.</p>
+<p>This is also why real training loops rarely use plain gradient descent:
+momentum-based optimizers (Level 3 Module 03) maintain an exponentially
+weighted running average of past gradients specifically to smooth out the
+per-step floating-point noise that arises from mini-batch sampling, and
+mixed-precision training (float16 forward/backward, float32 master weights)
+exists precisely because float16's ~3 decimal digits of precision would
+otherwise let exactly this kind of "update rounds to zero" problem destroy
+training — the master weights are kept in float32 so the accumulation of
+many small updates doesn't get lost to rounding.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Let <span class="arithmatex">\(J(\theta) = \theta^2 - 4\theta + 10\)</span>.</p>
 <ol>

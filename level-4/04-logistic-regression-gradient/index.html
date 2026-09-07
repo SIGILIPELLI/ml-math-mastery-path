@@ -1996,6 +1996,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2283,6 +2294,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2406,6 +2428,32 @@ z = 0.1(1)-0.2(2)+0 = -0.3, \qquad \hat y = \sigma(-0.3) \approx 0.4256
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a> [0.489  0.978 ]]
 <a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>eigenvalues=[0.     1.2225]  (should be &gt;= 0)
 </code></pre></div>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>The sigmoid function, <span class="arithmatex">\(\sigma(z) = 1/(1+e^{-z})\)</span>, computed exactly as
+written overflows for very negative <span class="arithmatex">\(z\)</span>: <code>exp(-z)</code> for <code>z = -1000</code> returns
+<code>inf</code>, giving <code>1/(1+inf) = 0.0</code> — which is actually the mathematically
+correct limit, just reached via an intermediate overflow rather than
+smoothly. The more dangerous case is the paired <strong>log-loss</strong> computation,
+<span class="arithmatex">\(-\left[y\log\sigma(z) + (1-y)\log(1-\sigma(z))\right]\)</span>: if <span class="arithmatex">\(\sigma(z)\)</span>
+has already rounded to exactly <code>0.0</code> or <code>1.0</code> in floating point (which
+happens for any <span class="arithmatex">\(|z|\)</span> larger than about 36 in float64), the subsequent
+<code>log(0)</code> returns <code>-inf</code>, and if that term is then multiplied by <code>y=0</code>
+elsewhere in the formula, you get <code>0 * -inf = NaN</code>.</p>
+<p>Every production implementation (scikit-learn, PyTorch's
+<code>BCEWithLogitsLoss</code>) sidesteps this by computing loss directly from the
+raw logit <span class="arithmatex">\(z\)</span> rather than from <span class="arithmatex">\(\sigma(z)\)</span>, using the mathematically
+equivalent but numerically safe identity
+<span class="arithmatex">\(-\left[yz - \log(1+e^{z})\right]\)</span>, further rewritten with the
+log-sum-exp trick to stay stable for both large positive and large
+negative <span class="arithmatex">\(z\)</span>:</p>
+<div class="arithmatex">\[
+\log(1+e^z) = \max(z,0) + \log\left(1+e^{-|z|}\right)
+\]</div>
+<p>This guarantees the argument to the final <code>exp</code> is always <span class="arithmatex">\(\leq 0\)</span>
+(so it can never overflow), which is exactly why every framework's
+<code>BCEWithLogitsLoss</code>/<code>binary_cross_entropy_with_logits</code> function explicitly
+warns against manually chaining a separate <code>sigmoid()</code> and <code>log_loss()</code> —
+mathematically identical, numerically much less safe.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Implement full-batch gradient descent for logistic regression on a

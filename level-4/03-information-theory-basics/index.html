@@ -1957,6 +1957,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2261,6 +2272,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2374,6 +2396,28 @@ D_{KL}(p\|q) = H(p,q)-H(p) = 0.3567 - 0 = 0.3567
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>H(p2)=0.8018, H(p2,q2)=0.9927, KL(p2||q2)=0.1909
 </code></pre></div>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>Entropy, <span class="arithmatex">\(H(p) = -\sum_i p_i \log p_i\)</span>, and KL divergence,
+<span class="arithmatex">\(D_{KL}(p\|q) = \sum_i p_i\log(p_i/q_i)\)</span>, both have a computational
+landmine baked into their definitions: <span class="arithmatex">\(p_i\log p_i \to 0\)</span> as <span class="arithmatex">\(p_i\to0\)</span>
+mathematically (the limit exists and is well-defined), but computed
+naively, <code>p_i * log(p_i)</code> for <code>p_i = 0.0</code> gives <code>0.0 * -inf</code>, which
+IEEE-754 defines as <code>NaN</code>, not <code>0.0</code> — the mathematical limit and the
+naive floating-point evaluation disagree at exactly this common edge case
+(any distribution with a zero-probability outcome, extremely common for
+one-hot labels or sparse predicted distributions). Real implementations
+guard this explicitly — e.g. <code>scipy.stats.entropy</code> and PyTorch's
+<code>kl_div</code> special-case (or mask out) zero-probability terms rather than
+evaluating the formula literally.</p>
+<p>KL divergence has a second, more severe failure mode: if <span class="arithmatex">\(q_i=0\)</span> where
+<span class="arithmatex">\(p_i&gt;0\)</span>, <span class="arithmatex">\(\log(p_i/q_i) = \log(\infty) = +\infty\)</span>, correctly reflecting
+that KL divergence is genuinely infinite in that case (not just a computing
+artifact) — this is precisely why KL divergence isn't used as a training
+loss when the model's predicted distribution <span class="arithmatex">\(q\)</span> could assign exact zero
+probability to an observed outcome, and why practical implementations add
+a small smoothing constant to <span class="arithmatex">\(q\)</span> or clip it away from exactly 0, changing
+the loss landscape slightly but keeping every gradient finite and
+computable.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Show numerically that <span class="arithmatex">\(D_{KL}(p\|q) \ne D_{KL}(q\|p)\)</span> in general (pick

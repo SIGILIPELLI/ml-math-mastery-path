@@ -1901,6 +1901,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2261,6 +2272,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2356,6 +2378,30 @@ convex.</p>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>convex (all &gt;= 0)? True
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>convexity inequality violations out of 1000 random checks: 0
 </code></pre></div>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>Verifying that a function is convex mathematically (checking
+<span class="arithmatex">\(\nabla^2 f \succeq 0\)</span> everywhere) is different from how an optimizer
+actually <em>exploits</em> convexity computationally. A convex loss surface
+guarantees that gradient descent's local, greedy steps — using only
+first-order (gradient) information computed at the current point, with no
+knowledge of the global shape — cannot get trapped in a bad local minimum,
+which is what makes the convergence guarantees in this module possible at
+all for non-convex-in-general ML problems restricted to convex special
+cases like linear/logistic regression.</p>
+<p>The <strong>condition number</strong> <span class="arithmatex">\(\kappa = \lambda_{\max}/\lambda_{\min}\)</span> of the
+Hessian (Level 2 Module 03-04) has a direct, measurable computational
+consequence for how fast gradient descent actually converges: the
+worst-case convergence rate for a convex quadratic is
+<span class="arithmatex">\(\left(\frac{\kappa-1}{\kappa+1}\right)^2\)</span> per iteration — for a
+well-conditioned problem (<span class="arithmatex">\(\kappa\approx1\)</span>) this shrinks the error almost
+to zero in a few steps, but for an ill-conditioned one (<span class="arithmatex">\(\kappa=10^4\)</span>,
+common with unnormalized features of very different scales), each step
+reduces error by less than 0.02%, requiring tens of thousands of iterations
+for the same accuracy. This single number is the actual, computable reason
+feature scaling/normalization (subtracting mean, dividing by standard
+deviation) speeds up training in practice: it directly reduces <span class="arithmatex">\(\kappa\)</span>
+of the resulting loss surface, without changing the location of the
+minimum at all.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Check whether <span class="arithmatex">\(g(w) = w_1^2 - 2w_2^2\)</span> is convex by computing its Hessian

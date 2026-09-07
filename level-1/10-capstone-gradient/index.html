@@ -1058,6 +1058,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise-final-level-1-check" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2327,6 +2338,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise-final-level-1-check" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2468,6 +2490,29 @@ in a helpful direction; by hand: <span class="arithmatex">\(J(1.3,0.3)=(1.3-3)^2
 <p><span class="arithmatex">\(J\)</span> dropped from <span class="arithmatex">\(14.0\)</span> to <span class="arithmatex">\(8.57\)</span> after a single step in the
 <span class="arithmatex">\(-\nabla J\)</span> direction — exactly the mechanism that trains every ML model
 built on gradient descent, from linear regression to deep neural networks.</p>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>This capstone combines two computational mechanisms from earlier modules,
+and it's worth being precise about which one does the real work in
+practice. The <strong>finite-difference check</strong> you ran in Step 6 evaluates the
+cost function at <span class="arithmatex">\(\theta \pm h\)</span> and divides by <span class="arithmatex">\(2h\)</span> — useful as a
+sanity check specifically <em>because</em> it is a completely independent
+computational path from the analytic gradient formula, so agreement
+between the two (to about 6-7 significant digits for float64 with a
+well-chosen <span class="arithmatex">\(h\)</span>) is strong evidence the analytic formula and its code are
+correct. It is never used as the actual training mechanism, because its
+cost scales as <span class="arithmatex">\(O(n)\)</span> evaluations of <span class="arithmatex">\(J\)</span> for <span class="arithmatex">\(n\)</span> parameters, and each
+evaluation carries the truncation/round-off trade-off from Module 06.</p>
+<p>The <strong>analytic gradient</strong> used for the actual descent step, by contrast,
+is the pattern every real training loop uses: compute it once (here, by
+hand-derived formula; in Level 3, via reverse-mode autodiff over a
+computational graph), then apply
+<span class="arithmatex">\(\theta \leftarrow \theta - \alpha\nabla J(\theta)\)</span> — a single vectorized
+floating-point update per parameter, applied element-wise using the exact
+IEEE-754 arithmetic and the same BLAS-backed vector operations from Module
+02-04. Every subsequent module's "numeric verification" section follows
+this same two-track pattern: a fast analytic/autodiff path for training,
+and a slow, independent finite-difference path used only to catch bugs
+before trusting the fast path.</p>
 <h2 id="exercise-final-level-1-check">Exercise (final Level 1 check)<a class="headerlink" href="#exercise-final-level-1-check" title="Permanent link">&para;</a></h2>
 <p>Given <span class="arithmatex">\(K(w,b) = (2w+1)^2 + 3b^2 - wb\)</span>:</p>
 <ol>

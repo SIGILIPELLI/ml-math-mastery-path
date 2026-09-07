@@ -1570,6 +1570,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2239,6 +2250,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2357,6 +2379,30 @@ quickly toward the minimum <span class="arithmatex">\(\theta=3\)</span> due to a
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>adam step 4: theta=1.1926
 <a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>adam step 5: theta=1.4808
 </code></pre></div>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>Adam's per-parameter state — the running first moment <span class="arithmatex">\(m_t\)</span> and second
+moment <span class="arithmatex">\(v_t\)</span> — is maintained as ordinary floating-point exponential moving
+averages, updated every step for every one of possibly billions of
+parameters, which means Adam's memory footprint is <strong>2x the model size</strong>
+just for optimizer state (plus the parameters and gradients themselves) —
+often the actual memory bottleneck in large-model training, not the
+activations. Numerically, <span class="arithmatex">\(v_t\)</span> (an average of squared gradients) is always
+non-negative by construction, but floating-point rounding can make it
+computed as an extremely small positive number or even flirt with zero in
+low-precision (float16) training; this is exactly why Adam's update
+divides by <span class="arithmatex">\(\sqrt{v_t}+\epsilon\)</span> rather than <span class="arithmatex">\(\sqrt{v_t}\)</span> — that <span class="arithmatex">\(\epsilon\)</span>
+(typically <span class="arithmatex">\(10^{-8}\)</span>) exists purely to prevent a division by (near-)zero
+that would otherwise blow up the update, and choosing <span class="arithmatex">\(\epsilon\)</span> too small
+for float16 training is a well-known real-world source of NaN losses.</p>
+<p>The bias-correction step,
+<span class="arithmatex">\(\hat{m}_t = m_t/(1-\beta_1^t)\)</span>, is also a purely computational fix: at
+<span class="arithmatex">\(t=1\)</span>, <span class="arithmatex">\(m_1 = (1-\beta_1)g_1\)</span> is much smaller in magnitude than <span class="arithmatex">\(g_1\)</span>
+itself (since <span class="arithmatex">\(\beta_1\approx0.9\)</span> means only 10% of <span class="arithmatex">\(g_1\)</span> is captured on
+the first step), so early updates would be artificially tiny without
+correction — dividing by <span class="arithmatex">\((1-\beta_1^t)\)</span>, which starts near 0 and
+approaches 1 as <span class="arithmatex">\(t\)</span> grows, exactly compensates for this "cold start" bias
+in the exponential moving average's own arithmetic, not for any property
+of the loss surface.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Using <span class="arithmatex">\(J(\theta)=\theta^2\)</span> (<span class="arithmatex">\(J'(\theta)=2\theta\)</span>), start <span class="arithmatex">\(\theta_0=5\)</span>.</p>
 <ol>

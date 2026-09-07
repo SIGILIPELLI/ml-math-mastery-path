@@ -1760,6 +1760,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2283,6 +2294,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2388,6 +2410,35 @@ e^{1000} = \text{overflow} \to \text{inf}, \qquad \text{inf}/\text{inf} = \text{
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>                   wrong nonzero value due to float64 precision limits)
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>stable var (matches np.var) = 0.6666666666666666, np.var = 0.6666666666666666
 </code></pre></div>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>Every numerical instability this module discusses traces back to the same
+root cause: IEEE-754 floating point stores a number as
+<span class="arithmatex">\((-1)^s \times 1.f \times 2^{e-\text{bias}}\)</span> — a sign bit, an 11-bit (for
+float64) or 8-bit (float32) exponent, and a finite-length fraction <span class="arithmatex">\(f\)</span>.
+This has two immediate consequences worth internalizing precisely.
+<strong>Relative</strong> precision is roughly constant (about 15-17 decimal digits for
+float64, ~7 for float32) but <strong>absolute</strong> precision depends on magnitude:
+the gap between adjacent representable floats near <span class="arithmatex">\(1.0\)</span> is about
+<span class="arithmatex">\(2.2\times10^{-16}\)</span> (machine epsilon), but near <span class="arithmatex">\(10^{10}\)</span> it's about
+<span class="arithmatex">\(2\times10^{-6}\)</span> — meaning <code>1e10 + 1e-10</code> is computed as exactly <code>1e10</code>,
+the small addend simply vanishes, with no warning. <strong>Catastrophic
+cancellation</strong> (subtracting two nearly-equal large floats, as seen in the
+naive variance formula, finite-difference derivatives, and softmax-without-
+max-subtraction) doesn't introduce new error so much as <em>reveal</em> error that
+was already present in each operand relative to the much smaller result.</p>
+<p>The specific fixes this module likely enumerates — max-subtraction in
+softmax, <span class="arithmatex">\(\epsilon\)</span> terms in denominators, log-space probability
+arithmetic, Welford's variance algorithm, computing in float64 for
+accumulation even when storing in float16/32 — are not a random grab-bag
+of tricks; they are all instances of one underlying strategy: <strong>keep
+intermediate magnitudes bounded and comparable in scale</strong>, because every
+floating-point operation's error is proportional to the magnitude of its
+inputs, not to the "true" mathematical answer. This is also the underlying
+justification for mixed-precision training's specific design (float16
+compute, float32 master weights and loss accumulation, and <strong>loss
+scaling</strong> — multiplying the loss by a constant like 1024 before the
+backward pass so small gradients don't underflow float16's limited
+exponent range, then dividing back out before the optimizer step).</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Implement <code>log_softmax(z)</code> using the log-sum-exp trick and verify

@@ -1676,6 +1676,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2283,6 +2294,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2407,6 +2429,30 @@ L = -\log(0.6590) \approx 0.4170
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>analytic grad = [-0.34099886  0.24243297  0.09856589]
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>numeric grad = [-0.34099886  0.24243297  0.09856589]
 </code></pre></div>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>Softmax, <span class="arithmatex">\(\text{softmax}(z)_i = e^{z_i}/\sum_j e^{z_j}\)</span>, computed exactly
+as written will overflow for any logit larger than about 709 (float64) or
+88 (float32) — trivially exceeded once a network is even moderately
+confident, since raw logits routinely reach the hundreds after a few
+training epochs. The universal fix, used in literally every production
+implementation, is the <strong>max-subtraction trick</strong>: since
+<span class="arithmatex">\(\text{softmax}(z)_i = \text{softmax}(z-c)_i\)</span> for <em>any</em> constant <span class="arithmatex">\(c\)</span>
+(subtracting a constant from every logit doesn't change the ratio),
+choosing <span class="arithmatex">\(c=\max_j z_j\)</span> guarantees the largest exponent computed is
+<span class="arithmatex">\(e^0=1\)</span> and every other term is <span class="arithmatex">\(\leq 1\)</span> — mathematically identical
+output, but now numerically overflow-proof:</p>
+<div class="arithmatex">\[
+\text{softmax}(z)_i = \frac{e^{z_i - \max_j z_j}}{\sum_k e^{z_k-\max_j z_j}}
+\]</div>
+<p>This is the same log-sum-exp identity used throughout Levels 2-3. In
+practice, softmax is virtually never computed as a standalone step before
+cross-entropy either — frameworks fuse the two into one kernel that works
+directly on logits (Module 02's fused loss) both to save an intermediate
+<code>exp</code>+<code>log</code> round trip and because the fused gradient, <span class="arithmatex">\(\hat{y}-y\)</span>, is
+what actually gets backpropagated; a hand-rolled <code>softmax()</code> then
+<code>cross_entropy()</code> pipeline is a common source of training instability in
+practice precisely because it reintroduces the overflow/underflow risk the
+fused kernel was built to avoid.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Repeat the derivation and numeric check for true class <span class="arithmatex">\(k=2\)</span> instead of

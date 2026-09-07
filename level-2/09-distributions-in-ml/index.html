@@ -1384,6 +1384,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2283,6 +2294,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2387,6 +2409,28 @@ f(1) = \frac{1}{\sqrt{2\pi}} e^{-1/2} \approx 0.3989 \times 0.6065 \approx 0.242
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>simulated P(X=6): 0.2050...
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>simulated mean, var: 5.000... 2.499...
 </code></pre></div>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>Evaluating a Gaussian's density,
+<span class="arithmatex">\(p(x) = \frac{1}{\sqrt{2\pi\sigma^2}}e^{-(x-\mu)^2/2\sigma^2}\)</span>, directly can
+silently underflow: for <span class="arithmatex">\(x\)</span> several standard deviations from <span class="arithmatex">\(\mu\)</span>, the
+exponent is a large negative number, and <code>exp</code> of a sufficiently negative
+float64 input returns exactly <code>0.0</code> (below roughly <span class="arithmatex">\(e^{-745}\)</span>), not a tiny
+positive number — the density hasn't mathematically vanished, but the
+floating-point representation has. This matters enormously for
+maximum-likelihood fitting (Level 3), which needs <span class="arithmatex">\(\log p(x)\)</span>, not <span class="arithmatex">\(p(x)\)</span>
+itself: computing <code>np.log(p(x))</code> after <span class="arithmatex">\(p(x)\)</span> has already underflowed to
+<code>0.0</code> gives <code>-inf</code>, whereas the mathematically correct log-density,
+<span class="arithmatex">\(-\frac{(x-\mu)^2}{2\sigma^2} - \frac{1}{2}\log(2\pi\sigma^2)\)</span>, is a
+perfectly finite, well-behaved number.</p>
+<p>The general principle — used throughout every ML library that fits
+distributions — is to implement <code>log_pdf(x)</code> as its own closed-form
+expression (computed directly from <span class="arithmatex">\(x\)</span>, <span class="arithmatex">\(\mu\)</span>, <span class="arithmatex">\(\sigma\)</span>, never by calling
+<code>log(pdf(x))</code>), because the log-density formula avoids the intermediate
+<code>exp</code> entirely. This is also why sampling from complex distributions in
+practice uses algorithms like <strong>rejection sampling</strong> or <strong>MCMC</strong> (Level 4)
+rather than inverting the CDF directly when no closed form exists — the
+computational mechanism has to be engineered around exactly these floating-
+point edge cases, not just derived from the probability formula.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Let <span class="arithmatex">\(X \sim \text{Binomial}(n=20, p=0.3)\)</span>.</p>
 <ol>

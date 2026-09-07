@@ -1272,6 +1272,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2283,6 +2294,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2394,6 +2416,30 @@ eigendecomposition of <span class="arithmatex">\(C\)</span> (better numerical st
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a> [[ 3.  0.]
 <a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a> [ 0. -2.]]
 </code></pre></div>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>None of LU, QR, or Cholesky decomposition are computed by "doing the
+algebra" the way you would on paper — each has a specific numerically
+stable algorithm behind the one-line <code>scipy.linalg.lu(A)</code> call. <strong>LU</strong>
+decomposition via naive Gaussian elimination can fail catastrophically on
+matrices where a pivot element is very small (dividing by a near-zero
+number massively amplifies rounding error), so real implementations use
+<strong>partial pivoting</strong>: at each elimination step, swap rows so the
+largest-magnitude candidate becomes the pivot, which is provably far more
+stable and is what the "P" in <code>PA = LU</code> represents. <strong>QR</strong> decomposition is
+typically computed via <strong>Householder reflections</strong> — a sequence of
+orthogonal (norm-preserving, hence numerically stable) transformations that
+zero out sub-diagonal entries one column at a time — rather than the
+Gram-Schmidt process taught algebraically, because classical Gram-Schmidt
+loses orthogonality badly in floating point (modified Gram-Schmidt helps
+but Householder is still preferred in production code).</p>
+<p><strong>Cholesky</strong> decomposition (<span class="arithmatex">\(A = LL^T\)</span> for symmetric positive-definite <span class="arithmatex">\(A\)</span>)
+computes <span class="arithmatex">\(L\)</span> column by column using only square roots and dot products of
+already-computed entries, and is roughly twice as fast as LU because it
+exploits symmetry — this is exactly why it's the standard choice for
+solving the normal equations or Gaussian-process kernel systems (Level 4)
+where the matrix is guaranteed symmetric positive-definite, and why
+solvers explicitly check for that structure before choosing which
+decomposition to run.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Let <span class="arithmatex">\(D = \begin{bmatrix}2&amp;0\\0&amp;2\end{bmatrix}\)</span> (a scaled identity) and
 <span class="arithmatex">\(E = \begin{bmatrix}0&amp;1\\1&amp;0\end{bmatrix}\)</span> (a swap matrix).</p>

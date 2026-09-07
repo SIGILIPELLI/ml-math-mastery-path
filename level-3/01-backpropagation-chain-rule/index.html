@@ -1525,6 +1525,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2261,6 +2272,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2386,6 +2408,30 @@ pass):</p>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>analytic dL/dw=-0.2110 dL/db=-0.1055
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>numeric  dL/dw=-0.2110 dL/db=-0.1055
 </code></pre></div>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>Backpropagation is reverse-mode automatic differentiation, and its actual
+implementation has two computational phases that are easy to gloss over
+when you only see the chain-rule algebra. In the <strong>forward pass</strong>, the
+framework doesn't just compute the output — it builds a <strong>computational
+graph</strong> in memory: a directed acyclic graph where each node is an
+elementary operation (<code>matmul</code>, <code>add</code>, <code>relu</code>, ...) and each node retains a
+reference to (a) the operation that produced it and (b) whichever
+intermediate values it will need to compute its local derivative (e.g. a
+<code>relu</code> node needs to remember which entries were positive; a <code>matmul</code> node
+needs to remember both input tensors). This is why training uses
+noticeably more memory than inference alone — every layer's activations
+must stay alive in memory until backward pass reaches that layer.</p>
+<p>In the <strong>backward pass</strong>, the framework performs a <strong>topological sort</strong> of
+the graph (so every node is processed only after all nodes that depend on
+it) and walks it in reverse, calling each node's stored <code>grad_fn</code> with the
+accumulated upstream gradient to produce gradients for its inputs, summing
+contributions when a value was used in multiple places (the multivariate
+chain rule's sum-over-paths, applied mechanically). For very deep networks
+where storing every activation is too expensive, <strong>gradient checkpointing</strong>
+trades compute for memory: it discards some activations after the forward
+pass and recomputes them on demand during the backward pass — a direct,
+deliberate exploitation of the fact that forward computation is cheap
+relative to the memory cost of storing it.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Extend the network with a second layer: <span class="arithmatex">\(z_1=wx+b\)</span>, <span class="arithmatex">\(a_1=\sigma(z_1)\)</span>,
 <span class="arithmatex">\(z_2 = w_2a_1+b_2\)</span>, <span class="arithmatex">\(a_2=\sigma(z_2)\)</span>, <span class="arithmatex">\(L=(a_2-y)^2\)</span>.</p>

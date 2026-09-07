@@ -1918,6 +1918,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2239,6 +2250,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2342,6 +2364,31 @@ machine).</p>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>closed-form (Lagrange): x=0.5000, y=0.5000, f=0.5000
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>grad f = [1. 1.], lambda*grad g = [1. 1.]
 </code></pre></div>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>Solving a constrained optimization problem by setting up the Lagrangian
+and solving <span class="arithmatex">\(\nabla L = 0\)</span> by hand works for small, clean problems; real
+constrained solvers (used inside SVM training, portfolio optimization, and
+constrained neural-network training) instead run <strong>iterative</strong> algorithms
+on the KKT system. Interior-point methods, for instance, replace hard
+inequality constraints <span class="arithmatex">\(g(x)\leq0\)</span> with a <strong>log-barrier</strong> term
+<span class="arithmatex">\(-\mu\sum_i\log(-g_i(x))\)</span> added to the objective, which is smooth and
+finite as long as <span class="arithmatex">\(x\)</span> stays strictly feasible, and which mathematically
+approaches the true constrained problem as the barrier weight <span class="arithmatex">\(\mu\to0\)</span>.
+This converts a constrained problem into a sequence of unconstrained
+(smooth, differentiable, autodiff-friendly) problems that gradient/Newton
+methods can solve directly — a specific numerical strategy for turning
+"solve the KKT conditions" into "run ordinary unconstrained optimization
+several times with a shrinking parameter."</p>
+<p>A separate class, <strong>active-set / SQP methods</strong>, instead numerically tracks
+<em>which</em> inequality constraints are currently tight (active,
+<span class="arithmatex">\(g_i(x)=0\)</span>) at each iterate, treats those as equality constraints for a
+local step, and updates the active set as the iterate moves — this is
+closer to directly solving small linear systems built from the Lagrangian's
+KKT conditions at each step, rather than the smooth-approximation approach
+of interior-point methods. Both are genuinely iterative numerical
+procedures with their own convergence and stability considerations; neither
+solves the Lagrangian symbolically the way the by-hand examples in this
+module do.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Minimize <span class="arithmatex">\(f(x,y)=xy\)</span> subject to <span class="arithmatex">\(x^2+y^2=1\)</span> using Lagrange multipliers

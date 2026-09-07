@@ -1637,6 +1637,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2261,6 +2272,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2358,6 +2380,31 @@ result <span class="arithmatex">\(\hat\mu = \bar x\)</span>:</p>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>numerically optimized mu = 4.0000
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>binary cross-entropy = 0.3199
 </code></pre></div>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>Maximizing the likelihood <span class="arithmatex">\(L(\theta) = \prod_i p(x_i;\theta)\)</span> directly is a
+numerical non-starter for any real dataset: multiplying even a few hundred
+probabilities (each <span class="arithmatex">\(\leq 1\)</span>, typically much less than 1 for continuous
+densities) underflows float64 to exactly <code>0.0</code> almost immediately, at
+which point the "likelihood" carries zero information about which <span class="arithmatex">\(\theta\)</span>
+is better. This is precisely why every practical implementation maximizes
+the <strong>log-likelihood</strong> instead,
+<span class="arithmatex">\(\ell(\theta) = \sum_i \log p(x_i;\theta)\)</span> — mathematically equivalent
+(since <span class="arithmatex">\(\log\)</span> is monotonic, the maximizing <span class="arithmatex">\(\theta\)</span> is identical) but
+numerically stable, because summing many log-probabilities (each a
+moderate negative number) stays comfortably within float64's range where
+their product would not.</p>
+<p>This also determines <em>how</em> MLE is actually solved computationally: for
+most models (anything beyond simple closed-form cases like a Gaussian's
+mean and variance), there is no algebraic solution to
+<span class="arithmatex">\(\nabla_\theta \ell(\theta) = 0\)</span>, so real code runs gradient-based
+optimization — computing <span class="arithmatex">\(\nabla_\theta \ell(\theta)\)</span> via autodiff through
+the log-density expression directly (never through <span class="arithmatex">\(\log(p(\cdot))\)</span> after
+<span class="arithmatex">\(p\)</span> has been computed, for the underflow reasons from Level 2 Module 09),
+and applying gradient ascent (or, equivalently, gradient descent on the
+negative log-likelihood, which is the actual "loss function" minimized when
+you train a classifier with cross-entropy — cross-entropy loss <em>is</em>
+negative log-likelihood under a categorical model, computed via the fused,
+numerically stable softmax-cross-entropy kernel from Module 06.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Derive the MLE for the variance <span class="arithmatex">\(\sigma^2\)</span> of a Gaussian given data

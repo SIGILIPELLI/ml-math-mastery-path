@@ -1766,6 +1766,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2239,6 +2250,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2397,6 +2419,33 @@ a_1(1-a_1) = (0.4750\times0.5250,\ 0.7685\times0.2315) \approx (0.2494, 0.1779)
 <a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a> [ 0.036   0.072 ]]
 <a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>numeric dW2=[-0.24016 -0.38863]
 </code></pre></div>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>Implementing forward and backward passes "from scratch" in this capstone
+means, mechanically, building a small computational graph by hand: every
+matrix multiply, activation function, and loss evaluation you write in the
+forward pass must have a matching, explicitly coded backward function that
+you call in reverse order during backprop — exactly the <code>grad_fn</code>
+machinery that Module 01 and Level 2's chain-rule modules described a
+framework doing automatically. Writing this by hand is instructive
+precisely because it exposes the bookkeeping a framework normally hides:
+you must decide what to cache from the forward pass (pre-activation values
+for ReLU's derivative, the softmax output for the fused cross-entropy
+gradient), and you must correctly sum gradients at every node whose output
+feeds into more than one downstream computation (a shared weight matrix
+used at two points, for instance) — a bug here (overwriting instead of
+accumulating) is one of the most common real implementation mistakes when
+building autodiff by hand.</p>
+<p>The "numeric verification" step in this capstone is not optional
+scaffolding — it is the single most important debugging tool for exactly
+this kind of hand-written backward pass: comparing your analytic gradient
+against a central finite difference,
+<span class="arithmatex">\(\frac{f(\theta+h)-f(\theta-h)}{2h}\)</span> (more accurate than the one-sided
+version from Module 06 of Level 1, since it cancels the first-order
+truncation error, leaving <span class="arithmatex">\(O(h^2)\)</span> error instead of <span class="arithmatex">\(O(h)\)</span>), for a handful
+of parameters is the standard way real ML engineers catch backward-pass
+bugs before trusting a training run — matching to 4-6 significant digits
+is the usual bar, since perfect agreement is impossible given floating-
+point round-off in both computations.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Take one gradient descent step (<span class="arithmatex">\(\eta=0.5\)</span>) on all parameters and

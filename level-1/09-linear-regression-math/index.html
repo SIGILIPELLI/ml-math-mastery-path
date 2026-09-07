@@ -997,6 +997,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2261,6 +2272,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2395,6 +2417,30 @@ essentially zero, confirming <span class="arithmatex">\((w^*,b^*)\)</span> reall
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>normal-equation [w, b]: [1.5        0.33333333]
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>gradient at optimum: [0. 0.]
 </code></pre></div>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>The closed-form solution <span class="arithmatex">\(\boldsymbol{\beta} = (X^TX)^{-1}X^Ty\)</span> is
+mathematically correct but is almost never computed that way in real
+numerical software — for two computational reasons. First, forming
+<span class="arithmatex">\(X^TX\)</span> and inverting it explicitly squares the <strong>condition number</strong> of the
+problem: if <span class="arithmatex">\(X\)</span> has condition number <span class="arithmatex">\(\kappa\)</span>, then <span class="arithmatex">\(X^TX\)</span> has condition
+number <span class="arithmatex">\(\kappa^2\)</span>, which means floating-point rounding error in the
+solution gets amplified quadratically compared to working with <span class="arithmatex">\(X\)</span>
+directly. If <span class="arithmatex">\(X\)</span>'s columns are even mildly correlated (a common real-world
+case — this is literally why Level 3 has a whole module on
+regularization), <span class="arithmatex">\(X^TX\)</span> can become numerically close to singular, and
+<code>inv()</code> on it returns a wildly inaccurate result even though it doesn't
+throw an error.</p>
+<p>Second, computing a matrix inverse is wasteful: LAPACK's actual solvers
+(and what <code>np.linalg.lstsq</code> calls) instead compute a <strong>QR decomposition</strong>
+<span class="arithmatex">\(X = QR\)</span> (<span class="arithmatex">\(Q\)</span> orthogonal, <span class="arithmatex">\(R\)</span> upper triangular) and solve
+<span class="arithmatex">\(R\boldsymbol{\beta} = Q^Ty\)</span> by back-substitution, or use the <strong>SVD</strong>
+<span class="arithmatex">\(X = U\Sigma V^T\)</span> and solve via <span class="arithmatex">\(\boldsymbol{\beta} = V\Sigma^{+}U^Ty\)</span>
+(Level 4's SVD module covers this pseudo-inverse construction). Both avoid
+ever forming <span class="arithmatex">\(X^TX\)</span>, keep the effective condition number at <span class="arithmatex">\(\kappa\)</span> instead
+of <span class="arithmatex">\(\kappa^2\)</span>, and are what <code>scikit-learn</code>'s <code>LinearRegression</code> actually
+calls under the hood — the formula you derived by hand is exact algebra,
+but production code solves the same problem through a numerically
+safer route.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Using the points <span class="arithmatex">\((1,1), (2,2), (3,2), (4,3)\)</span>:</p>
 <ol>

@@ -2035,6 +2035,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2305,6 +2316,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2420,6 +2442,28 @@ exactly, without ever forming <span class="arithmatex">\(\phi\)</span>.</p>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>RBF Gram matrix eigenvalues = [0.0700 0.2079 0.2079 0.7261 3.7881]
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>all &gt;= 0 (valid kernel)? True
 </code></pre></div>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>The kernel trick's computational payoff is concrete and measurable: for a
+polynomial kernel of degree <span class="arithmatex">\(d\)</span> over <span class="arithmatex">\(p\)</span> raw features, the explicit feature
+map <span class="arithmatex">\(\phi(x)\)</span> has <span class="arithmatex">\(O(p^d)\)</span> dimensions, but <span class="arithmatex">\(K(x,y)=(x^Ty+c)^d\)</span> computes the
+same inner product <span class="arithmatex">\(\phi(x)^T\phi(y)\)</span> in <span class="arithmatex">\(O(p)\)</span> time — for the RBF kernel,
+<span class="arithmatex">\(\phi\)</span> is formally infinite-dimensional, yet <span class="arithmatex">\(K(x,y)=\exp(-\|x-y\|^2/2\sigma^2)\)</span>
+still costs <span class="arithmatex">\(O(p)\)</span> per pair. This is why kernel methods can use feature
+spaces no explicit computation could ever construct.</p>
+<p>The real computational bottleneck kernel methods hit instead is the
+<strong>kernel (Gram) matrix</strong> <span class="arithmatex">\(K\in\mathbb{R}^{n\times n}\)</span>, one entry per pair
+of the <span class="arithmatex">\(n\)</span> training points — <span class="arithmatex">\(O(n^2)\)</span> memory and <span class="arithmatex">\(O(n^2)\)</span> to <span class="arithmatex">\(O(n^3)\)</span>
+compute to build and factor, which is why kernel SVMs and kernel ridge
+regression scale poorly past tens of thousands of examples regardless of
+how cheap each individual <span class="arithmatex">\(K(x_i,x_j)\)</span> evaluation is. Solving kernel ridge
+regression, <span class="arithmatex">\(\alpha = (K+\lambda I)^{-1}y\)</span>, is done via <strong>Cholesky
+decomposition</strong> of <span class="arithmatex">\(K+\lambda I\)</span> (guaranteed symmetric positive-definite for
+<span class="arithmatex">\(\lambda&gt;0\)</span> and a valid kernel, by Mercer's theorem) rather than by explicit
+matrix inversion, for the same <span class="arithmatex">\(O(n^3)\)</span>-but-more-stable reasons as the
+normal-equations discussion in Level 1 Module 09 — and the <span class="arithmatex">\(\lambda I\)</span> term
+isn't just regularization mathematically, it's also what keeps the system
+well-conditioned enough for Cholesky to succeed numerically when <span class="arithmatex">\(K\)</span> alone
+is near-singular (common when training points are nearly duplicated).</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Derive the explicit feature map for <span class="arithmatex">\(k(x,z)=(x^\top z + 1)^2\)</span> in 2D

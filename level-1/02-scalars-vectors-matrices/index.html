@@ -812,6 +812,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2283,6 +2294,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2393,6 +2415,27 @@ so "row 2" in math notation is <code>X[1, :]</code> in code):</p>
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>row 1 (house 1): [1.5 3. ]
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>column 1 (sqft feature): [1.5 2.  1.2]
 </code></pre></div>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>A vector or matrix "of numbers" is, in memory, a single contiguous block of
+bytes plus a small header describing shape and stride. A NumPy array of
+<code>dtype=float64</code> storing a <span class="arithmatex">\(3\times 3\)</span> matrix uses exactly <span class="arithmatex">\(9 \times 8 = 72\)</span>
+bytes laid out <strong>row-major</strong> (C order): row 0's three floats, then row 1's,
+then row 2's — so <code>A[i, j]</code> is really <code>buffer[i*ncols + j]</code>. Column-major
+(Fortran order, used by MATLAB and BLAS internally) instead lays out
+<code>buffer[j*nrows + i]</code>. This is not a cosmetic detail: it determines which
+direction of iteration is cache-friendly. Looping over a row-major matrix
+row-by-row touches consecutive memory addresses (fast, good cache reuse);
+looping column-by-column jumps <code>ncols</code> floats at a time (cache misses,
+slow) — the same mathematical matrix, traversed the "wrong" way, can run
+an order of magnitude slower.</p>
+<p>Every "vector" is also just a 1-D case of this same layout, and every
+operation you write in NumPy (<code>A + B</code>, <code>A @ B</code>) is dispatched to compiled C
+or Fortran routines (BLAS/LAPACK) rather than looping in Python — this is
+why <code>A @ B</code> for a <span class="arithmatex">\(1000\times 1000\)</span> matrix finishes in milliseconds while a
+hand-written Python triple-loop over the same matrices takes minutes: the
+math is identical, but one path does 64-bit floating-point multiply-adds in
+vectorized CPU instructions (SIMD, operating on 4-8 floats per instruction)
+while the other does one Python-object-boxed multiplication at a time.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Given the matrix</p>
 <div class="arithmatex">\[

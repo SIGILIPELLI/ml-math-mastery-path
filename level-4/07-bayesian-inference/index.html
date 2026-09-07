@@ -2058,6 +2058,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2239,6 +2250,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2342,6 +2364,32 @@ from, the raw MLE estimate <span class="arithmatex">\(7/10=0.7\)</span>.</p>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>posterior mean = 0.6667
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>numerically integrated posterior mean = 0.6667
 </code></pre></div>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>Computing a posterior <span class="arithmatex">\(p(\theta|D) = p(D|\theta)p(\theta)/p(D)\)</span> exactly
+requires the normalizing constant
+<span class="arithmatex">\(p(D) = \int p(D|\theta)p(\theta)\,d\theta\)</span> — an integral that is only
+tractable in closed form for special conjugate pairs like this module's
+Beta-Bernoulli example. For virtually every realistic model, <span class="arithmatex">\(p(D)\)</span> has no
+closed form and can't even be estimated by direct numerical integration
+once <span class="arithmatex">\(\theta\)</span> has more than a handful of dimensions (grid-based
+quadrature's cost grows exponentially with dimension — the "curse of
+dimensionality").</p>
+<p><strong>Markov Chain Monte Carlo (MCMC)</strong> methods sidestep the integral entirely
+by constructing a Markov chain whose stationary distribution <em>is</em> the
+posterior, without ever needing <span class="arithmatex">\(p(D)\)</span>: the <strong>Metropolis-Hastings</strong>
+algorithm, for instance, proposes a new <span class="arithmatex">\(\theta'\)</span> from the current <span class="arithmatex">\(\theta\)</span>,
+and accepts it with probability
+<span class="arithmatex">\(\min\left(1, \frac{p(D|\theta')p(\theta')}{p(D|\theta)p(\theta)}\right)\)</span>
+— notice <span class="arithmatex">\(p(D)\)</span> cancels exactly in this ratio, so the intractable
+normalizing constant never needs to be computed at all. Run for enough
+steps, the chain's visited states form samples from the true posterior,
+even though no step ever evaluated <span class="arithmatex">\(p(D)\)</span>. Modern practice largely uses
+<strong>Hamiltonian Monte Carlo</strong> (used by Stan, PyMC, NumPyro) instead, which
+uses the <em>gradient</em> of the log-posterior (computed via autodiff, exactly
+the mechanism from Level 3) to propose much more efficient moves through
+parameter space than Metropolis-Hastings' undirected random walk — a
+direct application of automatic differentiation to make sampling-based
+Bayesian inference computationally practical in high dimensions.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Repeat with a stronger prior Beta(10,10) (representing a strong belief
