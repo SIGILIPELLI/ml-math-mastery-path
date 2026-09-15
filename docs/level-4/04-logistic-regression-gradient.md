@@ -152,6 +152,11 @@ This guarantees the argument to the final `exp` is always $\leq 0$
 warns against manually chaining a separate `sigmoid()` and `log_loss()` —
 mathematically identical, numerically much less safe.
 
+## 🔀 Related lessons on other tracks
+
+- [AI/ML — 01 · Transformers & Attention from Scratch](https://sigilipelli.github.io/ai-ml-mastery-path/level-3/01-transformers-attention/)
+- [Product Lead — Building Product Organizations from Scratch](https://sigilipelli.github.io/product-lead-mastery-path/level-4/02-building-orgs-from-scratch/)
+
 ## Exercise
 
 1. Implement full-batch gradient descent for logistic regression on a

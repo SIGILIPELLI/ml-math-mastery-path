@@ -139,6 +139,11 @@ numerical paths to the same answer, rather than expecting exact equality,
 is how you distinguish "a genuine bug" from "ordinary floating-point
 disagreement between algorithms."
 
+## 🔀 Related lessons on other tracks
+
+- [AI/ML — 01 · Transformers & Attention from Scratch](https://sigilipelli.github.io/ai-ml-mastery-path/level-3/01-transformers-attention/)
+- [Product Lead — Building Product Organizations from Scratch](https://sigilipelli.github.io/product-lead-mastery-path/level-4/02-building-orgs-from-scratch/)
+
 ## Exercise
 
 1. Add a third feature that's a near-exact linear combination of the
