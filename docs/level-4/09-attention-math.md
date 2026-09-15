@@ -1,3 +1,7 @@
+---
+description: "Math Behind Transformer Attention — Transformer attention is a weighted average — the 'weighting' comes from scaled dot products passed through softmax…"
+---
+
 # 09 · Math Behind Transformer Attention
 
 Transformer attention is a weighted average — the "weighting" comes from

@@ -1,3 +1,7 @@
+---
+description: "Distributions Used in ML — A probability distribution describes how likely each outcome of a random variable is. A handful of named distributions recur…"
+---
+
 # 09 · Distributions Used in ML
 
 A **probability distribution** describes how likely each outcome of a random

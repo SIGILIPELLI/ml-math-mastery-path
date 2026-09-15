@@ -1,3 +1,7 @@
+---
+description: "Numerical Optimization Methods — Vanilla gradient descent and Adam (Level 3 Module 03) aren't the only options. Second-order methods use curvature…"
+---
+
 # 08 · Numerical Optimization Methods
 
 Vanilla gradient descent and Adam (Level 3 Module 03) aren't the only

@@ -1,3 +1,7 @@
+---
+description: "Vector Operations — Now that vectors have a shape, they need operations. Three matter most for ML: addition/scaling, the dot product, and the norm…"
+---
+
 # 03 · Vector Operations
 
 Now that vectors have a shape, they need operations. Three matter most for

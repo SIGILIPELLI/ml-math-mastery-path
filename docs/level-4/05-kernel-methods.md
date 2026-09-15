@@ -1,3 +1,7 @@
+---
+description: "Kernel Methods & the Kernel Trick — Kernel methods let linear algorithms (like SVMs) draw non-linear decision boundaries — without ever explicitly…"
+---
+
 # 05 · Kernel Methods & the Kernel Trick
 
 Kernel methods let linear algorithms (like SVMs) draw non-linear decision

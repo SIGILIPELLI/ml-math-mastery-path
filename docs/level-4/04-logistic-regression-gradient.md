@@ -1,3 +1,7 @@
+---
+description: "Logistic Regression Gradient from Scratch — Logistic regression is the cleanest place to see MLE, the chain rule, and convexity all fit together into one…"
+---
+
 # 04 · Logistic Regression Gradient from Scratch
 
 Logistic regression is the cleanest place to see MLE, the chain rule, and

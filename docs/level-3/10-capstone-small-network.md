@@ -1,3 +1,7 @@
+---
+description: "Capstone — Hand-Derive a Small Network — This capstone pulls together every Level 3 module — chain rule backprop, loss derivatives, softmax/cross-entropy…"
+---
+
 # 10 · Capstone — Hand-Derive a Small Network
 
 This capstone pulls together every Level 3 module — chain rule

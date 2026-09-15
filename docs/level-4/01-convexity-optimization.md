@@ -1,3 +1,7 @@
+---
+description: 'Convexity & Optimization — A set $S$ is convex if the line segment between any two points in $S$ stays in $S$: $\theta x + (1-\theta)y \in S$ for all…'
+---
+
 # 01 · Convexity & Optimization
 
 Convexity is why gradient descent is *guaranteed* to find the global

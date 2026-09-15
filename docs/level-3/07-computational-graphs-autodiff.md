@@ -1,3 +1,7 @@
+---
+description: "Computational Graphs & Autodiff — Frameworks like PyTorch and TensorFlow don't use symbolic differentiation or numerical finite differences — they use…"
+---
+
 # 07 · Computational Graphs & Autodiff
 
 Frameworks like PyTorch and TensorFlow don't use symbolic differentiation

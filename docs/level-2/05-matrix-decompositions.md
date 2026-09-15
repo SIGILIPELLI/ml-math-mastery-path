@@ -1,3 +1,7 @@
+---
+description: "Matrix Decompositions Overview — Building on eigenvalues, this module introduces the two decompositions that show up everywhere in ML: eigendecomposition…"
+---
+
 # 05 · Matrix Decompositions Overview
 
 Building on eigenvalues, this module introduces the two decompositions that

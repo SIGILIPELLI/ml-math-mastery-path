@@ -1,3 +1,7 @@
+---
+description: "Bayes' Theorem — Bayes' theorem lets you flip a conditional probability around — update a belief given new evidence. It's the mathematical core of naive…"
+---
+
 # 08 · Bayes' Theorem
 
 Bayes' theorem lets you flip a conditional probability around — update a

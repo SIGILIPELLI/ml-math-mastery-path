@@ -1,3 +1,7 @@
+---
+description: "Numerical Stability in ML Math — Correct math on paper can still fail in floating point — overflow, underflow, and catastrophic cancellation are the usual…"
+---
+
 # 09 · Numerical Stability in ML Math
 
 Correct math on paper can still fail in floating point — overflow,

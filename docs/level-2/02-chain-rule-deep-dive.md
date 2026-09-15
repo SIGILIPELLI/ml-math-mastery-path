@@ -1,3 +1,7 @@
+---
+description: "Chain Rule Deep Dive — The single-variable chain rule from Level 1 handles $f(g(x))$. Neural networks are compositions of many multivariable functions, so…"
+---
+
 # 02 · Chain Rule Deep Dive
 
 The single-variable chain rule from Level 1 handles $f(g(x))$. Neural

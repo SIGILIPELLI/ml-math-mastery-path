@@ -1,3 +1,7 @@
+---
+description: "Eigenvalues & Eigenvectors Intuition — Eigenvalues and eigenvectors describe the directions a matrix 'prefers' — directions it only stretches or shrinks…"
+---
+
 # 04 · Eigenvalues & Eigenvectors Intuition
 
 Eigenvalues and eigenvectors describe the directions a matrix "prefers" —

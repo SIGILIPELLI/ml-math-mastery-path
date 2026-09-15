@@ -1,3 +1,7 @@
+---
+description: "Jacobians & Hessians — The gradient generalizes derivatives for a scalar-valued function of many variables. Two more objects generalize further: the…"
+---
+
 # 03 · Jacobians & Hessians
 
 The gradient generalizes derivatives for a scalar-valued function of many

@@ -1,3 +1,7 @@
+---
+description: "Probability Basics — Calculus and linear algebra tell us how to optimize; probability tells us how to reason about uncertainty — noisy labels, random…"
+---
+
 # 06 · Probability Basics
 
 Calculus and linear algebra tell us how to optimize; probability tells us how

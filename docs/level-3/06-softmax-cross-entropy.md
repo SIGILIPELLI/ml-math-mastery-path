@@ -1,3 +1,7 @@
+---
+description: "Softmax & Cross-Entropy Derivatives — Softmax turns raw scores (logits) into a probability distribution; cross-entropy measures how far that distribution…"
+---
+
 # 06 · Softmax & Cross-Entropy Derivatives
 
 Softmax turns raw scores (logits) into a probability distribution;

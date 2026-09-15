@@ -1,3 +1,7 @@
+---
+description: "What Is a Derivative? — Module 5 ended with the average rate of change of $f(x)=x^2$ homing in on $2$ as the interval around $x=1$ shrank to zero. That…"
+---
+
 # 06 · What Is a Derivative?
 
 Module 5 ended with the average rate of change of $f(x)=x^2$ homing in on

@@ -1,3 +1,7 @@
+---
+description: "Functions & Graphs Refresher — Before derivatives, a quick refresher on functions and their graphs — the vocabulary of 'slope,' 'curve,' and 'rate of…"
+---
+
 # 05 · Functions & Graphs Refresher
 
 Before derivatives, a quick refresher on functions and their graphs — the

@@ -1,3 +1,7 @@
+---
+description: "Information Theory Basics — Entropy, cross-entropy, and KL divergence quantify 'how surprising' or 'how different' distributions are — and they underlie…"
+---
+
 # 03 · Information Theory Basics
 
 Entropy, cross-entropy, and KL divergence quantify "how surprising" or

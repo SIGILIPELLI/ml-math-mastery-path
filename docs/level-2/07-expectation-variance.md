@@ -1,3 +1,7 @@
+---
+description: "Expectation & Variance — Expectation and variance summarize a random variable with two numbers: where it's centered, and how spread out it is. Loss…"
+---
+
 # 07 · Expectation & Variance
 
 Expectation and variance summarize a random variable with two numbers: where

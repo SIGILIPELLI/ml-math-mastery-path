@@ -1,3 +1,7 @@
+---
+description: "Gradient Descent Step-by-Step — Level 1 ended with the gradient $\nabla f$ as the direction of steepest increase. Gradient descent is the algorithm that…"
+---
+
 # 01 · Gradient Descent Step-by-Step
 
 Level 1 ended with the gradient $\nabla f$ as the direction of steepest

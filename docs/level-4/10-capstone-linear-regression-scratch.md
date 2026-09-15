@@ -1,3 +1,7 @@
+---
+description: "Capstone — Linear Regression from Scratch in NumPy — This final capstone implements linear regression three different ways — closed-form normal equations…"
+---
+
 # 10 · Capstone — Linear Regression from Scratch in NumPy
 
 This final capstone implements linear regression three different ways —

@@ -1,3 +1,7 @@
+---
+description: "Matrix Operations — With vector operations settled, matrices need their own rules — particularly matrix multiplication, which is the single most-executed…"
+---
+
 # 04 · Matrix Operations
 
 With vector operations settled, matrices need their own rules —

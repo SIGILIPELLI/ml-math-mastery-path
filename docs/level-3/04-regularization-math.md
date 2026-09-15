@@ -1,3 +1,7 @@
+---
+description: "Regularization Math (L1/L2) — Regularization adds a penalty term to the loss so the optimizer is pulled toward simpler models, not just ones that fit the…"
+---
+
 # 04 · Regularization Math (L1/L2)
 
 Regularization adds a penalty term to the loss so the optimizer is pulled

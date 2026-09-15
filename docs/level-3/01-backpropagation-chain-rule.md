@@ -1,3 +1,7 @@
+---
+description: "Backpropagation from the Chain Rule — Backpropagation is not a separate algorithm from calculus — it's the multivariable chain rule (Level 2 Module 2)…"
+---
+
 # 01 · Backpropagation from the Chain Rule
 
 Backpropagation is not a separate algorithm from calculus — it's the

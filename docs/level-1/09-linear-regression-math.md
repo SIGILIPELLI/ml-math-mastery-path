@@ -1,3 +1,7 @@
+---
+description: "Linear Regression as a Math Example — This module ties together every tool from Level 1 — vectors, dot products, matrix multiplication, derivatives…"
+---
+
 # 09 · Linear Regression as a Math Example
 
 This module ties together every tool from Level 1 — vectors, dot products,

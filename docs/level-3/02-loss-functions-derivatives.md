@@ -1,3 +1,7 @@
+---
+description: 'Loss Functions & Their Derivatives — Every training loop needs $\partial L/\partial \hat y$ (or directly $\partial L/\partial z$) to start…'
+---
+
 # 02 · Loss Functions & Their Derivatives
 
 Every training loop needs $\partial L/\partial \hat y$ (or directly

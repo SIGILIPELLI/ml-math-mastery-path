@@ -1,3 +1,7 @@
+---
+description: "Lagrange Multipliers & Constrained Optimization — Many ML problems aren't 'minimize $f$' but 'minimize $f$ subject to constraints' — SVM margins…"
+---
+
 # 02 · Lagrange Multipliers & Constrained Optimization
 
 Many ML problems aren't "minimize $f$" but "minimize $f$ subject to

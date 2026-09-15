@@ -1,3 +1,7 @@
+---
+description: "Singular Value Decomposition Deep Dive — SVD generalizes eigendecomposition (Level 2 Module 4) to any matrix, not just square symmetric ones — and…"
+---
+
 # 06 · Singular Value Decomposition Deep Dive
 
 SVD generalizes eigendecomposition (Level 2 Module 4) to **any** matrix,

@@ -1,3 +1,7 @@
+---
+description: "Capstone — Derive & Verify a Gradient — This capstone combines every skill from Level 1: reading vector/matrix notation, computing partial derivatives…"
+---
+
 # 10 · Capstone — Derive & Verify a Gradient
 
 This capstone combines every skill from Level 1: reading vector/matrix

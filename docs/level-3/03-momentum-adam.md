@@ -1,3 +1,7 @@
+---
+description: "Optimization Beyond Vanilla GD — Vanilla gradient descent (Level 2 Module 1) treats every step independently. Momentum and Adam use the history of…"
+---
+
 # 03 · Optimization Beyond Vanilla GD
 
 Vanilla gradient descent (Level 2 Module 1) treats every step independently.

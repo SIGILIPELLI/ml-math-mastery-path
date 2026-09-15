@@ -1,3 +1,7 @@
+---
+description: "Capstone — Probability & Optimization Mini-Project — This capstone combines everything from Level 2: gradient descent, the chain rule, and…"
+---
+
 # 10 · Capstone — Probability & Optimization Mini-Project
 
 This capstone combines everything from Level 2: gradient descent, the chain

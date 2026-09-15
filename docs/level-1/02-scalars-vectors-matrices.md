@@ -1,3 +1,7 @@
+---
+description: "Scalars, Vectors & Matrices — Every object in ML math is one of a small number of shapes. Getting the vocabulary and notation solid now saves confusion in…"
+---
+
 # 02 · Scalars, Vectors & Matrices
 
 Every object in ML math is one of a small number of shapes. Getting the

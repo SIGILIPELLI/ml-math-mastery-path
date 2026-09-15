@@ -1,3 +1,7 @@
+---
+description: "Batch Normalization Math — Batch normalization standardizes layer activations across a mini-batch, then applies a learnable rescale — stabilizing training…"
+---
+
 # 08 · Batch Normalization Math
 
 Batch normalization standardizes layer activations across a mini-batch,

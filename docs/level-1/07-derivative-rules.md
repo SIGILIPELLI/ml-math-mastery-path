@@ -1,3 +1,7 @@
+---
+description: "Basic Derivative Rules — Deriving every function from first principles (Module 6's limit definition) would make ML math unbearably slow. In practice we…"
+---
+
 # 07 · Basic Derivative Rules
 
 Deriving every function from first principles (Module 6's limit definition)

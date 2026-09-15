@@ -1,3 +1,7 @@
+---
+description: "Why Math Matters for ML — You can call .fit() on a scikit-learn model without knowing any of the math underneath it, and it will happily run. But the…"
+---
+
 # 01 · Why Math Matters for ML
 
 You can call `.fit()` on a scikit-learn model without knowing any of the math

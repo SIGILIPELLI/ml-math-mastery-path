@@ -1,3 +1,7 @@
+---
+description: "Partial Derivatives & Gradients — Every derivative so far has been for a function of one variable. Real ML cost functions depend on many parameters at…"
+---
+
 # 08 · Partial Derivatives & Gradients
 
 Every derivative so far has been for a function of **one** variable. Real

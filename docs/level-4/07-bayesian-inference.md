@@ -1,3 +1,7 @@
+---
+description: "Bayesian Inference Foundations — Bayesian inference treats parameters as random variables with a distribution that gets updated as data arrives …"
+---
+
 # 07 · Bayesian Inference Foundations
 
 Bayesian inference treats parameters as random variables with a
