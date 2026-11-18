@@ -154,8 +154,8 @@ mathematically identical, numerically much less safe.
 
 ## 🔀 Related lessons on other tracks
 
-- [AI/ML — 01 · Transformers & Attention from Scratch](https://sigilipelli.github.io/ai-ml-mastery-path/level-3/01-transformers-attention/)
-- [Product Lead — Building Product Organizations from Scratch](https://sigilipelli.github.io/product-lead-mastery-path/level-4/02-building-orgs-from-scratch/)
+- [AI/ML — 01 · Transformers & Attention from Scratch](https://learnmasterypath.com/ai-ml-mastery-path/level-3/01-transformers-attention/)
+- [Product Lead — Building Product Organizations from Scratch](https://learnmasterypath.com/product-lead-mastery-path/level-4/02-building-orgs-from-scratch/)
 
 ## Exercise
 
