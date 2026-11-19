@@ -64,7 +64,7 @@ see the sibling site:
 
 - [AI & Machine Learning Mastery Path](https://learnmasterypath.com/ai-ml-mastery-path/) — scikit-learn, PyTorch, and production ML
 
-🎥 **Prefer video?** Watch the [Mastery Path video series](https://youtube.com/@learnmasterypath) on YouTube — Shorts and full walkthroughs of these lessons.
+🎥 **Prefer video?** Watch the [Mastery Path video series](https://youtube.com/@learnmasterypath) on YouTube — Shorts and full walkthroughs of these lessons. [▶ Subscribe free](https://www.youtube.com/@learnmasterypath?sub_confirmation=1)
 
 ## More from the Mastery Path series
 
