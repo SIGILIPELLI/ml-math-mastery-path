@@ -1,3 +1,7 @@
+---
+description: "Level 2 (Intermediate) of the free ML Math Foundations Mastery Path. Turn the single-variable calculus and vector/matrix basics from Level 1 into the actual…"
+---
+
 # Level 2 · Intermediate <span class="level-badge">In Progress</span>
 
 Goal: turn the single-variable calculus and vector/matrix basics from Level 1

@@ -1,3 +1,7 @@
+---
+description: "Level 3 (Advanced) of the free ML Math Foundations Mastery Path. Assemble Level 1–2 tools into the math that actually trains neural networks —…"
+---
+
 # Level 3 · Advanced <span class="level-badge">In Progress</span>
 
 Goal: assemble Level 1–2 tools into the math that actually trains neural

@@ -1,3 +1,7 @@
+---
+description: "Level 1 (Entry) of the free ML Math Foundations Mastery Path. Build the working vocabulary and mechanical fluency you need before any ML course makes sense…"
+---
+
 # Level 1 · Entry <span class="level-badge">Foundations</span>
 
 Goal: build the working vocabulary and mechanical fluency you need before any

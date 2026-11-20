@@ -1,3 +1,7 @@
+---
+description: "Level 4 (Master) of the free ML Math Foundations Mastery Path. The mathematical foundations behind advanced and research-level ML — convex optimization…"
+---
+
 # Level 4 · Master <span class="level-badge">In Progress</span>
 
 Goal: the mathematical foundations behind advanced and research-level ML —
