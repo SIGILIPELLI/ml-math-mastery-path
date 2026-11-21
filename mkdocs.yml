@@ -57,10 +57,12 @@ extra_javascript:
   - https://polyfill.io/v3/polyfill.min.js?features=es6
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
   - javascripts/progress-tracker.js
+  - javascripts/final-quiz.js
 
 extra_css:
   - stylesheets/extra.css
   - stylesheets/progress-tracker.css
+  - stylesheets/final-quiz.css
 
 
 
@@ -132,3 +134,5 @@ nav:
       - "08 · Numerical Optimization Methods": level-4/08-numerical-optimization-methods.md
       - "09 · Math Behind Transformer Attention": level-4/09-attention-math.md
       - "10 · Capstone — Linear Regression from Scratch in NumPy": level-4/10-capstone-linear-regression-scratch.md
+  - "🎯 Final Quiz": quiz.md
+
