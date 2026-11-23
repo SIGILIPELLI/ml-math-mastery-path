@@ -87,7 +87,7 @@ not_in_nav: |
 
 nav:
   - Home: index.md
-  - "💼 Interview Questions": interview-questions.md
+  - Interview Questions: interview-questions.md
   - "Level 1 · Entry":
       - Overview: level-1/index.md
       - "01 · Why Math Matters for ML": level-1/01-why-math-matters.md
@@ -136,5 +136,5 @@ nav:
       - "08 · Numerical Optimization Methods": level-4/08-numerical-optimization-methods.md
       - "09 · Math Behind Transformer Attention": level-4/09-attention-math.md
       - "10 · Capstone — Linear Regression from Scratch in NumPy": level-4/10-capstone-linear-regression-scratch.md
-  - "🎯 Final Quiz": quiz.md
+  - Final Quiz: quiz.md
 
